@@ -155,9 +155,14 @@ client.on("messageCreate", async message => {
         const itemList = await player_items.get(player)
         itemList.forEach(x => {
           if(x[0] == itemId){
-            x[]
+            const hoge = x[1]
+            x.pop()
+            x.push(hoge+Number(quantity))
+            return;
           }
+          
         })
+        await player_items.set(player,itemList)
         message.reply(`\`${client.users.cache.get(player).username}\`は\`ID:${itemId}:${itemName}\`を\`${quantity}\`個手に入れた！`)
       }else{
         message.reply("実行権限がありません。")
