@@ -33,6 +33,7 @@ const prefix = "_"
 const cmd_list = ["help","status","st"]
 const json = require("./jsons/command.json")
 const item_json = require("./jsons/item.json")
+const admin_list = ["945460382733058109"];
 process.env.TZ = 'Asia/Tokyo'
 
 http
@@ -125,8 +126,24 @@ client.on("messageCreate", async message => {
       embed.setDescription(`>>> ${content}`)
       message.reply({ embeds:[embed] })
     }
+    if(command == "itemid")
+      if(admin_list.includes(message.author.id)){
+        const itemId = message.content.split(" ")[1]
+        const quantity = message.content.split(" ")[2]
+        let player;
+        if(message.mentions.members.size == 1){
+          player = message.mentions.members.first().id
+        }else if(message.mentions.size >= 2){
+          player = undefined
+        }else{
+          player = message.content.split(" ")[3]
+        }
+      }else{
+        message.reply("実行権限がありません。")
+        message.react("❎")
+      }
     if(command.startsWith("db"))
-    if(message.author.id == "945460382733058109"){
+      if(admin_list.includes(message.author.id)){
         var result = message.content.slice(prefix.length+3).trim();
           let evaled = eval("(async () => {" + result + "})()");
           if(typeof evaled != "string"){
@@ -135,7 +152,7 @@ client.on("messageCreate", async message => {
           message.channel.send("Done.")
           message.react("✅")
       }else{
-        message.reply("dbの実行権限がないぞ")
+        message.reply("実行権限がありません。")
         message.react("❎")
       }
   }catch(err){
