@@ -133,11 +133,23 @@ client.on("messageCreate", async message => {
         let player;
         if(message.mentions.members.size == 1){
           player = message.mentions.members.first().id
-        }else if(message.mentions.size >= 2){
+        }else if(message.mentions.members.size >= 2){
           player = undefined
         }else{
           player = message.content.split(" ")[3]
         }
+        const hoge = JSON.parse(JSON.stringify(item_json))
+        const keyList = Object.keys(hoge)
+        let itemName;
+        for(let key in keyList){
+          if(keyList[key] == itemId){
+            itemName = `${hoge[keyList[key]]}`
+          }
+        }
+        if(itemId == undefined || quantity == undefined || player == undefined || itemName == undefined){
+          return message.reply("引数が変です")
+        }
+        message.reply(`itemName:${itemName}\nitemId:${itemId}\nquantity:${quantity}\nplayerId:${player}`)
       }else{
         message.reply("実行権限がありません。")
         message.react("❎")
