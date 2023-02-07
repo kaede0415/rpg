@@ -153,14 +153,18 @@ client.on("messageCreate", async message => {
           return message.reply("Undefined_Player")
         }
         const itemList = await player_items.get(player)
+        const itemIds = [];
         itemList.forEach(x => {
+          itemIds.push(x[0])
           if(x[0] == itemId){
             const hoge = x[1]
             x.pop()
             x.push(hoge+Number(quantity))
             return;
           }
-          
+          if(!itemIds.includes(itemId)){
+            itemList.push([itemId,Number(quantity)])
+          }
         })
         await player_items.set(player,itemList)
         message.reply(`\`${client.users.cache.get(player).username}\`は\`ID:${itemId}:${itemName}\`を\`${quantity}\`個手に入れた！`)
