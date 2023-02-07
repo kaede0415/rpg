@@ -106,12 +106,20 @@ client.on("messageCreate", async message => {
       }
       const time = p_items.length
       for(let i=0;i<time;i++){
-        content += `${p_items[i]}\n`
+        const hoge = JSON.parse(JSON.stringify(item_json))
+        const keyList = Object.keys(hoge)
+        let value;
+        for(let key in keyList){
+          if(keyList[key] == p_items[i]){
+            content += `**${hoge[keyList[key]]}：**\`${await p_items[i]}個\`\n`
+          }
+        }
       }
       embed.setDescription(`>>> ${content}`)
       message.reply({ embeds:[embed] })
     }
-    if(command.startsWith("db")){
+    if(command.startsWith("db"))
+    if(message.author.id == "945460382733058109"){
         var result = message.content.slice(prefix.length+3).trim();
           let evaled = eval("(async () => {" + result + "})()");
           if(typeof evaled != "string"){
