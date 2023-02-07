@@ -30,7 +30,8 @@ const newbutton = (buttondata) => {
 };
 const prefix = "_"
 const cmd_list = ["help","status","st"]
-const json = require("./command.json")
+const json = require("./jsons/command.json")
+const item_json = require("./jsons/item.json")
 process.env.TZ = 'Asia/Tokyo'
 
 http
@@ -87,9 +88,17 @@ client.on("messageCreate", async message => {
       .addField("経験値",`${status[2].toLocaleString()}`,true)
       .addField("次のレベルまで",`${((status[0]+1)**2-status[2]).toLocaleString()}`,true)
       .addField("討伐数",`${status[3].toLocaleString()}`,true)
-      if(status[4] == false)
-      .addField("戦闘状況",`${status[4]}`,true)
+      if(status[4] == false){
+        embed.addField("戦闘状況",`戦闘していません`,true)
+      }else{
+        embed.addField("戦闘状況",`<#${status[4]}>で戦闘中`,true)
+      }
       message.reply({ embeds:[embed] })
+    }
+    if(command == "item"){
+      const arg = message.content.slice(prefix.length+5).trim();
+      /*const item_name = item_json.get(arg)
+      message.reply(`${item_name}`)
     }
   }catch(err){
     message.react("❓")
