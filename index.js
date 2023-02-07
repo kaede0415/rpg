@@ -149,7 +149,16 @@ client.on("messageCreate", async message => {
         if(itemId == undefined || quantity == undefined || player == undefined || itemName == undefined){
           return message.reply("引数が変です")
         }
-        message.reply(`itemName:${itemName}\nitemId:${itemId}\nquantity:${quantity}\nplayerId:${player}`)
+        if(await player_status.get(player) == undefined){
+          return message.reply("Undefined_Player")
+        }
+        const itemList = await player_items.get(player)
+        itemList.forEach(x => {
+          if(x[0] == itemId){
+            x[]
+          }
+        })
+        message.reply(`\`${client.users.cache.get(player).username}\`は\`ID:${itemId}:${itemName}\`を\`${quantity}\`個手に入れた！`)
       }else{
         message.reply("実行権限がありません。")
         message.react("❎")
