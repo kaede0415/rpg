@@ -3,6 +3,10 @@ const { Client, Intents, MessageEmbed, MessageActionRow, MessageButton } = requi
 const { Pagination } = require("discordjs-button-embed-pagination");
 const moment = require('moment');
 const Keyv = require('keyv');
+const player_status = new Keyv(`sqlite://player_data.sqlite`, { table: "status" });
+const player_items = new Keyv(`sqlite://player_data.sqlite`, { table: "item" });
+const enemy_status = new Keyv(`sqlite://enemy_data.sqlite`, { table: "status" });
+const channel_status = new Keyv(`sqlite://channel_data.sqlite`, { table: "channel" });
 const client = new Client({
   partials: ["CHANNEL"],
   intents: new Intents(32767),
@@ -25,7 +29,7 @@ const newbutton = (buttondata) => {
   };
 };
 const prefix = "_"
-const cmd_list = []
+const cmd_list = ["help","status","st"]
 const json = require("./command.json")
 process.env.TZ = 'Asia/Tokyo'
 
@@ -55,6 +59,24 @@ client.on('ready', async () => {
   client.channels.cache.get("1072311355606048839").send({ embeds:[embed] })
 });
 
-
+client.on("messageCreate", async message => {
+  const arg = message.content.slice(prefix.length).split(/ +/);
+  const command = arg.shift().toLowerCase();
+  if(message.author.bot || message.channel.type == "DM" || !message.content.startsWith(prefix)){
+    return;
+  }
+  try{
+    if(command == "status" || command == "st"){
+      message.reply("...")
+    }
+  }catch(err){
+    message.react("❓")
+    const embed = new MessageEmbed()
+    .setTitle("Error[ " + err.toString() + " ]")
+    .setDescription(`M:${message.content}/${message.id}\nG:${message.guild.name}/${message.guild.id}\nC:${message.channel.name}/${message.channel.id}/<#${message.channel.id}>\nU:${message.author.username}/${message.author.id}/<@${message.author.id}>\n` + "```js\n" + err.stack + "```")
+    .setColor("RANDOM")
+    message.reply({ embeds:[embed], allowedMentions: { parse: [] } })
+  }
+});
 
 client.login(process.env.DISCORD_BOT_TOKEN)
