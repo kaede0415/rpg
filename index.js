@@ -162,13 +162,11 @@ client.on("messageCreate", async message => {
             x.push(hoge+Number(quantity))
             return;
           }
-          if(!itemIds.includes(itemId)){
-            itemList.push([itemId,Number(quantity)])
-            console.log(itemList)
-          }
         })
+        if(!itemIds.includes(itemId)){
+          itemList.push([itemId,Number(quantity)])
+        }
         await player_items.set(player,itemList)
-        console.log(await player_items.get(player))
         message.reply(`\`${client.users.cache.get(player).username}\`は\`ID:${itemId}:${itemName}\`を\`${quantity}\`個手に入れた！`)
       }else{
         message.reply("実行権限がありません。")
