@@ -96,8 +96,9 @@ client.on("messageCreate", async message => {
       }
       message.reply({ embeds:[embed] })
     }
-    if(command == "item"){
+    if(command == "item" || command == "i"){
       const p_items = await player_items.get(message.author.id)
+      p_items.sort()
       let content = "";
       const embed = new MessageEmbed()
       .setTitle(`${message.author.username}のアイテムリスト:`)
@@ -105,14 +106,14 @@ client.on("messageCreate", async message => {
         content = "なし"
       }
       const time = p_items.length
+      const hoge = JSON.parse(JSON.stringify(item_json))
+      const keyList = Object.keys(hoge)
       for(let i=0;i<time;i++){
         const item_id = p_items[i][0]
         const item_value = p_items[i][1]
-        const hoge = JSON.parse(JSON.stringify(item_json))
-        const keyList = Object.keys(hoge)
         for(let key in keyList){
           if(keyList[key] == item_id){
-            content += `**${hoge[keyList[key]]}：**\`${item_value}個\`\n`
+            content += `**${hoge[keyList[key]]}：**\`${item_value.toLocaleString()}個\`\n`
           }
         }
       }
