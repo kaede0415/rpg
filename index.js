@@ -82,6 +82,7 @@ client.on("messageCreate", async message => {
       const status = await player_status.get(message.author.id)
       const embed = new MessageEmbed()
       .setTitle(`${message.author.username}のステータス:`)
+      .setColor("RANDOM")
       .setThumbnail(message.author.displayAvatarURL())
       .addField("レベル",`${status[0].toLocaleString()}`,true)
       .addField("体力",`${(status[0]*5+50).toLocaleString()}`,true)
@@ -98,13 +99,14 @@ client.on("messageCreate", async message => {
     }
     if(command == "item" || command == "i"){
       const p_items = await player_items.get(message.author.id)
-      const comparefunction = function (a, b) {
+      const comparefunction = function(a,b){
         return a - b
       }
       p_items.sort(comparefunction)
       let content = "";
       const embed = new MessageEmbed()
       .setTitle(`${message.author.username}のアイテムリスト:`)
+      .setColor("RANDOM")
       if(!p_items.length){
         content = "なし"
       }
