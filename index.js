@@ -97,8 +97,13 @@ client.on("messageCreate", async message => {
     }
     if(command == "item"){
       const arg = message.content.slice(prefix.length+5).trim();
-      /*const item_name = item_json.get(arg)
-      message.reply(`${item_name}`)
+      const hoge = JSON.parse(item_json)
+      const keyList = Object.keys(hoge)
+      console.log(hoge)
+      console.log(keyList)
+      for(let key in keyList){
+        console.log(`key=${keyList[key]} | value=${hoge[keyList[key]]} `)
+      }
     }
   }catch(err){
     message.react("❓")
