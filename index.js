@@ -71,10 +71,25 @@ client.on("messageCreate", async message => {
     if(!p_status){
       await player_status.set(message.author.id,[100,550,10000,0,false,false])
     }
+    if(!p_items){
+      await player_items.set(message.author.id,[])
+    }
   }
   try{
     if(command == "status" || command == "st"){
-      message.reply("...")
+      const status = await player_status.get(message.author.id)
+      const embed = new MessageEmbed()
+      .setTitle(`${message.author.username}のステータス:`)
+      .setThumbnail(message.author.displayAvatarURL())
+      .addField("レベル",`${status[0].toLocaleString()}`,true)
+      .addField("体力",`${(status[0]*5+50).toLocaleString()}`,true)
+      .addField("攻撃力",`${(status[0]*2+10).toLocaleString()}`,true)
+      .addField("経験値",`${status[2].toLocaleString()}`,true)
+      .addField("次のレベルまで",`${((status[0]+1)**2-status[2]).toLocaleString()}`,true)
+      .addField("討伐数",`${status[3].toLocaleString()}`,true)
+      if(status[4] == false)
+      .addField("戦闘状況",`${status[4]}`,true)
+      message.reply({ embeds:[embed] })
     }
   }catch(err){
     message.react("❓")
