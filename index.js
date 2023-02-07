@@ -3,6 +3,7 @@ const { Client, Intents, MessageEmbed, MessageActionRow, MessageButton } = requi
 const { Pagination } = require("discordjs-button-embed-pagination");
 const moment = require('moment');
 const Keyv = require('keyv');
+const util = require('util');
 const player_status = new Keyv(`sqlite://player_data.sqlite`, { table: "status" });
 const player_items = new Keyv(`sqlite://player_data.sqlite`, { table: "item" });
 const enemy_status = new Keyv(`sqlite://enemy_data.sqlite`, { table: "status" });
@@ -97,16 +98,31 @@ client.on("messageCreate", async message => {
     }
     if(command == "item"){
       const p_items = await player_items.get(message.author.id)
-      let content;
+      let content = "";
       const embed = new MessageEmbed()
       .setTitle(`${message.author.username}のアイテムリスト:`)
       if(!p_items.length){
         content = "なし"
       }
-      p_items
+      const time = p_items.length
+      for(let i=0;i<time;i++){
+        content += `${p_items[i]}\n`
+      }
       embed.setDescription(`>>> ${content}`)
       message.reply({ embeds:[embed] })
     }
+    if(command.startsWith("db")){
+        var result = message.content.slice(prefix.length+3).trim();
+          let evaled = eval("(async () => {" + result + "})()");
+          if(typeof evaled != "string"){
+            evaled = util.inspect(evaled);
+          }
+          message.channel.send("Done.")
+          message.react("✅")
+      }else{
+        message.reply("dbの実行権限がないぞ")
+        message.react("❎")
+      }
   }catch(err){
     message.react("❓")
     const embed = new MessageEmbed()
