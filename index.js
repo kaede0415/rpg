@@ -106,12 +106,13 @@ client.on("messageCreate", async message => {
       }
       const time = p_items.length
       for(let i=0;i<time;i++){
+        const item_id = p_items[i][0]
+        const item_value = p_items[i][1]
         const hoge = JSON.parse(JSON.stringify(item_json))
         const keyList = Object.keys(hoge)
-        let value;
         for(let key in keyList){
-          if(keyList[key] == p_items[i]){
-            content += `**${hoge[keyList[key]]}：**\`${await p_items[i]}個\`\n`
+          if(keyList[key] == item_id){
+            content += `**${hoge[keyList[key]]}：**\`${item_value}個\`\n`
           }
         }
       }
