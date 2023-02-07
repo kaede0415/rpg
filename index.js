@@ -96,7 +96,16 @@ client.on("messageCreate", async message => {
       message.reply({ embeds:[embed] })
     }
     if(command == "item"){
-      
+      const p_items = await player_items.get(message.author.id)
+      let content;
+      const embed = new MessageEmbed()
+      .setTitle(`${message.author.username}のアイテムリスト:`)
+      if(!p_items.length){
+        content = "なし"
+      }
+      p_items
+      embed.setDescription(`>>> ${content}`)
+      message.reply({ embeds:[embed] })
     }
   }catch(err){
     message.react("❓")
