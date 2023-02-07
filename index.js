@@ -24,7 +24,7 @@ const newbutton = (buttondata) => {
     type: 1,
   };
 };
-const prefix = ""
+const prefix = "_"
 const cmd_list = []
 const json = require("./command.json")
 process.env.TZ = 'Asia/Tokyo'
@@ -42,8 +42,7 @@ if (process.env.DISCORD_BOT_TOKEN == undefined) {
 }
 
 client.on('ready', async () => {
-  const you = client.users.cache.get(ID)
-    client.user.setActivity(`${client.user.username} | prefix=${prefix} | 製作者:${you.tag} | ${client.guilds.cache.size}servers | ${client.users.cache.size}members`, {
+    client.user.setActivity(`${prefix}help`, {
       type: 'PLAYING'
     });
     client.user.setStatus("idle");
@@ -53,7 +52,9 @@ client.on('ready', async () => {
   .setDescription(">>> ```diff\n+ Hello World!　　　　　``````diff\n+ 導入サーバー数:" + client.guilds.cache.size + "\n+ ユーザー数:" + client.users.cache.size + "```" + moment().format("YYYY-MM-DD HH:mm:ss"))
   .setThumbnail(client.user.displayAvatarURL())
   .setColor("RANDOM")
-  client.channels.cache.get(ID).send({ embeds:[embed] })
+  client.channels.cache.get("1072311355606048839").send({ embeds:[embed] })
 });
+
+
 
 client.login(process.env.DISCORD_BOT_TOKEN)

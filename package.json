@@ -7,13 +7,13 @@
     "start": "node index.js"
   },
   "dependencies": {
-    "discord.js": "^13.6.0",
-    "moment": "^2.29.3",
-    "@keyv/sqlite": "^3.5.1",
-    "keyv": "^4.2.7",
-    "pify": "^5.0.0",
-    "discordjs-button-embed-pagination": "^4.0.2",
-    "util": "^0.12.4"
+    "discord.js": "^13.x",
+    "moment": "^2.29.4",
+    "@keyv/sqlite": "^3.6.4",
+    "keyv": "^4.5.2",
+    "pify": "^6.1.0",
+    "discordjs-button-embed-pagination": "^4.x",
+    "util": "^0.12.5"
   },
   "engines": {
     "node": "16.x"
