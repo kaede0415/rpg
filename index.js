@@ -65,6 +65,13 @@ client.on("messageCreate", async message => {
   if(message.author.bot || message.channel.type == "DM" || !message.content.startsWith(prefix)){
     return;
   }
+  if(message.content.startsWith(prefix) && cmd_list.includes(command)){
+    const p_status = await player_status.get(message.author.id)
+    const p_items = await player_items.get(message.author.id)
+    if(!p_status){
+      await player_status.set(message.author.id,[100,550,10000,0,false,false])
+    }
+  }
   try{
     if(command == "status" || command == "st"){
       message.reply("...")
