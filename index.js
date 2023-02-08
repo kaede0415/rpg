@@ -48,11 +48,10 @@ if (process.env.DISCORD_BOT_TOKEN == undefined) {
   process.exit(0)
 }
 
-async function get_player_attack(player_level,rand){
-  const attack = level*2+10
-  const magnification = (Math.random() * 0.5) + 0.75
+function get_player_attack(player_level,rand){
   if(rand < 0.01) return 0
-  else return player_level*(rand/2+1 if rand<0.96 else 3) + 10
+  else if(rand > 0.96) return player_level*(3) + 10
+  else return player_level*(rand/2+1) + 10
 }
 
 client.on('ready', async () => {
@@ -107,14 +106,15 @@ client.on("messageCreate", async message => {
     }
     if(command == "attack" || command == "atk"){
       const p_status = await player_status.get(message.author.id)
-      const e_status = await enemy_status.get(message.channel.id)
+      /*const e_status = await enemy_status.get(message.channel.id)
       const ch_status = await channel_status.get(message.channel.id)
       if(!ch_status){
         await channel_status.set(message.channel.id,[1,false])
       }
       if(!e_status){
         await enemy_status.set(message.channel.id,[1,60,"【通常】",""])
-      }
+      }*/
+      console.log(get_player_attack(p_status[0],Math.random()))
     }
     if(command == "item" || command == "i"){
       const p_items = await player_items.get(message.author.id)
