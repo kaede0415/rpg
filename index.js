@@ -100,11 +100,14 @@ client.on("messageCreate", async message => {
     }
     if(command == "attack" || command == "atk"){
       const p_status = await player_status.get(message.author.id)
+      const e_status = await enemy_status.get(message.channel.id)
       const ch_status = await channel_status.get(message.channel.id)
       if(!ch_status){
         await channel_status.set(message.channel.id,[1,false])
       }
-      
+      if(!e_status){
+        await enemy_status.set(message.channel.id,[1,60,"【通常】",""])
+      }
     }
     if(command == "item" || command == "i"){
       const p_items = await player_items.get(message.author.id)
