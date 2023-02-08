@@ -54,8 +54,13 @@ function get_player_attack(player_attack,rand){
   else return Math.floor(player_attack*(rand/2+1) + 10)
 }
 
-function get_attack_message(){
-  
+function get_attack_message(user_name,player_attack,monster_name,rand){
+  if(player_attack == 0)
+    return `${user_name}の攻撃！${monster_name}にかわされてしまった！`
+  else if(rand > 0.96)
+    return `${user_name}の攻撃！会心の一撃！${monster_name}に${player_attack}のダメージを与えた！`
+  else
+    return `${user_name}の攻撃！${monster_name}に${player_attack}のダメージを与えた！`
 }
 
 client.on('ready', async () => {
@@ -109,6 +114,7 @@ client.on("messageCreate", async message => {
       message.reply({ embeds:[embed] })
     }
     if(command == "attack" || command == "atk"){
+      const random = Math.random()
       const p_status = await player_status.get(message.author.id)
       /*const e_status = await enemy_status.get(message.channel.id)
       const ch_status = await channel_status.get(message.channel.id)
@@ -118,7 +124,7 @@ client.on("messageCreate", async message => {
       if(!e_status){
         await enemy_status.set(message.channel.id,[1,60,"【通常】",""])
       }*/
-      message.channel.send(get_player_attack((p_status[0]*2+10),Math.random()).toString())
+      message.channel.send(get_attack_message(message.author.username,get_player_attack((p_status[0]*2+10),random),"モンスター",random))
     }
     if(command == "item" || command == "i"){
       const p_items = await player_items.get(message.author.id)
