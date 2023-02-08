@@ -48,20 +48,11 @@ if (process.env.DISCORD_BOT_TOKEN == undefined) {
   process.exit(0)
 }
 
-async function getAttack(id){
-  const status = await player_status.get(id)
-  const attack = status[0]*2+10
-  let damage;
-  const random = Math.random()
+async function get_player_attack(player_level,rand){
+  const attack = level*2+10
   const magnification = (Math.random() * 0.5) + 0.75
-  if(random < 0.01){
-    damage = 0
-  }else if(random > 0.96){
-    damage = Math.floor(attack * magnification) * 2
-  }else{
-    damage = Math.floor(attack * magnification)
-  }
-  return damage;
+  if(rand < 0.01) return 0
+  else return player_level*(rand/2+1 if rand<0.96 else 3) + 10
 }
 
 client.on('ready', async () => {
