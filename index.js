@@ -58,7 +58,10 @@ async function getAttack(id){
     damage = 0
   }else if(random > 0.96){
     damage = Math.floor(attack * magnification) * 2
+  }else{
+    damage = Math.floor(attack * magnification)
   }
+  return damage;
 }
 
 client.on('ready', async () => {
