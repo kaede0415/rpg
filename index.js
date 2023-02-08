@@ -30,7 +30,7 @@ const newbutton = (buttondata) => {
   };
 };
 const prefix = "_"
-const cmd_list = ["help","status","st"]
+const cmd_list = ["help","status","st","attack","atk","item","i"]
 const json = require("./jsons/command.json")
 const item_json = require("./jsons/item.json")
 const admin_list = ["945460382733058109"];
@@ -97,6 +97,14 @@ client.on("messageCreate", async message => {
         embed.addField("戦闘状況",`<#${status[4]}>で戦闘中`,true)
       }
       message.reply({ embeds:[embed] })
+    }
+    if(command == "attack" || command == "atk"){
+      const p_status = await player_status.get(message.author.id)
+      const ch_status = await channel_status.get(message.channel.id)
+      if(!ch_status){
+        await channel_status.set(message.channel.id,[1,false])
+      }
+      
     }
     if(command == "item" || command == "i"){
       const p_items = await player_items.get(message.author.id)
