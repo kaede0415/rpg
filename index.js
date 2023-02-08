@@ -51,7 +51,7 @@ if (process.env.DISCORD_BOT_TOKEN == undefined) {
 function get_player_attack(player_level,rand){
   if(rand < 0.01) return 0
   else if(rand > 0.96) return player_level*(3) + 10
-  else return player_level*(rand/2+1) + 10
+  else return Math.floor(player_level*(rand/2+1) + 10)
 }
 
 client.on('ready', async () => {
