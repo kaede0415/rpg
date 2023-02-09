@@ -46,9 +46,15 @@ function get_attack_message(player_name,player_attack,monster_name,monster_level
   if(player_attack == 0)
     return `+ ${player_name}の攻撃！${monster_name}にかわされてしまった！\n- ${monster_name}のHP:${monster_hp}/${monster_level * 10 + 50}`
   else if(rand > 0.96)
-    return `+ ${player_name}の攻撃！会心の一撃！${monster_name}に${player_attack}のダメージを与えた！\n- ${monster_name}のHP:${monster_hp}/${monster_level * 10 + 50}`
+    if(monster_hp <= player_attack)
+      return `+ ${player_name}の攻撃！会心の一撃！${monster_name}に${player_attack}のダメージを与えた！`
+    else
+      return `+ ${player_name}の攻撃！会心の一撃！${monster_name}に${player_attack}のダメージを与えた！\n- ${monster_name}のHP:${monster_hp}/${monster_level * 10 + 50}`
   else
-    return `+ ${player_name}の攻撃！${monster_name}に${player_attack}のダメージを与えた！\n- ${monster_name}のHP:${monster_hp}/${monster_level * 10 + 50}`
+    if(monster_hp <= player_attack)
+      return `+ ${player_name}の攻撃！${monster_name}に${player_attack}のダメージを与えた！`
+    else
+      return `+ ${player_name}の攻撃！${monster_name}に${player_attack}のダメージを与えた！\n- ${monster_name}のHP:${monster_hp}/${monster_level * 10 + 50}`
 }
 
 function get_mosnter_attack(monster_level){
