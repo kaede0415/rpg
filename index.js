@@ -107,7 +107,7 @@ async function consume_item(item_id,quantity,player_id){
         x
       }
       x.pop()
-      x.push(hoge+Number(quantity))
+      x.push(hoge-Number(quantity))
       return;
     }
   })
