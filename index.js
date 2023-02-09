@@ -42,13 +42,13 @@ function get_player_attack(player_attack,rand){
   else return Math.floor(player_attack*(rand/2+1) + 10)
 }
 
-function get_attack_message(user_name,player_attack,monster_name,rand){
+function get_attack_message(player_name,player_attack,monster_name,rand){
   if(player_attack == 0)
-    return `${user_name}の攻撃！${monster_name}にかわされてしまった！`
+    return `${player_name}の攻撃！${monster_name}にかわされてしまった！`
   else if(rand > 0.96)
-    return `${user_name}の攻撃！会心の一撃！${monster_name}に${player_attack}のダメージを与えた！`
+    return `${player_name}の攻撃！会心の一撃！${monster_name}に${player_attack}のダメージを与えた！`
   else
-    return `${user_name}の攻撃！${monster_name}に${player_attack}のダメージを与えた！`
+    return `${player_name}の攻撃！${monster_name}に${player_attack}のダメージを与えた！`
 }
 
 function get_mosnter_attack(monster_level){
@@ -61,6 +61,11 @@ function get_mosnter_attack(monster_level){
   }else{
     return Math.floor(monster_level * (2 + Math.random()) + 5)
   }
+}
+
+function monster_attack_process(player_id,player_level,player_hp,monster_name,monster_attack){
+  if(monster_attack == 0)
+    return `${monster_name}の攻撃！<@${player_id}>は華麗にかわした！\n - <@{user_id}>のHP:\`${player_hp}\`/${player_level * 5 + 50}`
 }
 
 function get_item_name(item_id){
