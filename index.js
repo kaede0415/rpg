@@ -132,6 +132,10 @@ async function consume_item(item_id,quantity,player_id){
 
 async function reset_battle(channel_id,level_up=false){
   const ch_status = await channel_status.get(channel_id)
+  ch_status[2].forEach(async x => {
+    const status = await player_status.get(x)
+    status[4]
+  })
 }
 
 function generate_monster(rank){
