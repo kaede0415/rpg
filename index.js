@@ -55,11 +55,11 @@ function get_mosnter_attack(monster_level){
   if(Math.random() < 0.01){
     return 0
   }else if(monster_level % 50 == 0){
-    
+    return Math.floor(monster_level * (1 + Math.random()) * 5)
   }else if(monster_level % 5 == 0){
-    
+    return Math.floor(monster_level * (1 + Math.random()) * 3)
   }else{
-    
+    return Math.floor(monster_level * (2 + Math.random()) + 5)
   }
 }
 
