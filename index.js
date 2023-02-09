@@ -108,8 +108,14 @@ async function consume_item(item_id,quantity,player_id){
 }
 
 function generate_monster(rank){
-  const monsters = require(`./monsters/${rank}.json`)
-  const number = monsters.length
+  try{
+    const monsters = require(`./monsters/${rank}.json`)
+    const number = Math.floor( Math.random() * Number(monsters.length.toString()) )
+    const monster = monsters[number]
+    return [monster.name,monster.rank,monster.img]
+  }catch(err){
+    return undefined
+  }
 }
 
 http
@@ -252,6 +258,15 @@ client.on("messageCreate", async message => {
         }
         await consume_item(itemId,quantity,player)
       message.reply("unco")
+    }
+    if(command == "monstergen"){
+      const rank = message.content.slice(prefix.length+11)
+      const info = generate_monster(rank)
+      const embed = new MessageEmbed()
+      .setTitle(`ランク:${info[1]}\n${info[0]}が待ち構えている...！`)
+      .setImage(info[2])
+      .setColor("RANDOM")
+      message.channel.send({ embeds:[embed] })
     }
     if(command.startsWith("db"))
       if(admin_list.includes(message.author.id)){
