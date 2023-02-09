@@ -244,26 +244,26 @@ client.on("messageCreate", async message => {
       }
     if(command == "consumeitem"){
       const itemId = message.content.split(" ")[1]
-        const quantity = message.content.split(" ")[2]
-        let player;
-        if(message.mentions.members.size == 1){
-          player = message.mentions.members.first().id
-        }else if(message.mentions.members.size >= 2){
-          player = undefined
-        }else{
-          player = message.content.split(" ")[3]
-        }
-        if(await player_status.get(player) == undefined){
-          return message.reply("Undefined_Player")
-        }
-        await consume_item(itemId,quantity,player)
+      const quantity = message.content.split(" ")[2]
+      let player;
+      if(message.mentions.members.size == 1){
+        player = message.mentions.members.first().id
+      }else if(message.mentions.members.size >= 2){
+        player = undefined
+      }else{
+        player = message.content.split(" ")[3]
+      }
+      if(await player_status.get(player) == undefined){
+        return message.reply("Undefined_Player")
+      }
+      await consume_item(itemId,quantity,player)
       message.reply("unco")
     }
     if(command == "monstergen"){
       const rank = message.content.slice(prefix.length+11)
       const info = generate_monster(rank)
       const embed = new MessageEmbed()
-      .setTitle(`ランク:${info[1]}\n${info[0]}が待ち構えている...！`)
+      .setTitle(`ランク:${info[1]}\n${info[0]}が待ち構えている...！\nLv.0 HP:0`)
       .setImage(info[2])
       .setColor("RANDOM")
       message.channel.send({ embeds:[embed] })
