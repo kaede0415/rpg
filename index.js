@@ -107,7 +107,10 @@ async function consume_item(item_id,quantity,player_id){
   await player_items.set(player_id,itemList)
 }
 
-function generate_monster
+function generate_monster(rank){
+  const monsters = require(`./monsters/${rank}.json`)
+  const number = monsters.length
+}
 
 http
   .createServer(function(request, response) {
