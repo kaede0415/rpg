@@ -6,7 +6,7 @@ const Keyv = require('keyv');
 const util = require('util');
 const player_status = new Keyv(`sqlite://player_data.sqlite`, { table: "status" });
 const player_items = new Keyv(`sqlite://player_data.sqlite`, { table: "item" });
-const enemy_status = new Keyv(`sqlite://enemy_data.sqlite`, { table: "status" });
+const monster_status = new Keyv(`sqlite://monster_data.sqlite`, { table: "status" });
 const channel_status = new Keyv(`sqlite://channel_data.sqlite`, { table: "channel" });
 const client = new Client({
   partials: ["CHANNEL"],
@@ -49,6 +49,12 @@ function get_attack_message(user_name,player_attack,monster_name,rand){
     return `${user_name}の攻撃！会心の一撃！${monster_name}に${player_attack}のダメージを与えた！`
   else
     return `${user_name}の攻撃！${monster_name}に${player_attack}のダメージを与えた！`
+}
+
+function get_mosnter_attack(monster_level){
+  if(Math.random() < 0.01){
+    return 0
+  }else if(monster_level%50)
 }
 
 function get_item_name(item_id){
