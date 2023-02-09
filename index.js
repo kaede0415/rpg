@@ -54,7 +54,13 @@ function get_attack_message(user_name,player_attack,monster_name,rand){
 function get_mosnter_attack(monster_level){
   if(Math.random() < 0.01){
     return 0
-  }else if(monster_level%50)
+  }else if(monster_level % 50 == 0){
+    
+  }else if(monster_level % 5 == 0){
+    
+  }else{
+    
+  }
 }
 
 function get_item_name(item_id){
