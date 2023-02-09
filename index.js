@@ -74,7 +74,7 @@ function get_item_name(item_id){
   return undefined
 }
 
-async function ontain_item(item_id,quantity,player_id){
+async function obtain_item(item_id,quantity,player_id){
   if(get_item_name(item_id) == undefined) console.log("error")
   const itemList = await player_items.get(player_id)
   const itemIds = [];
@@ -89,6 +89,30 @@ async function ontain_item(item_id,quantity,player_id){
   })
   if(!itemIds.includes(item_id)){
     itemList.push([item_id,Number(quantity)])
+  }
+  await player_items.set(player_id,itemList)
+}
+
+async function consume_item(item_id,quantity,player_id){
+  if(get_item_name(item_id) == undefined) console.log("error")
+  const itemList = await player_items.get(player_id)
+  const itemIds = [];
+  itemList.forEach(x => {
+    itemIds.push(x[0])
+    if(x[0] == item_id){
+      const hoge = x[1]
+      if(hoge < quantity){
+        return false
+      }else if(hoge == quantity){
+        x
+      }
+      x.pop()
+      x.push(hoge+Number(quantity))
+      return;
+    }
+  })
+  if(!itemIds.includes(item_id)){
+    return false
   }
   await player_items.set(player_id,itemList)
 }
@@ -199,7 +223,7 @@ client.on("messageCreate", async message => {
         if(await player_status.get(player) == undefined){
           return message.reply("Undefined_Player")
         }
-        await give_item(itemId,quantity,player)
+        await obtain_item(itemId,quantity,player)
         message.reply(`\`${client.users.cache.get(player).username}\`は\`ID:${itemId}:${get_item_name(itemId)}\`を\`${quantity}\`個手に入れた！`)
       }else{
         message.reply("実行権限がありません。")
