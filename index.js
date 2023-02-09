@@ -107,6 +107,8 @@ async function consume_item(item_id,quantity,player_id){
   await player_items.set(player_id,itemList)
 }
 
+function generate_monster
+
 http
   .createServer(function(request, response) {
     response.writeHead(200, { 'Content-Type': 'text/plain;charset=utf-8' })
