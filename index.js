@@ -35,7 +35,77 @@ const json = require("./jsons/command.json")
 const item_json = require("./jsons/item.json")
 const admin_list = ["945460382733058109"];
 process.env.TZ = 'Asia/Tokyo'
-import get_player_attack from "functions.js"
+
+function get_player_attack(player_attack,rand){
+  if(rand < 0.01) return 0
+  else if(rand > 0.96) return player_attack*(2) + 10
+  else return Math.floor(player_attack*(rand/2+1) + 10)
+}
+
+function get_attack_message(user_name,player_attack,monster_name,rand){
+  if(player_attack == 0)
+    return `${user_name}の攻撃！${monster_name}にかわされてしまった！`
+  else if(rand > 0.96)
+    return `${user_name}の攻撃！会心の一撃！${monster_name}に${player_attack}のダメージを与えた！`
+  else
+    return `${user_name}の攻撃！${monster_name}に${player_attack}のダメージを与えた！`
+}
+
+function get_item_name(item_id){
+  const hoge = JSON.parse(JSON.stringify(item_json))
+  const keyList = Object.keys(hoge)
+  for(let key in keyList){
+    if(keyList[key] == item_id){
+      return `${hoge[keyList[key]]}`
+    }
+  }
+  return undefined
+}
+
+async function obtain_item(item_id,quantity,player_id){
+  if(get_item_name(item_id) == undefined) console.log("error")
+  const itemList = await player_items.get(player_id)
+  const itemIds = [];
+  itemList.forEach(x => {
+    itemIds.push(x[0])
+    if(x[0] == item_id){
+      const hoge = x[1]
+      x.pop()
+      x.push(hoge+Number(quantity))
+      return;
+    }
+  })
+  if(!itemIds.includes(item_id)){
+    itemList.push([item_id,Number(quantity)])
+  }
+  await player_items.set(player_id,itemList)
+}
+
+async function consume_item(item_id,quantity,player_id){
+  if(get_item_name(item_id) == undefined) console.log("error")
+  const itemList = await player_items.get(player_id)
+  const itemIds = [];
+  itemList.forEach(x => {
+    itemIds.push(x[0])
+    if(x[0] == item_id){
+      const hoge = x[1]
+      if(hoge < Number(quantity)){
+        return false
+      }else if(hoge == Number(quantity)){
+        const num = itemIds.indexOf(x[0])
+        const func = itemList.splice(num,1)
+        return
+      }
+      console.log(itemIds)
+      x.pop()
+      x.push(hoge-Number(quantity))
+    }
+  })
+  if(!itemIds.includes(item_id)){
+    return false
+  }
+  await player_items.set(player_id,itemList)
+}
 
 http
   .createServer(function(request, response) {
