@@ -101,13 +101,15 @@ async function consume_item(item_id,quantity,player_id){
     itemIds.push(x[0])
     if(x[0] == item_id){
       const hoge = x[1]
+      console.log(hoge,quantity)
       if(hoge < quantity){
         return false
-      }else if(hoge == quantity){
+      }else if(hoge === quantity){
         const num = itemIds.indexOf(x[0])
-        itemList.splice(num,1)
+        const func = itemList.splice(num,1)
         return
       }
+      console.log(itemIds)
       x.pop()
       x.push(hoge-Number(quantity))
     }
