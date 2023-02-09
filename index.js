@@ -63,6 +63,36 @@ function get_attack_message(user_name,player_attack,monster_name,rand){
     return `${user_name}の攻撃！${monster_name}に${player_attack}のダメージを与えた！`
 }
 
+function get_item_name(item_id){
+  const hoge = JSON.parse(JSON.stringify(item_json))
+  const keyList = Object.keys(hoge)
+  for(let key in keyList){
+    if(keyList[key] == item_id){
+      return `${hoge[keyList[key]]}`
+    }
+  }
+  return undefined
+}
+
+async function give_item(item_id,quantity,player_id){
+  if(get_item_name(item_id) == undefined) console.log("error")
+  const itemList = await player_items.get(player_id)
+  const itemIds = [];
+  itemList.forEach(x => {
+    itemIds.push(x[0])
+    if(x[0] == item_id){
+      const hoge = x[1]
+      x.pop()
+      x.push(hoge+Number(quantity))
+      return;
+    }
+  })
+  if(!itemIds.includes(item_id)){
+    itemList.push([item_id,Number(quantity)])
+  }
+  await player_items.set(player_id,itemList)
+}
+
 client.on('ready', async () => {
     client.user.setActivity(`${prefix}help`, {
       type: 'PLAYING'
@@ -166,36 +196,11 @@ client.on("messageCreate", async message => {
         }else{
           player = message.content.split(" ")[3]
         }
-        const hoge = JSON.parse(JSON.stringify(item_json))
-        const keyList = Object.keys(hoge)
-        let itemName;
-        for(let key in keyList){
-          if(keyList[key] == itemId){
-            itemName = `${hoge[keyList[key]]}`
-          }
-        }
-        if(itemId == undefined || quantity == undefined || player == undefined || itemName == undefined){
-          return message.reply("引数が変です")
-        }
         if(await player_status.get(player) == undefined){
           return message.reply("Undefined_Player")
         }
-        const itemList = await player_items.get(player)
-        const itemIds = [];
-        itemList.forEach(x => {
-          itemIds.push(x[0])
-          if(x[0] == itemId){
-            const hoge = x[1]
-            x.pop()
-            x.push(hoge+Number(quantity))
-            return;
-          }
-        })
-        if(!itemIds.includes(itemId)){
-          itemList.push([itemId,Number(quantity)])
-        }
-        await player_items.set(player,itemList)
-        message.reply(`\`${client.users.cache.get(player).username}\`は\`ID:${itemId}:${itemName}\`を\`${quantity}\`個手に入れた！`)
+        await give_item(itemId,quantity,player)
+        message.reply(`\`${client.users.cache.get(player).username}\`は\`ID:${itemId}:${get_item_name(itemId)}\`を\`${quantity}\`個手に入れた！`)
       }else{
         message.reply("実行権限がありません。")
         message.react("❎")
