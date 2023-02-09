@@ -130,6 +130,10 @@ async function consume_item(item_id,quantity,player_id){
   await player_items.set(player_id,itemList)
 }
 
+async function reset_battle(channel_id,level_up=false){
+  const ch_status = await channel_status.get(channel_id)
+}
+
 function generate_monster(rank){
   try{
     const monsters = require(`./monsters/${rank}.json`)
