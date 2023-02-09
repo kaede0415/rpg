@@ -74,7 +74,7 @@ function get_item_name(item_id){
   return undefined
 }
 
-async function give_item(item_id,quantity,player_id){
+async function ontain_item(item_id,quantity,player_id){
   if(get_item_name(item_id) == undefined) console.log("error")
   const itemList = await player_items.get(player_id)
   const itemIds = [];
