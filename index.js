@@ -46,12 +46,12 @@ function get_attack_message(player_name,player_attack,monster_name,monster_level
   if(player_attack == 0)
     return `+ ${player_name}の攻撃！${monster_name}にかわされてしまった！\n- ${monster_name}のHP:${monster_hp}/${monster_level * 10 + 50}`
   else if(rand > 0.96)
-    if(monster_hp <= player_attack)
+    if(monster_hp+player_attack <= player_attack)
       return `+ ${player_name}の攻撃！会心の一撃！${monster_name}に${player_attack}のダメージを与えた！`
     else
       return `+ ${player_name}の攻撃！会心の一撃！${monster_name}に${player_attack}のダメージを与えた！\n- ${monster_name}のHP:${monster_hp}/${monster_level * 10 + 50}`
   else
-    if(monster_hp <= player_attack)
+    if(monster_hp+player_attack <= player_attack)
       return `+ ${player_name}の攻撃！${monster_name}に${player_attack}のダメージを与えた！`
     else
       return `+ ${player_name}の攻撃！${monster_name}に${player_attack}のダメージを与えた！\n- ${monster_name}のHP:${monster_hp}/${monster_level * 10 + 50}`
@@ -215,7 +215,8 @@ client.on("messageCreate", async message => {
         await enemy_status.set(message.channel.id,[1,60,"【通常】",""])
       }*/
       const player_attack = get_player_attack((p_status[0]*2+10),random)
-      message.channel.send(`\`\`\`diff\n${get_attack_message(message.author.username,player_attack,"モンスター",100,1050-player_attack,random)}\`\`\``)
+      const monster_hp = 26*10+50-player_attack
+      message.channel.send(`\`\`\`diff\n${get_attack_message(message.author.username,player_attack,"モンスター",26,monster_hp,random)}\`\`\``)
     }
     if(command == "item" || command == "i"){
       const p_items = await player_items.get(message.author.id)
