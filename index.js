@@ -104,11 +104,12 @@ async function consume_item(item_id,quantity,player_id){
       if(hoge < quantity){
         return false
       }else if(hoge == quantity){
-        const num = itemIds.indexOf()
+        const num = itemIds.indexOf(x[0])
+        itemList.splice(num,1)
+        return
       }
       x.pop()
       x.push(hoge-Number(quantity))
-      return;
     }
   })
   if(!itemIds.includes(item_id)){
@@ -229,6 +230,23 @@ client.on("messageCreate", async message => {
         message.reply("実行権限がありません。")
         message.react("❎")
       }
+    if(command == "consumeitem"){
+      const itemId = message.content.split(" ")[1]
+        const quantity = message.content.split(" ")[2]
+        let player;
+        if(message.mentions.members.size == 1){
+          player = message.mentions.members.first().id
+        }else if(message.mentions.members.size >= 2){
+          player = undefined
+        }else{
+          player = message.content.split(" ")[3]
+        }
+        if(await player_status.get(player) == undefined){
+          return message.reply("Undefined_Player")
+        }
+        await consume_item(itemId,quantity,player)
+      message.reply("unco")
+    }
     if(command.startsWith("db"))
       if(admin_list.includes(message.author.id)){
         var result = message.content.slice(prefix.length+3).trim();
