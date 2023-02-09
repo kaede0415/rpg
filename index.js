@@ -104,7 +104,7 @@ async function consume_item(item_id,quantity,player_id){
       if(hoge < quantity){
         return false
       }else if(hoge == quantity){
-        x
+        const num = itemIds.indexOf()
       }
       x.pop()
       x.push(hoge-Number(quantity))
