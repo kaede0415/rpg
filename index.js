@@ -69,9 +69,11 @@ function get_mosnter_attack(monster_level){
   }
 }
 
-function monster_attack_process(player_id,player_level,player_hp,monster_name,monster_attack){
+function monster_attack_process(player_name,player_level,player_hp,monster_name,monster_attack){
   if(monster_attack == 0)
-    return `${monster_name}の攻撃！<@${player_id}>は華麗にかわした！\n - <@{user_id}>のHP:\`${player_hp}\`/${player_level * 5 + 50}`
+    return `- ${monster_name}の攻撃！${player_name}は華麗にかわした！\n- ${player_name}のHP:${player_hp}/${player_level * 5 + 50}`
+  if(player_hp <= monster_attack)
+    return `${monster_name}の攻撃！${player_name}は${}`
 }
 
 function get_item_name(item_id){
