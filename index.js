@@ -249,14 +249,14 @@ client.on("messageCreate", async message => {
       if(!e_status){
         await enemy_status.set(message.channel.id,[1,60,"【通常】",""])
       }*/
-      const player_name = message.author.username
-      const player_level = p_status[0]
-      const player_hp = p_status[1]
       const player_attack = get_player_attack((p_status[0]*2+10),random)
       const monster_name = "モンスター"
       const monster_level = 26
       const monster_hp = monster_level*10+50-player_attack
       const monster_attack = get_monster_attack(monster_level)
+      const player_name = message.author.username
+      const player_level = p_status[0]
+      const player_hp = p_status[1]-monster_attack
       if(monster_hp < 0){
         message.channel.send(`\`\`\`diff\n${get_attack_message(player_name,player_attack,monster_name,monster_level,monster_hp,random)}\`\`\``)
       }else{
