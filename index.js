@@ -130,6 +130,20 @@ async function consume_item(item_id,quantity,player_id){
   await player_items.set(player_id,itemList)
 }
 
+async function into_battle(player_id,channel_id){
+  const status = await player_status.get(player_id)
+  const ch_status = await channel_status.get(channel_id)
+  if(status[4] == false){
+    status.splice(4,1,channel_id)
+    ch_status[2].push(player_id)
+    await player_status.set(player_id,status)
+    await channel_status.set(player_id,status)
+  }else if(status[4] == channel_id){
+    return
+  }else if(status[4] != channel_id){
+    
+  }
+}
 async function reset_battle(channel_id,level_up=false){
 let ch_status = await channel_status.get(channel_id)
   ch_status[2].forEach(async x => {
