@@ -257,7 +257,11 @@ client.on("messageCreate", async message => {
       const monster_level = 26
       const monster_hp = monster_level*10+50-player_attack
       const monster_attack = get_monster_attack(monster_level)
-      message.channel.send(`\`\`\`diff\n${get_attack_message(player_name,player_attack,monster_name,monster_level,monster_hp,random)}\n\n${monster_attack_process(player_name,player_level,player_hp,monster_name,monster_attack)}\`\`\``)
+      if(monster_hp < 0){
+        message.channel.send(`\`\`\`diff\n${get_attack_message(player_name,player_attack,monster_name,monster_level,monster_hp,random)}\`\`\``)
+      }else{
+        message.channel.send(`\`\`\`diff\n${get_attack_message(player_name,player_attack,monster_name,monster_level,monster_hp,random)}\n\n${monster_attack_process(player_name,player_level,player_hp,monster_name,monster_attack)}\`\`\``)
+      }
     }
     if(command == "item" || command == "i"){
       const p_items = await player_items.get(message.author.id)
