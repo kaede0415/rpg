@@ -131,18 +131,19 @@ async function consume_item(item_id,quantity,player_id){
 }
 
 async function reset_battle(channel_id,level_up=false){
-  const ch_status = await channel_status.get(channel_id)
-  if(level_up=false){
-    ch_status[2].forEach(async x => {
-      const status = await player_status.get(x)
-      status.splice(4,1,false)
-      await player_status.set(x,status)
-    })
-    ch_status.splice(1,1,false)
-    ch_status.splice(3,1,[])
+let ch_status = await channel_status.get(channel_id)
+  ch_status[2].forEach(async x => {
+    const status = await player_status.get(x)
+    status.splice(4,1,false)
+    await player_status.set(x,status)
+  })
+  ch_status.splice(1,1,false)
+  ch_status.splice(3,1,[])
+  await channel_status.set(channel_id,ch_status)
+  if(level_up=true){
+    ch_status = await channel_status.get(channel_id)
+    ch_status.splice(0,1,ch_status[0]+1)
     await channel_status.set(channel_id,ch_status)
-  }else if(level_up=true){
-    
   }
 }
 
