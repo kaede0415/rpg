@@ -162,6 +162,8 @@ let ch_status = await channel_status.get(channel_id)
     ch_status = await channel_status.get(channel_id)
     ch_status.splice(0,1,ch_status[0]+1)
     await channel_status.set(channel_id,ch_status)
+  }else{
+    
   }
 }
 
