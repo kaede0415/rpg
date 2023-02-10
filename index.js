@@ -73,7 +73,7 @@ function monster_attack_process(player_name,player_level,player_hp,monster_name,
   if(monster_attack == 0)
     return `- ${monster_name}の攻撃！${player_name}は華麗にかわした！\n- ${player_name}のHP:${player_hp}/${player_level * 5 + 50}`
   if(player_hp <= monster_attack)
-    return `${monster_name}の攻撃！${player_name}は${}`
+    return `${monster_name}の攻撃！${player_name}は${monster_attack}のダメージを受けた。\n- `
 }
 
 function get_item_name(item_id){
