@@ -137,11 +137,11 @@ async function into_battle(player_id,channel_id){
     status.splice(4,1,channel_id)
     ch_status[2].push(player_id)
     await player_status.set(player_id,status)
-    await channel_status.set(player_id,status)
+    await channel_status.set(channel_id,ch_status)
   }else if(status[4] == channel_id){
     return
   }else if(status[4] != channel_id){
-    
+    return false
   }
 }
 async function reset_battle(channel_id,level_up=false){
