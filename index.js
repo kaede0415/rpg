@@ -257,7 +257,7 @@ client.on("messageCreate", async message => {
       const player_name = message.author.username
       const player_level = p_status[0]
       const player_hp = p_status[1]-monster_attack
-      if(monster_hp < 0){
+      if(monster_hp <= 0){
         message.channel.send(`\`\`\`diff\n${get_attack_message(player_name,player_attack,monster_name,monster_level,monster_hp,random)}\`\`\``)
       }else{
         message.channel.send(`\`\`\`diff\n${get_attack_message(player_name,player_attack,monster_name,monster_level,monster_hp,random)}\n\n${monster_attack_process(player_name,player_level,player_hp,monster_name,monster_attack)}\`\`\``)
