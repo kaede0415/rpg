@@ -46,18 +46,18 @@ function get_attack_message(player_name,player_attack,monster_name,monster_level
   if(player_attack == 0)
     return `+ ${player_name}の攻撃！${monster_name}にかわされてしまった！\n- ${monster_name}のHP:${monster_hp}/${monster_level * 10 + 50}`
   else if(rand > 0.96)
-    if(monster_hp+player_attack <= player_attack)
+    if(monster_hp <= 0)
       return `+ ${player_name}の攻撃！会心の一撃！${monster_name}に${player_attack}のダメージを与えた！`
     else
       return `+ ${player_name}の攻撃！会心の一撃！${monster_name}に${player_attack}のダメージを与えた！\n- ${monster_name}のHP:${monster_hp}/${monster_level * 10 + 50}`
   else
-    if(monster_hp+player_attack <= player_attack)
+    if(monster_hp <= 0)
       return `+ ${player_name}の攻撃！${monster_name}に${player_attack}のダメージを与えた！`
     else
       return `+ ${player_name}の攻撃！${monster_name}に${player_attack}のダメージを与えた！\n- ${monster_name}のHP:${monster_hp}/${monster_level * 10 + 50}`
 }
 
-function get_mosnter_attack(monster_level){
+function get_monster_attack(monster_level){
   if(Math.random() < 0.01){
     return 0
   }else if(monster_level % 50 == 0){
@@ -71,11 +71,11 @@ function get_mosnter_attack(monster_level){
 
 function monster_attack_process(player_name,player_level,player_hp,monster_name,monster_attack){
   if(monster_attack == 0)
-    return `- ${monster_name}の攻撃！${player_name}は華麗にかわした！\n- ${player_name}のHP:${player_hp}/${player_level * 5 + 50}`
+    return `+ ${monster_name}の攻撃！${player_name}は華麗にかわした！\n- ${player_name}のHP:${player_hp}/${player_level * 5 + 50}`
   else if(player_hp <= 0)
-    return `${monster_name}の攻撃！${player_name}は${monster_attack}のダメージを受けた。\n- ${player_name}のHP:${player_hp}/${player_level * 5 + 50}\n- ${player_name}はやられてしまった。。。`
+    return `+ ${monster_name}の攻撃！${player_name}は${monster_attack}のダメージを受けた。\n- ${player_name}のHP:${player_hp}/${player_level * 5 + 50}\n- ${player_name}はやられてしまった。。。`
   else 
-    return `${monster_name}の攻撃！${player_name}は${monster_attack}のダメージを受けた。\n- ${player_name}のHP:${player_hp}/${player_level * 5 + 50}`
+    return `+ ${monster_name}の攻撃！${player_name}は${monster_attack}のダメージを受けた。\n- ${player_name}のHP:${player_hp}/${player_level * 5 + 50}`
 }
 
 function get_item_name(item_id){
@@ -251,9 +251,13 @@ client.on("messageCreate", async message => {
       }*/
       const player_name = message.author.username
       const player_level = p_status[0]
+      const player_hp = p_status[1]
       const player_attack = get_player_attack((p_status[0]*2+10),random)
-      const monster_hp = 26*10+50-player_attack
-      message.channel.send(`\`\`\`diff\n${get_attack_message(message.author.username,player_attack,"モンスター",26,monster_hp,random)}\`\`\``)
+      const monster_name = "モンスター"
+      const monster_level = 26
+      const monster_hp = monster_level*10+50-player_attack
+      const monster_attack = get_monster_attack(monster_level)
+      message.channel.send(`\`\`\`diff\n${get_attack_message(player_name,player_attack,monster_name,monster_level,monster_hp,random)}\n\n${monster_attack_process(player_name,player_level,player_hp,monster_name,monster_attack)}\`\`\``)
     }
     if(command == "item" || command == "i"){
       const p_items = await player_items.get(message.author.id)
