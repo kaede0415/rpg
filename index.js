@@ -172,6 +172,14 @@ async function consume_item(item_id,quantity,player_id){
   await player_items.set(player_id,itemList)
 }
 
+async function add_exp(player_id,exp){
+  const newexp = await player_status.get(player_id)+
+}
+
+async function win_process(channel_id,monster_name,exp){
+  
+}
+
 async function into_battle(player_id,channel_id){
   const status = await player_status.get(player_id)
   const ch_status = await channel_status.get(channel_id)
@@ -283,12 +291,8 @@ client.on("messageCreate", async message => {
   }
   if(message.content.startsWith(prefix) && cmd_list.includes(command)){
     const p_status = await player_status.get(message.author.id)
-    const p_items = await player_items.get(message.author.id)
     if(!p_status){
-      create_data("player",message.author.id)
-    }
-    if(!p_items){
-      await player_items.set(message.author.id,[])
+      await create_data("player",message.author.id)
     }
   }
   try{
