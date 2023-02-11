@@ -194,12 +194,12 @@ function generate_monster(rank){
         rank = "zyakuteki"
       }
       const monsters = require(`./monsters/${rank}.json`)
-      const number = Math.floor( Math.random() * Number(monsters.length.toString()) )
+      const number = Math.floor( Math.random() * Number( monsters.length.toString()) )
       const monster = monsters[number]
       return [monster.name,monster.rank,monster.img]
     }else{
       const monsters = require(`./monsters/${rank}.json`)
-      const number = Math.floor( Math.random() * Number(monsters.length.toString()) )
+      const number = Math.floor( Math.random() * Number( monsters.length.toString()) )
       const monster = monsters[number]
       return [monster.name,monster.rank,monster.img]
     }
@@ -362,7 +362,7 @@ client.on("messageCreate", async message => {
       message.reply("unco")
     }
     if(command == "monstergen"){
-      const rank = message.content.slice(prefix.length+11)
+      let rank = message.content.slice(prefix.length+11)
       const info = generate_monster(rank)
       const embed = new MessageEmbed()
       .setTitle(`ランク:${info[1]}\n${info[0]}が待ち構えている...！\nLv.0 HP:0`)
