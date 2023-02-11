@@ -41,7 +41,26 @@ async function create_data(option,id){
     await player_status.set(id,[100,550,10000,0,false])
     await player_items.set(id,[])
   }else if(option == "monster"){
-    await monster_status.set(id,[1,60,])
+    const info = generate_monster("random")
+    const array = [1,60].concat(info)
+    await monster_status.set(id,array)
+  }else if(option == "channel"){
+    await channel_status.set(id,[1,false,[]])
+  }else{
+    return false
+  }
+}
+
+async function delete_data(option,id){
+  if(option == "player"){
+    await player_status.delete(id)
+    await player_items.delete(id)
+  }else if(option == "monster"){
+    await monster_status.delete(id)
+  }else if(option == "channel"){
+    await channel_status.delete(id)
+  }else{
+    return false
   }
 }
 
@@ -256,7 +275,7 @@ client.on("messageCreate", async message => {
     const p_status = await player_status.get(message.author.id)
     const p_items = await player_items.get(message.author.id)
     if(!p_status){
-      await player_status.set(message.author.id,[100,550,10000,0,false,false])
+      create_data()
     }
     if(!p_items){
       await player_items.set(message.author.id,[])
