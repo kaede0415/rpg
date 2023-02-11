@@ -180,10 +180,19 @@ let ch_status = await channel_status.get(channel_id)
   }
 }
 
-function generate_monster(rank="random"){
+function generate_monster(rank){
   try{
     if(rank == "random"){
-      const random = random.ra
+      const random = Math.random()
+      if(random <= 0.01){
+        rank = "rare"
+      }else if(0.01 < random && random <= 0.012){
+        rank = "super_rare"
+      }else if(0.012 < random && random <= 0.013){
+        rank = "super_ultra_rare"
+      }else if(0.013 < random && random <= 0.023){
+        rank = "zyakuteki"
+      }
       const monsters = require(`./monsters/${rank}.json`)
       const number = Math.floor( Math.random() * Number(monsters.length.toString()) )
       const monster = monsters[number]
