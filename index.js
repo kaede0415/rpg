@@ -106,6 +106,16 @@ function monster_attack_process(player_name,player_level,player_hp,monster_name,
     return `+ ${monster_name}の攻撃！${player_name}は${monster_attack}のダメージを受けた。\n- ${player_name}のHP:${player_hp}/${player_level * 5 + 50}`
 }
 
+async function get_item_quantity(player_id,item_id){
+  const itemList = await player_items.get(player_id)
+  itemList.forEach(x => {
+    if(x[0] == item_id){
+      return x[1]
+    }
+  })
+  return 0
+}
+
 function get_item_name(item_id){
   const hoge = JSON.parse(JSON.stringify(item_json))
   const keyList = Object.keys(hoge)
@@ -275,7 +285,7 @@ client.on("messageCreate", async message => {
     const p_status = await player_status.get(message.author.id)
     const p_items = await player_items.get(message.author.id)
     if(!p_status){
-      create_data()
+      create_data("player",message.author.id)
     }
     if(!p_items){
       await player_items.set(message.author.id,[])
@@ -312,8 +322,9 @@ client.on("messageCreate", async message => {
       if(!e_status){
         await enemy_status.set(message.channel.id,[1,60,"【通常】",""])
       }*/
+      const monster_info = generate_monster("random")
       const player_attack = get_player_attack((p_status[0]*2+10),random)
-      const monster_name = "モンスター"
+      const monster_name = monster_info[0]
       const monster_level = 26
       const monster_hp = monster_level*10+50-player_attack
       const monster_attack = get_monster_attack(monster_level)
