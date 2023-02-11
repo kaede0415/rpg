@@ -36,6 +36,15 @@ const item_json = require("./jsons/item.json")
 const admin_list = ["945460382733058109"];
 process.env.TZ = 'Asia/Tokyo'
 
+async function create_data(option,id){
+  if(option == "player"){
+    await player_status.set(id,[100,550,10000,0,false])
+    await player_items.set(id,[])
+  }else if(option == "monster"){
+    await monster_status.set(id,[1,60,])
+  }
+}
+
 function get_player_attack(player_attack,rand){
   if(rand < 0.01) return 0
   else if(rand > 0.96) return player_attack*(2) + 10
@@ -171,12 +180,20 @@ let ch_status = await channel_status.get(channel_id)
   }
 }
 
-function generate_monster(rank){
+function generate_monster(rank="random"){
   try{
-    const monsters = require(`./monsters/${rank}.json`)
-    const number = Math.floor( Math.random() * Number(monsters.length.toString()) )
-    const monster = monsters[number]
-    return [monster.name,monster.rank,monster.img]
+    if(rank == "random"){
+      const random = random.ra
+      const monsters = require(`./monsters/${rank}.json`)
+      const number = Math.floor( Math.random() * Number(monsters.length.toString()) )
+      const monster = monsters[number]
+      return [monster.name,monster.rank,monster.img]
+    }else{
+      const monsters = require(`./monsters/${rank}.json`)
+      const number = Math.floor( Math.random() * Number(monsters.length.toString()) )
+      const monster = monsters[number]
+      return [monster.name,monster.rank,monster.img]
+    }
   }catch(err){
     return undefined
   }
