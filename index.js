@@ -192,6 +192,8 @@ function generate_monster(rank){
         rank = "super_ultra_rare"
       }else if(0.013 < random && random <= 0.023){
         rank = "zyakuteki"
+      }else{
+        rank = "normal"
       }
       const monsters = require(`./monsters/${rank}.json`)
       const number = Math.floor( Math.random() * Number( monsters.length.toString()) )
