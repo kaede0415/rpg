@@ -172,11 +172,21 @@ async function consume_item(item_id,quantity,player_id){
   await player_items.set(player_id,itemList)
 }
 
-async function add_exp(player_id,exp){
-  const newexp = await player_status.get(player_id)+
+async function experiment(player_id,exp){
+  const status = await player_status.get(player_id)
+  const newexp = status[2]+exp
+  const current_level = status[0]
+  status.splice(2,1,newexp)
+  await player_status.set(player_id,status)
+  if(newexp > (current_level+1)**2){
+    return `**<@${player_id}>:** \`Lv.{current_level} -> Lv.{int(math.sqrt(next_exp))}\``
+  }
 }
 
 async function win_process(channel_id,monster_name,exp){
+  const exp_members = []
+  const levelup_members = []
+  const item_members = []
   
 }
 
