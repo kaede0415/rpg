@@ -173,21 +173,20 @@ let ch_status = await channel_status.get(channel_id)
     await channel_status.set(channel_id,ch_status)
     const boss_level = ch_status[0]+1
     const monster_info = [boss_level,boss_level*10+50]
+    let info;
     if(boss_level % 50 == 0){
-      const info = generate_monster("super_kyouteki")
-      monster_info.concat(info)
-      await monster_status.set(channel_id,monster_info)
+      info = generate_monster("super_kyouteki")
     }else if(boss_level % 5 == 0){
-      const info = generate_monster("kyouteki")
-      monster_info.concat(info)
-      await monster_status.set(channel_id,monster_info)
+      info = generate_monster("kyouteki")
     }else{
-      const info = generate_monster("random")
-      monster_info.concat(info)
-      await monster_status.set(channel_id,monster_info)
+      info = generate_monster("random")
     }
+    await monster_status.set(channel_id,monster_info.concat(info))
   }else{
-    
+    ch_status = await channel_status.get(channel_id)
+    const monster_info = [ch_status[0],ch_status*10+50]
+    const info = generate_monster("normal")
+    await monster_status.set(channel_id,monster_info.concat(info))
   }
 }
 
