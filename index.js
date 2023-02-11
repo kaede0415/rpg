@@ -173,7 +173,7 @@ let ch_status = await channel_status.get(channel_id)
     await channel_status.set(channel_id,ch_status)
     const boss_level = ch_status[0]+1
     if(boss_level % 50 == 0){
-      
+      const info = generate_monster("super_kyouteki")
     }
   }else{
     
