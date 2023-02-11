@@ -187,7 +187,7 @@ async function win_process(channel_id,monster_name,exp){
   let exp_members = ""
   let levelup_members = ""
   let item_members = ""
-  const 
+  const members = await channel_status()
 }
 
 async function into_battle(player_id,channel_id){
