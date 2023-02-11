@@ -179,15 +179,15 @@ async function experiment(player_id,exp){
   status.splice(2,1,newexp)
   await player_status.set(player_id,status)
   if(newexp > (current_level+1)**2){
-    return `**<@${player_id}>:** \`Lv.{current_level} -> Lv.{int(math.sqrt(next_exp))}\``
+    return `**<@${player_id}>:** \`Lv.${current_level} -> Lv.${Math.floor(newexp**0.5)}\``
   }
 }
 
 async function win_process(channel_id,monster_name,exp){
-  const exp_members = []
-  const levelup_members = []
-  const item_members = []
-  
+  let exp_members = ""
+  let levelup_members = ""
+  let item_members = ""
+  const 
 }
 
 async function into_battle(player_id,channel_id){
