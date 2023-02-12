@@ -84,7 +84,7 @@ async function _attack(player_id,channel_id,message){
   monster_hp -= player_attack
   const attack_message = get_attack_message(player_id,player_attack,monster_name,random)
   if(monster_hp <= 0){
-    const win_message = win_process(channel_id,monster_level)
+    const win_message = await win_process(channel_id,monster_level)
     const embed = new MessageEmbed()
     .setTitle("戦闘結果:")
     .setDescription(`**${monster_name}を倒した！**\n>>> ${win_message[0]}`)
@@ -101,6 +101,7 @@ async function _attack(player_id,channel_id,message){
     .setImage(monster_info[2])
     .setColor("RANDOM")
     message.reply({ content:`\`\`\`diff\n${attack_message}\`\`\``, embeds:[embed,embed2] })
+    await reset_battle(channel_id,true)
   }else{
     m_status.splice(2,1,monster_hp)
     await monster_status.set(channel_id,m_status)
