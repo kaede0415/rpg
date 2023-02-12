@@ -203,9 +203,14 @@ async function win_process(channel_id,monster_name,exp){
       await obtain_item(2,1,members[i])
     }
     if(Math.random() < p*2){
-      
+      item_members.push(`<@${members[i]}>は祈りの書を**1個**手に入れた！`)
+      await obtain_item(3,1,members[i])
     }
   }
+  const exp_message = exp_members.join("\n")
+  const levelup_message = levelup_members.join("\n")
+  const item_message = item_members.join("\n")
+  return [exp_message,levelup_message,item_message]
 }
 
 async function into_battle(player_id,channel_id){
@@ -324,6 +329,14 @@ client.on("messageCreate", async message => {
     }
   }
   try{
+    if(command == "test"){
+      const msgs = await win_process(message.channel.id,"モンスター",100)
+      const embed = new MessageEmbed()
+      .addField("exp",`>>> ${msgs[0]}`)
+      .addField("level",`>>> ${msgs[1]}`)
+      .addField("items",`>>> ${msgs[2]}`)
+      message.reply({ embeds:[embed] })
+    }
     if(command == "status" || command == "st"){
       const status = await player_status.get(message.author.id)
       const embed = new MessageEmbed()
