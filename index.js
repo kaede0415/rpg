@@ -82,7 +82,25 @@ async function _attack(player_id,channel_id,message){
   const random = Math.random()
   const player_attack = get_player_attack(player_level,random)
   monster_hp -= player_attack
-  
+  const attack_message = attack_message = get_attack_message(player_id,player_attack,monster_name,random)
+  if(monster_hp <= 0){
+    const win_message = win_process(channel_id,monster_level)
+    const embed = new MessageEmbed()
+    .setTitle("戦闘結果:")
+    .setDescription(`**${monster_name}を倒した！**\n>>> ${win_message[0]}`)
+    .setColor("RANDOM")
+    if(win_message[1].length){
+      embed.addField("**レベルアップ:**",`>>> ${win_message[1]}`)
+    }
+    if(win_message[2].length){
+      embed.addField("**アイテムを獲得:**",`>>> ${win_message[2]}`)
+    }
+    const monster_info = generate_monster("random")
+    const embed2 = new MessageEmbed()
+    .setTitle(`ランク:${monster_info[1]}\n${monster_info[0]}が待ち構えている...！\nLv.${monster_level+1} HP:${(monster_level+1)*10+50}`)
+    .setImage(monster_ind)
+    message.reply({ content:`\`\`\`diff\n${attack_message}\`\`\``, embeds:[embed] })
+  }
 }
 
 function get_player_attack(player_attack,rand){
@@ -204,7 +222,7 @@ async function experiment(player_id,exp){
   }
 }
 
-async function win_process(channel_id,monster_name,exp){
+async function win_process(channel_id,exp){
   const ch_status = await channel_status(channel_id)
   let exp_members = []
   let levelup_members = []
