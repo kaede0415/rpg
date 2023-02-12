@@ -68,31 +68,31 @@ async function _attack(player_id,channel_id,message){
   const intobattle = await into_battle(player_id,channel_id)
   const status = await player_status.get(player_id)
   const m_status = await monster_status.get(channel_id)
-  const player_hp = intobattle[0]
+  let player_hp = intobattle[0]
   const error_message = intobattle[1]
   if(error_message != ""){
     return message.reply(error_message)
   }
   const player_level = status[0]
   const monster_level = m_status[0]
-  const monster_hp = m_status[1]
+  let monster_hp = m_status[1]
   const monster_name = m_status[2]
   const monster_rank = m_status[3]
   const monster_img = m_status[4]
   const random = Math.random()
   const player_attack = get_player_attack(player_level,random)
   monster_hp -= player_attack
-  const attack_message = attack_message = get_attack_message(player_id,player_attack,monster_name,random)
+  const attack_message = get_attack_message(player_id,player_attack,monster_name,random)
   if(monster_hp <= 0){
     const win_message = win_process(channel_id,monster_level)
     const embed = new MessageEmbed()
     .setTitle("戦闘結果:")
     .setDescription(`**${monster_name}を倒した！**\n>>> ${win_message[0]}`)
     .setColor("RANDOM")
-    if(win_message[1].length){
+    if(win_message[1] != ""){
       embed.addField("**レベルアップ:**",`>>> ${win_message[1]}`)
     }
-    if(win_message[2].length){
+    if(win_message[2] != ""){
       embed.addField("**アイテムを獲得:**",`>>> ${win_message[2]}`)
     }
     const monster_info = generate_monster("random")
@@ -239,7 +239,7 @@ async function experiment(player_id,exp){
 }
 
 async function win_process(channel_id,exp){
-  const ch_status = await channel_status(channel_id)
+  const ch_status = await channel_status.get(channel_id)
   let exp_members = []
   let levelup_members = []
   let item_members = []
@@ -428,7 +428,7 @@ client.on("messageCreate", async message => {
     if(command == "attack" || command == "atk"){
       const random = Math.random()
       const p_status = await player_status.get(message.author.id)
-      _attack
+      await _attack(message.author.id,message.channel.id,message)
     }
     if(command == "item" || command == "i"){
       const p_items = await player_items.get(message.author.id)
