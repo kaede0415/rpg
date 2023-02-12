@@ -64,10 +64,24 @@ async function delete_data(option,id){
   }
 }
 
-async function _attack(player_id,channel_id){
+async function _attack(player_id,channel_id,message){
   const intobattle = await into_battle(player_id,channel_id)
+  const status = await player_status.get(player_id)
+  const m_status = await monster_status.get(channel_id)
   const player_hp = intobattle[0]
   const error_message = intobattle[1]
+  if(error_message != ""){
+    return message.reply(error_message)
+  }
+  const player_level = status[0]
+  const monster_level = m_status[0]
+  const monster_hp = m_status[1]
+  const monster_name = m_status[2]
+  const monster_rank = m_status[3]
+  const monster_img = m_status[4]
+  const random = Math.random()
+  const player_attack = get_player_attack(player_level,random)
+  monster_hp -= player_attack
   
 }
 
