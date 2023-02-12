@@ -192,6 +192,19 @@ async function win_process(channel_id,monster_name,exp){
   for(let i=0;i<members.length;i++){
     exp_members.push(`<@${members[i]}>は**${exp}EXP**を獲得した。`)
     levelup_members.push(await experiment(members[i],exp))
+    const status = await player_status.get(members[i])
+    const p = Math.min((0.02*(exp**2))/status[2],0.1)
+    if(exp % 50 == 0 || Math.random() < p){
+      item_members.push(`<@${members[i]}>はエリクサーを**1個**手に入れた！`)
+      await obtain_item(1,1,members[i])
+    }
+    if(Math.random() < p){
+      item_members.push(`<@${members[i]}>はファイアボールの書を**1個**手に入れた！`)
+      await obtain_item(2,1,members[i])
+    }
+    if(Math.random() < p*2){
+      
+    }
   }
 }
 
