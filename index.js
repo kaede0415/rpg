@@ -64,7 +64,9 @@ async function delete_data(option,id){
   }
 }
 
-async function _attack(player_id,channel_id)
+async function _attack(player_id,channel_id){
+  
+}
 
 function get_player_attack(player_attack,rand){
   if(rand < 0.01) return 0
@@ -217,12 +219,21 @@ async function win_process(channel_id,monster_name,exp){
 
 async function into_battle(player_id,channel_id){
   const status = await player_status.get(player_id)
-  const ch_status = await channel_status.get(channel_id)
+  let ch_status = await channel_status.get(channel_id)
+  if(!client.channels.cache.get(channel_id)){
+    ch_status.splice(1,1,false)
+    ch_status.splice(2,1,[])
+    await channel_status.set(channel_id,ch_status)
+  }
+  ch_status = await channel_status.get(channel_id)
   if(status[4] == false){
     status.splice(4,1,channel_id)
     ch_status[2].push(player_id)
     await player_status.set(player_id,status)
     await channel_status.set(channel_id,ch_status)
+    const player_hp = status[1]
+    
+    return 
   }else if(status[4] == channel_id){
     return
   }else if(status[4] != channel_id){
