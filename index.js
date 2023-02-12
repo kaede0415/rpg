@@ -64,6 +64,8 @@ async function delete_data(option,id){
   }
 }
 
+async function _attack(player_id,channel_id)
+
 function get_player_attack(player_attack,rand){
   if(rand < 0.01) return 0
   else if(rand > 0.96) return player_attack*(2) + 10
