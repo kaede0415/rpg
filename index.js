@@ -65,6 +65,9 @@ async function delete_data(option,id){
 }
 
 async function _attack(player_id,channel_id){
+  const intobattle = await into_battle(player_id,channel_id)
+  const player_hp = intobattle[0]
+  const error_message = intobattle[1]
   
 }
 
@@ -220,6 +223,7 @@ async function win_process(channel_id,monster_name,exp){
 async function into_battle(player_id,channel_id){
   const status = await player_status.get(player_id)
   let ch_status = await channel_status.get(channel_id)
+  let error_message = ""
   if(!client.channels.cache.get(channel_id)){
     ch_status.splice(1,1,false)
     ch_status.splice(2,1,[])
@@ -229,17 +233,21 @@ async function into_battle(player_id,channel_id){
   if(status[4] == false){
     status.splice(4,1,channel_id)
     ch_status[2].push(player_id)
+    status.splice(1,1,status[0]*5+50)
     await player_status.set(player_id,status)
     await channel_status.set(channel_id,ch_status)
-    const player_hp = status[1]
-    
-    return 
-  }else if(status[4] == channel_id){
-    return
-  }else if(status[4] != channel_id){
-    return false
+    const player_hp = status[0]*5+50
+    return [player_hp,error_message]
   }
+  const player_hp = status[1]
+  if(status[4] != channel_id){
+    error_message = `${client.users.cache.get(player_id).username}は<#${channel_id}>で戦闘中だ。`
+  }else if(player_hp == 0){
+    error_message = `${client.users.cache.get(player_id).username}はすでにやられている！`
+  }
+  return [player_hp,error_message]
 }
+
 async function reset_battle(channel_id,level_up=false){
 let ch_status = await channel_status.get(channel_id)
   ch_status[2].forEach(async x => {
