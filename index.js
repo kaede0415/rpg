@@ -98,8 +98,24 @@ async function _attack(player_id,channel_id,message){
     const monster_info = generate_monster("random")
     const embed2 = new MessageEmbed()
     .setTitle(`ランク:${monster_info[1]}\n${monster_info[0]}が待ち構えている...！\nLv.${monster_level+1} HP:${(monster_level+1)*10+50}`)
-    .setImage(monster_ind)
-    message.reply({ content:`\`\`\`diff\n${attack_message}\`\`\``, embeds:[embed] })
+    .setImage(monster_info[2])
+    .setColor("RANDOM")
+    message.reply({ content:`\`\`\`diff\n${attack_message}\`\`\``, embeds:[embed,embed2] })
+  }else{
+    m_status.splice(2,1,monster_hp)
+    await monster_status.set(channel_id,m_status)
+    const monster_attack = get_monster_attack(monster_level)
+    player_hp -= monster_attack
+    if(monster_attack == 0){
+    }else if(player_hp <= 0){
+      status.splice(1,1,0)
+      await player_status.set(player_id,status)
+    }else{
+      status.splice(1,1,player_hp)
+      await player_status.set(player_id,status)
+    }
+    const monster_attack_message = monster_attack_process(player_id,player_hp,player_level,monster_name,monster_attack)
+    message.channel.send(`\`\`\`diff\n${attack_message}\n\n${monster_attack_message}\`\`\``)
   }
 }
 
@@ -412,28 +428,7 @@ client.on("messageCreate", async message => {
     if(command == "attack" || command == "atk"){
       const random = Math.random()
       const p_status = await player_status.get(message.author.id)
-      /*const e_status = await enemy_status.get(message.channel.id)
-      const ch_status = await channel_status.get(message.channel.id)
-      if(!ch_status){
-        await channel_status.set(message.channel.id,[1,false])
-      }
-      if(!e_status){
-        await enemy_status.set(message.channel.id,[1,60,"【通常】",""])
-      }*/
-      const monster_info = generate_monster("random")
-      const player_attack = get_player_attack((p_status[0]*2+10),random)
-      const monster_name = monster_info[0]
-      const monster_level = 26
-      const monster_hp = monster_level*10+50-player_attack
-      const monster_attack = get_monster_attack(monster_level)
-      const player_name = message.author.username
-      const player_level = p_status[0]
-      const player_hp = p_status[1]-monster_attack
-      if(monster_hp <= 0){
-        message.channel.send(`\`\`\`diff\n${get_attack_message(player_name,player_attack,monster_name,monster_level,monster_hp,random)}\`\`\``)
-      }else{
-        message.channel.send(`\`\`\`diff\n${get_attack_message(player_name,player_attack,monster_name,monster_level,monster_hp,random)}\n\n${monster_attack_process(player_name,player_level,player_hp,monster_name,monster_attack)}\`\`\``)
-      }
+      _attack
     }
     if(command == "item" || command == "i"){
       const p_items = await player_items.get(message.author.id)
