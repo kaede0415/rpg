@@ -105,7 +105,7 @@ async function _attack(player_id,channel_id,message){
     message.reply({ content:`\`\`\`diff\n${attack_message}\`\`\``, embeds:[embed,embed2] })
     await reset_battle(channel_id,true)
   }else{
-    m_status.splice(2,1,monster_hp)
+    m_status.splice(1,1,monster_hp)
     await monster_status.set(channel_id,m_status)
     const monster_attack = get_monster_attack(monster_level)
     player_hp -= monster_attack
@@ -117,7 +117,7 @@ async function _attack(player_id,channel_id,message){
       status.splice(1,1,player_hp)
       await player_status.set(player_id,status)
     }
-    const monster_attack_message = monster_attack_process(player_id,player_hp,player_level,monster_name,monster_attack)
+    const monster_attack_message = monster_attack_process(player_name,player_hp,player_level,monster_name,monster_attack)
     message.channel.send(`\`\`\`diff\n${attack_message}\n\n${monster_attack_message}\`\`\``)
   }
 }
@@ -243,9 +243,9 @@ async function experiment(player_id,exp){
 
 async function win_process(channel_id,exp){
   const ch_status = await channel_status.get(channel_id)
-  let exp_members = []
-  let levelup_members = []
-  let item_members = []
+  const exp_members = []
+  const levelup_members = []
+  const item_members = []
   const members = ch_status[2]
   for(let i=0;i<members.length;i++){
     exp_members.push(`<@${members[i]}>は**${exp}EXP**を獲得した。`)
