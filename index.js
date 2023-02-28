@@ -400,7 +400,7 @@ client.on("messageCreate", async message => {
   }
   try{
     if(command == "test"){
-      const msgs = await win_process(message.channel.id,"モンスター",100)
+      const msgs = await win_process(message.channel.id,100)
       const embed = new MessageEmbed()
       .addField("exp",`>>> ${msgs[0]}`)
       .addField("level",`>>> ${msgs[1]}`)
