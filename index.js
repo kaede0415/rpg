@@ -298,7 +298,7 @@ async function into_battle(player_id,channel_id){
   }
   const player_hp = status[1]
   if(status[4] != channel_id){
-    error_message = `${client.users.cache.get(player_id).username}は<#${channel_id}>で戦闘中だ。`
+    error_message = `${client.users.cache.get(player_id).username}は<#${status[4]}>で戦闘中だ。`
   }else if(player_hp == 0){
     error_message = `${client.users.cache.get(player_id).username}はすでにやられている！`
   }
@@ -467,6 +467,13 @@ client.on("messageCreate", async message => {
         }
       }
       embed.setDescription(`>>> ${content}`)
+      message.reply({ embeds:[embed] })
+    }
+    if(command == "in"){
+      await into_battle(message.author.id,message.channel.id)
+      const embed = new MessageEmbed()
+      .setDescription(`<@${message.author.id}>は<#${message.channel.id}>の戦闘に参加した！`)
+      .setColor("RANDOM")
       message.reply({ embeds:[embed] })
     }
     if(command == "reset" || command == "re"){
