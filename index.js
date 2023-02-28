@@ -408,7 +408,7 @@ client.on("messageCreate", async message => {
       const rand = Math.random()
       const msg = await get_attack_message(player_name,player_attack,monster_name,monster_level,monster_hp,rand)
       message.channel.send(msg)*/
-      const msgs = await win_process(message.channel.id,100)
+      const msgs = await win_process(message.channel.id,1)
       console.log(msgs)
     }
     if(command == "status" || command == "st"){
