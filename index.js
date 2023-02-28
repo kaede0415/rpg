@@ -116,7 +116,7 @@ async function _attack(player_id,channel_id,message){
       status.splice(1,1,player_hp)
       await player_status.set(player_id,status)
     }
-    const monster_attack_message = monster_attack_process(player_name,player_hp,player_level,monster_name,monster_attack)
+    const monster_attack_message = monster_attack_process(player_name,player_level,player_hp,monster_name,monster_attack)
     message.channel.send(`\`\`\`diff\n${attack_message}\n\n${monster_attack_message}\`\`\``)
   }
 }
@@ -237,6 +237,8 @@ async function experiment(player_id,exp){
   await player_status.set(player_id,status)
   if(newexp > (current_level+1)**2){
     return `**<@${player_id}>:** \`Lv.${current_level} -> Lv.${Math.floor(newexp**0.5)}\``
+    status.splice(0,1,Math.floor(newexp**0.5))
+    await player_status.set(player_id,status)
   }
 }
 
