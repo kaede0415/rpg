@@ -86,7 +86,6 @@ async function _attack(player_id,channel_id,message){
   const attack_message = get_attack_message(player_name,player_attack,monster_name,monster_level,monster_hp,random)
   if(monster_hp <= 0){
     const win_message = await win_process(channel_id,monster_level)
-    console.log(win_message)
     const embed = new MessageEmbed()
     .setTitle("戦闘結果:")
     .setDescription(`**${monster_name}を倒した！**\n>>> ${win_message[0]}`)
@@ -269,6 +268,7 @@ async function win_process(channel_id,exp){
   const levelup_message = levelup_members.join("\n")
   const item_message = item_members.join("\n")
   return [exp_message,levelup_message,item_message]
+  console.log(exp_message)
 }
 
 async function into_battle(player_id,channel_id){
