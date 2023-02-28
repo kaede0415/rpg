@@ -96,13 +96,19 @@ async function _attack(player_id,channel_id,message){
     if(win_message[2] != ""){
       embed.addField("**アイテムを獲得:**",`>>> ${win_message[2]}`)
     }
-    const monster_info = generate_monster("random")
+    await reset_battle(channel_id,true)
+    const monster_info = await monster_status
+    const m_level = monster_level+1
+    const m_hp = m_level*10+50
+    const m_name = monster_info[0]
+    const m_rank = monster_info[1]
+    const m_img = monster_info[2]
+    await monster_status.set(channel_id,m_level,m_hp,m_name,m_rank,m_img)
     const embed2 = new MessageEmbed()
-    .setTitle(`ランク:${monster_info[1]}\n${monster_info[0]}が待ち構えている...！\nLv.${monster_level+1} HP:${(monster_level+1)*10+50}`)
-    .setImage(monster_info[2])
+    .setTitle(`ランク:${m_rank}\n${m_name}が待ち構えている...！\nLv.${m_level} HP:${m_hp}`)
+    .setImage(m_img)
     .setColor("RANDOM")
     message.reply({ content:`\`\`\`diff\n${attack_message}\`\`\``, embeds:[embed,embed2] })
-    await reset_battle(channel_id,true)
   }else{
     m_status.splice(1,1,monster_hp)
     await monster_status.set(channel_id,m_status)
@@ -325,9 +331,9 @@ let ch_status = await channel_status.get(channel_id)
       info = generate_monster("random")
     }
     await monster_status.set(channel_id,monster_info.concat(info))
-  }else if(le{
+  }else if(level_up == false){
     ch_status = await channel_status.get(channel_id)
-    const monster_info = [ch_status[0],ch_status*10+50]
+    const monster_info = [ch_status[0],ch_status[0]*10+50]
     const info = generate_monster("normal")
     await monster_status.set(channel_id,monster_info.concat(info))
   }
