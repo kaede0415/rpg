@@ -79,12 +79,14 @@ async function _attack(player_id,channel_id,message){
   const monster_name = m_status[2]
   const monster_rank = m_status[3]
   const monster_img = m_status[4]
+  const player_name = client.users.cache.get(player_id).username
   const random = Math.random()
   const player_attack = get_player_attack(player_level,random)
   monster_hp -= player_attack
-  const attack_message = get_attack_message(player_id,player_attack,monster_name,random)
+  const attack_message = get_attack_message(player_name,player_attack,monster_name,monster_level,monster_hp,random)
   if(monster_hp <= 0){
     const win_message = await win_process(channel_id,monster_level)
+    console.log(win_message)
     const embed = new MessageEmbed()
     .setTitle("戦闘結果:")
     .setDescription(`**${monster_name}を倒した！**\n>>> ${win_message[0]}`)
