@@ -97,13 +97,12 @@ async function _attack(player_id,channel_id,message){
       embed.addField("**アイテムを獲得:**",`>>> ${win_message[2]}`)
     }
     await reset_battle(channel_id,true)
-    const monster_info = await monster_status
-    const m_level = monster_level+1
-    const m_hp = m_level*10+50
-    const m_name = monster_info[0]
-    const m_rank = monster_info[1]
-    const m_img = monster_info[2]
-    await monster_status.set(channel_id,m_level,m_hp,m_name,m_rank,m_img)
+    const m_info = await monster_status.get(channel_id)
+    const m_level = m_info[0]
+    const m_hp = m_info[1]
+    const m_name = m_info[2]
+    const m_rank = m_info[3]
+    const m_img = m_info[4]
     const embed2 = new MessageEmbed()
     .setTitle(`ランク:${m_rank}\n${m_name}が待ち構えている...！\nLv.${m_level} HP:${m_hp}`)
     .setImage(m_img)
@@ -440,8 +439,6 @@ client.on("messageCreate", async message => {
       message.reply({ embeds:[embed] })
     }
     if(command == "attack" || command == "atk"){
-      const random = Math.random()
-      const p_status = await player_status.get(message.author.id)
       await _attack(message.author.id,message.channel.id,message)
     }
     if(command == "item" || command == "i"){
