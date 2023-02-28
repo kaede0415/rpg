@@ -158,7 +158,7 @@ function monster_attack_process(player_name,player_level,player_hp,monster_name,
   if(monster_attack == 0)
     return `+ ${monster_name}の攻撃！${player_name}は華麗にかわした！\n- ${player_name}のHP:${player_hp}/${player_level * 5 + 50}`
   else if(player_hp <= 0)
-    return `+ ${monster_name}の攻撃！${player_name}は${monster_attack}のダメージを受けた。\n- ${player_name}のHP:${player_hp}/${player_level * 5 + 50}\n- ${player_name}はやられてしまった。。。`
+    return `+ ${monster_name}の攻撃！${player_name}は${monster_attack}のダメージを受けた。\n- ${player_name}のHP:0/${player_level * 5 + 50}\n- ${player_name}はやられてしまった。。。`
   else 
     return `+ ${monster_name}の攻撃！${player_name}は${monster_attack}のダメージを受けた。\n- ${player_name}のHP:${player_hp}/${player_level * 5 + 50}`
 }
@@ -236,9 +236,9 @@ async function experiment(player_id,exp){
   status.splice(2,1,newexp)
   await player_status.set(player_id,status)
   if(newexp > (current_level+1)**2){
-    return `**<@${player_id}>:** \`Lv.${current_level} -> Lv.${Math.floor(newexp**0.5)}\``
     status.splice(0,1,Math.floor(newexp**0.5))
     await player_status.set(player_id,status)
+    return `**<@${player_id}>:** \`Lv.${current_level} -> Lv.${Math.floor(newexp**0.5)}\``
   }
 }
 
@@ -465,6 +465,9 @@ client.on("messageCreate", async message => {
       }
       embed.setDescription(`>>> ${content}`)
       message.reply({ embeds:[embed] })
+    }
+    if(command == "reset" || command == "re"){
+      await reset_battle(message.channel.id,false)
     }
     if(command == "itemid")
       if(admin_list.includes(message.author.id)){
