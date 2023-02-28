@@ -300,7 +300,7 @@ async function into_battle(player_id,channel_id){
   return [player_hp,error_message]
 }
 
-async function reset_battle(channel_id,level_up=false){
+async function reset_battle(channel_id,level_up){
 let ch_status = await channel_status.get(channel_id)
   ch_status[2].forEach(async x => {
     const status = await player_status.get(x)
@@ -310,7 +310,7 @@ let ch_status = await channel_status.get(channel_id)
   ch_status.splice(1,1,false)
   ch_status.splice(2,1,[])
   await channel_status.set(channel_id,ch_status)
-  if(level_up=true){
+  if(level_up == true){
     ch_status = await channel_status.get(channel_id)
     ch_status.splice(0,1,ch_status[0]+1)
     await channel_status.set(channel_id,ch_status)
@@ -325,7 +325,7 @@ let ch_status = await channel_status.get(channel_id)
       info = generate_monster("random")
     }
     await monster_status.set(channel_id,monster_info.concat(info))
-  }else{
+  }else if(le{
     ch_status = await channel_status.get(channel_id)
     const monster_info = [ch_status[0],ch_status*10+50]
     const info = generate_monster("normal")
@@ -468,6 +468,12 @@ client.on("messageCreate", async message => {
     }
     if(command == "reset" || command == "re"){
       await reset_battle(message.channel.id,false)
+      const m_info = await monster_status.get(message.channel.id)
+      const embed = new MessageEmbed()
+      .setTitle(`ランク:${m_info[3]}\n${m_info[2]}が待ち構えている...！\nLv.${m_info[0]} HP:${m_info[1]}`)
+      .setImage(m_info[4])
+      .setColor("RANDOM")
+      message.channel.send({ embeds:[embed] })
     }
     if(command == "itemid")
       if(admin_list.includes(message.author.id)){
