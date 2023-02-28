@@ -268,7 +268,6 @@ async function win_process(channel_id,exp){
   const levelup_message = levelup_members.join("\n")
   const item_message = item_members.join("\n")
   return [exp_message,levelup_message,item_message]
-  console.log(exp_message)
 }
 
 async function into_battle(player_id,channel_id){
@@ -512,7 +511,20 @@ client.on("messageCreate", async message => {
       .setColor("RANDOM")
       message.channel.send({ embeds:[embed] })
     }
-    if(command.startsWith("db"))
+    if(command == "eval")
+      if(admin_list.includes(message.author.id)){
+        var result = message.content.slice(prefix.length+3).trim();
+          let evaled = eval("(async () => {" + result + "})()");
+          if(typeof evaled != "string"){
+            evaled = util.inspect(evaled);
+          }
+          message.channel.send("Done.")
+          message.react("✅")
+      }else{
+        message.reply("実行権限がありません。")
+        message.react("❎")
+      }
+    if(command == "db")
       if(admin_list.includes(message.author.id)){
         var result = message.content.slice(prefix.length+3).trim();
           let evaled = eval("(async () => {" + result + "})()");
