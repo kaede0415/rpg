@@ -470,7 +470,11 @@ client.on("messageCreate", async message => {
       message.reply({ embeds:[embed] })
     }
     if(command == "in"){
-      await into_battle(message.author.id,message.channel.id)
+      const intobattle = await into_battle(message.author.id,message.channel.id)
+      const error_message = intobattle[1]
+      if(error_message != ""){
+        return message.reply(error_message)
+      }
       const embed = new MessageEmbed()
       .setDescription(`<@${message.author.id}>は<#${message.channel.id}>の戦闘に参加した！`)
       .setColor("RANDOM")
@@ -523,6 +527,15 @@ client.on("messageCreate", async message => {
       await consume_item(itemId,quantity,player)
       message.reply("unco")
     }
+    if(command == "exp")
+      if(admin_list.includes(message.author.id)){
+        const player_id = message.content.split(" ")[1]
+        const exp = Number(message.content.split(" ")[2])
+        const levelup_msg = await experiment(player_id,exp)
+        const embed = new MessageEmbed()
+        .setDescription(`<@${player_id}>に${exp}EXPを付与しました\n${levelup_msg}`)
+        message.reply({ embeds:[embed] })
+      }
     if(command == "monstergen"){
       let rank = message.content.slice(prefix.length+11)
       const info = generate_monster(rank)
