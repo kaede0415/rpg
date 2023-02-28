@@ -400,12 +400,16 @@ client.on("messageCreate", async message => {
   }
   try{
     if(command == "test"){
+      /*const player_name = message.author.username
+      const player_attack = get_player_attack(10000,Math.random())
+      const monster_name = "モンスター"
+      const monster_level = 10
+      const monster_hp = 150
+      const rand = Math.random()
+      const msg = await get_attack_message(player_name,player_attack,monster_name,monster_level,monster_hp,rand)
+      message.channel.send(msg)*/
       const msgs = await win_process(message.channel.id,100)
-      const embed = new MessageEmbed()
-      .addField("exp",`>>> ${msgs[0]}`)
-      .addField("level",`>>> ${msgs[1]}`)
-      .addField("items",`>>> ${msgs[2]}`)
-      message.reply({ embeds:[embed] })
+      console.log(msgs)
     }
     if(command == "status" || command == "st"){
       const status = await player_status.get(message.author.id)
