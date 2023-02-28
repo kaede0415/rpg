@@ -306,7 +306,7 @@ let ch_status = await channel_status.get(channel_id)
     await player_status.set(x,status)
   })
   ch_status.splice(1,1,false)
-  ch_status.splice(3,1,[])
+  ch_status.splice(2,1,[])
   await channel_status.set(channel_id,ch_status)
   if(level_up=true){
     ch_status = await channel_status.get(channel_id)
@@ -513,12 +513,9 @@ client.on("messageCreate", async message => {
     }
     if(command == "eval")
       if(admin_list.includes(message.author.id)){
-        var result = message.content.slice(prefix.length+3).trim();
-          let evaled = eval("(async () => {" + result + "})()");
-          if(typeof evaled != "string"){
-            evaled = util.inspect(evaled);
-          }
-          message.channel.send("Done.")
+        var result = message.content.slice(prefix.length+6).trim();
+          let evaled = eval(result);
+          message.channel.send(evaled)
           message.react("✅")
       }else{
         message.reply("実行権限がありません。")
