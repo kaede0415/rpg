@@ -450,6 +450,7 @@ client.on("messageCreate", async message => {
         return a - b
       }
       p_items.sort(comparefunction)
+      console.log(p_items)
       let content = "";
       const embed = new MessageEmbed()
       .setTitle(`${message.author.username}のアイテムリスト:`)
@@ -459,9 +460,10 @@ client.on("messageCreate", async message => {
       }
       const time = p_items.length
       for(let i=0;i<time;i++){
-        const item_id = p_items[i][0]
+        console.log(p_items[i])
+        const item_name = get_item_name(p_items[i][0])
         const item_value = p_items[i][1]
-        content += `**${hoge[keyList[key]]}：**\`${item_value.toLocaleString()}個\`\n`
+        content += `**${item_name}：**\`${item_value.toLocaleString()}個\`\n`
       }
       embed.setDescription(`>>> ${content}`)
       message.reply({ embeds:[embed] })
