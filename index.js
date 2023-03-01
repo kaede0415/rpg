@@ -260,15 +260,15 @@ async function win_process(channel_id,exp){
     const p = Math.min((0.02*(exp**2))/status[2],0.1)
     if(exp % 50 == 0 || Math.random() < p){
       item_members.push(`<@${members[i]}>はエリクサーを**1個**手に入れた！`)
-      await obtain_item(1,1,members[i])
+      await obtain_item("1",1,members[i])
     }
     if(Math.random() < p){
       item_members.push(`<@${members[i]}>はファイアボールの書を**1個**手に入れた！`)
-      await obtain_item(2,1,members[i])
+      await obtain_item("2",1,members[i])
     }
     if(Math.random() < p*2){
       item_members.push(`<@${members[i]}>は祈りの書を**1個**手に入れた！`)
-      await obtain_item(3,1,members[i])
+      await obtain_item("3",1,members[i])
     }
   }
   const exp_message = exp_members.join("\n")
@@ -445,7 +445,7 @@ client.on("messageCreate", async message => {
       await _attack(message.author.id,message.channel.id,message)
     }
     if(command == "item" || command == "i"){
-      const p_items = await player_items.get(message.author.id)
+      let p_items = await player_items.get(message.author.id)
       const comparefunction = function(a,b){
         return a - b
       }
@@ -458,16 +458,10 @@ client.on("messageCreate", async message => {
         content = "なし"
       }
       const time = p_items.length
-      const hoge = JSON.parse(JSON.stringify(item_json))
-      const keyList = Object.keys(hoge)
       for(let i=0;i<time;i++){
         const item_id = p_items[i][0]
         const item_value = p_items[i][1]
-        for(let key in keyList){
-          if(keyList[key] == item_id){
-            content += `**${hoge[keyList[key]]}：**\`${item_value.toLocaleString()}個\`\n`
-          }
-        }
+        content += `**${hoge[keyList[key]]}：**\`${item_value.toLocaleString()}個\`\n`
       }
       embed.setDescription(`>>> ${content}`)
       message.reply({ embeds:[embed] })
