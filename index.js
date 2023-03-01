@@ -281,10 +281,9 @@ async function into_battle(player_id,channel_id){
   const status = await player_status.get(player_id)
   let ch_status = await channel_status.get(channel_id)
   let error_message = ""
-  if(!client.channels.cache.get(channel_id)){
-    ch_status.splice(1,1,false)
-    ch_status.splice(2,1,[])
-    await channel_status.set(channel_id,ch_status)
+  if()
+  if(!ch_status){
+    await channel_status.set(channel_id,[1,false,[]])
   }
   ch_status = await channel_status.get(channel_id)
   if(status[4] == false){
