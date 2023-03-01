@@ -279,9 +279,13 @@ async function win_process(channel_id,exp){
 
 async function into_battle(player_id,channel_id){
   const status = await player_status.get(player_id)
+  const m_status = await monster_status.get(channel_id)
   let ch_status = await channel_status.get(channel_id)
   let error_message = ""
-  if()
+  if(!m_status){
+    const info = generate_monster("random")
+    await monster_status.set(channel_id,[1,60].concat(info))
+  }
   if(!ch_status){
     await channel_status.set(channel_id,[1,false,[]])
   }
