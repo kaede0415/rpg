@@ -550,7 +550,7 @@ client.on("messageCreate", async message => {
     }
     if(command == "eval")
       if(admin_list.includes(message.author.id)){
-        var result = message.content.slice(prefix.length+6).trim();
+        var result = message.content.slice(prefix.length+5).trim();
           let evaled = eval(result);
           message.channel.send(evaled)
           message.react("✅")
