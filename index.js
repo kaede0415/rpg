@@ -447,9 +447,9 @@ client.on("messageCreate", async message => {
     if(command == "item" || command == "i"){
       let p_items = await player_items.get(message.author.id)
       const comparefunction = function(a,b){
-        return a - b
+        return a[0] - b[0]
       }
-      console.log(p_items.sort(comparefunction))
+      p_items.sort(comparefunction)
       let content = "";
       const embed = new MessageEmbed()
       .setTitle(`${message.author.username}のアイテムリスト:`)
