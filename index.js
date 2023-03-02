@@ -179,7 +179,7 @@ async function fireball(player_id,channel_id,message){
   const monster_level = m_status[0]
   let monster_hp = m_status[1]
   const monster_name = m_status[2]
-  const damage = Number(player_attack * (1 + Math.random()) / 10)
+  const damage = Math.floor(player_level * (1 + Math.random()) /10)
   monster_hp -= damage
   const atk_msg = `+ ファイアボール！${monster_name}に${damage}のダメージを与えた！`
   if(monster_hp <= 0){
@@ -362,6 +362,7 @@ async function win_process(channel_id,exp){
   const levelup_message = levelup_members.join("\n")
   const item_message = item_members.join("\n")
   return [exp_message,levelup_message,item_message]
+  console
 }
 
 async function into_battle(player_id,channel_id){
