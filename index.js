@@ -160,7 +160,14 @@ async function _item(channel_id,item_name,mentions,message){
 }
 
 async function fireball(player_id,channel_id,message){
-  
+  const intobattle = await into_battle(player_id,channel_id)
+  const status = await player_status.get(player_id)
+  const m_status = await monster_status.get(channel_id)
+  let player_hp = intobattle[0]
+  const error_message = intobattle[1]
+  if(error_message != ""){
+    return message.reply(error_message)
+  }
 }
 
 function get_player_attack(player_attack,rand){
