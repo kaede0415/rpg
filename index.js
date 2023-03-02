@@ -127,7 +127,30 @@ async function _attack(player_id,channel_id,message){
 }
 
 async function _item(channel_id,item_name,mentions,message){
-  
+  if(item_name == undefined){
+    const p_items = await player_items.get(message.author.id)
+    const comparefunction = function(a,b){
+      return a[0] - b[0]
+    }
+    p_items.sort(comparefunction)
+    let content = "";
+    const embed = new MessageEmbed()
+    .setTitle(`${message.author.username}のアイテムリスト:`)
+    .setColor("RANDOM")
+    if(!p_items.length){
+      content = "なし"
+    }
+    const time = p_items.length
+    for(let i=0;i<time;i++){
+      const item_name = get_item_name(p_items[i][0])
+      const item_value = p_items[i][1]
+      content += `**${item_name}：**\`${item_value.toLocaleString()}個\`\n`
+    }
+    embed.setDescription(`>>> ${content}`)
+    message.reply({ embeds:[embed] })
+  }else if(["ファイアボールの書","fire","f"].includes(item_name)){
+    messag
+  }
 }
 
 function get_player_attack(player_attack,rand){
@@ -449,27 +472,8 @@ client.on("messageCreate", async message => {
       await _attack(message.author.id,message.channel.id,message)
     }
     if(command == "item" || command == "i"){
-      let p_items = await player_items.get(message.author.id)
-      const comparefunction = function(a,b){
-        return a[0] - b[0]
-      }
-      p_items.sort(comparefunction)
-      let content = "";
-      const embed = new MessageEmbed()
-      .setTitle(`${message.author.username}のアイテムリスト:`)
-      .setColor("RANDOM")
-      if(!p_items.length){
-        content = "なし"
-      }
-      const time = p_items.length
-      for(let i=0;i<time;i++){
-        console.log(p_items[i])
-        const item_name = get_item_name(p_items[i][0])
-        const item_value = p_items[i][1]
-        content += `**${item_name}：**\`${item_value.toLocaleString()}個\`\n`
-      }
-      embed.setDescription(`>>> ${content}`)
-      message.reply({ embeds:[embed] })
+      const item_name = message.content.split(" ")[1]
+      await _item(message.channel.id,item_name,message.mentions.members.first(),message)
     }
     if(command == "in"){
       const intobattle = await into_battle(message.author.id,message.channel.id)
