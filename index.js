@@ -213,6 +213,14 @@ async function fireball(player_id,channel_id,message){
   }
 }
 
+async function pray(player_id,channel_id,mentions,message){
+  if(!mentions){
+    return `祈りの書は仲間を復活させます。祈る相手を指定して使います。\n例)${prefix}item 祈りの書 @ユーザーメンション`
+  }
+  const prayed_id = mentions[0].id
+  const p_status = 
+}
+
 function get_player_attack(player_attack,rand){
   if(rand < 0.01) return 0
   else if(rand > 0.96) return player_attack*(2) + 10
