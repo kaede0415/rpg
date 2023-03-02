@@ -149,11 +149,11 @@ async function _item(channel_id,item_name,mentions,message){
     embed.setDescription(`>>> ${content}`)
     message.reply({ embeds:[embed] })
   }else if(["ファイアボールの書","fire","f"].includes(item_name)){
-    fireball(message.author.id,message.channel.id,message)
+    await fireball(message.author.id,message.channel.id,message)
   }else if(["エリクサー","elixir","e"].includes(item_name)){
     message.reply("エリ草")
   }else if(["祈りの書","i"].includes(item_name)){
-    message.reply("今から降るよ")
+    await pray(message.author.id,message.channel.id,mentions,message)
   }else{
     message.reply("Undefined_Item")
   }
@@ -218,7 +218,27 @@ async function pray(player_id,channel_id,mentions,message){
     return `祈りの書は仲間を復活させます。祈る相手を指定して使います。\n例)${prefix}item 祈りの書 @ユーザーメンション`
   }
   const prayed_id = mentions[0].id
-  const p_status = 
+  const prayed_status = await player_status.get(prayed_id)
+  const ch_status = await channel_status.get(channel_id)
+  const prayed_hp = prayed_status[1]
+  const btl_members = ch_status[2]
+  const prayed_tag = client.users.cache.get(prayed_id)
+  const player_tag = client.users.cache.get(player_id)
+  if(!btl_members.includes(prayed_id)){
+    return `${prayed_tag}は戦闘に参加していない！`
+  }else if(prayed_hp != 0){
+    return `${prayed_tag}はまだ生きている！`
+  }else if(await consume_item("3",1,player_id) == false){
+    return `${player_tag}は祈りの書を持っていない！`
+  }
+  const intobattle = await into_battle(player_id,channel_id)
+  const error_message = intobattle[1]
+  if(error_message != ""){
+    return message.reply(error_message)
+  }
+  prayed_status.splice(1,1,1)
+  await player_status.set(prayed_id,prayed_status)
+  return `祈りを捧げ、${prayed_tag}は復活した！\n${prayed_tag} 残りHP: 1`
 }
 
 function get_player_attack(player_attack,rand){
