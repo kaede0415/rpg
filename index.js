@@ -174,7 +174,40 @@ async function fireball(player_id,channel_id,message){
     .setColor("RANDOM")
     return message.reply({ embeds:[embed] })
   }
-  
+  const player_level = status[0]
+  const monster_level = m_status[0]
+  const monster_hp = m_status[1]
+  const monster_name = m_status[2]
+  const player_attack = Number(player_attack * (1 + Math.random()) / 10)
+  monster_hp -= player_attack
+  const atk_msg = `+ ファイアボール！${monster_name}に${player_attack}のダメージを与えた！`
+  if(monster_hp <= 0){
+    const win_message = await win_process(channel_id,m_level)
+    const embed = new MessageEmbed()
+    .setTitle("戦闘結果:")
+    .setDescription(`**${monster_name}を倒した！**\n>>> ${win_message[0]}`)
+    .setColor("RANDOM")
+    if(win_message[1] != ""){
+      embed.addField("**レベルアップ:**",`>>> ${win_message[1]}`)
+    }
+    if(win_message[2] != ""){
+      embed.addField("**アイテムを獲得:**",`>>> ${win_message[2]}`)
+    }
+    await reset_battle(channel_id,true)
+    const m_info = await monster_status.get(channel_id)
+    const m_level = m_info[0]
+    const m_hp = m_info[1]
+    const m_name = m_info[2]
+    const m_rank = m_info[3]
+    const m_img = m_info[4]
+    const embed2 = new MessageEmbed()
+    .setTitle(`ランク:${m_rank}\n${m_name}が待ち構えている...！\nLv.${m_level} HP:${m_hp}`)
+    .setImage(m_img)
+    .setColor("RANDOM")
+    message.reply({ content:`\`\`\`diff\n${atk_msg}\`\`\``, embeds:[embed,embed2] })
+  }else{
+    
+  }
 }
 
 function get_player_attack(player_attack,rand){
