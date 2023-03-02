@@ -332,7 +332,7 @@ async function experiment(player_id,exp){
     await player_status.set(player_id,status)
     return `**<@${player_id}>:** \`Lv.${current_level} -> Lv.${Math.floor(newexp**0.5)}\``
   }
-  return undefined
+  return "none"
 }
 
 async function win_process(channel_id,exp){
@@ -343,8 +343,7 @@ async function win_process(channel_id,exp){
   const members = ch_status[2]
   for(let i=0;i<members.length;i++){
     exp_members.push(`<@${members[i]}>は**${exp}EXP**を獲得した。`)
-    if(await experiment(members[i],exp) != undefined){
-      console.log(await experiment(members[i],exp))
+    if(await experiment(members[i],exp) != "none"){
       levelup_members.push(await experiment(members[i],exp))
     }
     const status = await player_status.get(members[i])
