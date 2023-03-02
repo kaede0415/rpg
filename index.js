@@ -168,6 +168,13 @@ async function fireball(player_id,channel_id,message){
   if(error_message != ""){
     return message.reply(error_message)
   }
+  if(await consume_item(2,1,player_id) == false){
+    const embed = new MessageEmbed()
+    .setDescription(`<@${player_id}>はファイボールの書を持っていない！`)
+    .setColor("RANDOM")
+    return message.reply({ embeds:[embed] })
+  }
+  
 }
 
 function get_player_attack(player_attack,rand){
