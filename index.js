@@ -153,7 +153,10 @@ async function _item(channel_id,item_name,mentions,message){
   }else if(["エリクサー","elixir","e"].includes(item_name)){
     message.reply("エリ草")
   }else if(["祈りの書","i"].includes(item_name)){
-    await pray(message.author.id,message.channel.id,mentions,message)
+    const embed = new MessageEmbed()
+    .setDescription(`>>> \`\`\`${await pray(message.author.id,message.channel.id,mentions,message)}\`\`\``)
+    .setColor("RANDOM")
+    message.reply({ embeds:[embed] })
   }else{
     message.reply("Undefined_Item")
   }
@@ -217,14 +220,16 @@ async function pray(player_id,channel_id,mentions,message){
   if(!mentions){
     return `祈りの書は仲間を復活させます。祈る相手を指定して使います。\n例)${prefix}item 祈りの書 @ユーザーメンション`
   }
-  const prayed_id = mentions[0].id
+  const prayed_id = message.mentions.members.first().id
   const prayed_status = await player_status.get(prayed_id)
   const ch_status = await channel_status.get(channel_id)
   const prayed_hp = prayed_status[1]
   const btl_members = ch_status[2]
-  const prayed_tag = client.users.cache.get(prayed_id)
-  const player_tag = client.users.cache.get(player_id)
-  if(!btl_members.includes(prayed_id)){
+  const prayed_tag = client.users.cache.get(prayed_id).tag
+  const player_tag = client.users.cache.get(player_id).tag
+  if(prayed_id == player_id){
+    return `自分を祈ることは出来ない！`
+  }else if(!btl_members.includes(prayed_id)){
     return `${prayed_tag}は戦闘に参加していない！`
   }else if(prayed_hp != 0){
     return `${prayed_tag}はまだ生きている！`
