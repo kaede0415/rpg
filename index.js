@@ -384,6 +384,7 @@ async function into_battle(player_id,channel_id){
   ch_status = await channel_status.get(channel_id)
   if(status[4] == false){
     status.splice(4,1,channel_id)
+    ch_status.splice(1,1,true)
     ch_status[2].push(player_id)
     status.splice(1,1,status[0]*5+50)
     await player_status.set(player_id,status)
@@ -401,7 +402,10 @@ async function into_battle(player_id,channel_id){
 }
 
 async function reset_battle(channel_id,level_up){
-let ch_status = await channel_status.get(channel_id)
+  let ch_status = await channel_status.get(channel_id)
+  if(ch_status[1] == false){
+    return "このchで戦闘は行われていませんよ...？"
+  }
   ch_status[2].forEach(async x => {
     const status = await player_status.get(x)
     status.splice(4,1,false)
@@ -552,7 +556,10 @@ client.on("messageCreate", async message => {
       message.reply({ embeds:[embed] })
     }
     if(command == "reset" || command == "re"){
-      await reset_battle(message.channel.id,false)
+      const reset = await reset_battle(message.channel.id,false)
+      if(reset == "このchで戦闘は行われていませんよ...？"){
+        return message.reply("このchで戦闘は行われていませんよ...？")
+      }
       const m_info = await monster_status.get(message.channel.id)
       const embed = new MessageEmbed()
       .setTitle(`ランク:${m_info[3]}\n${m_info[2]}が待ち構えている...！\nLv.${m_info[0]} HP:${m_info[1]}`)
