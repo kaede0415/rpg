@@ -331,8 +331,9 @@ async function experiment(player_id,exp){
     status.splice(0,1,Math.floor(newexp**0.5))
     await player_status.set(player_id,status)
     return `**<@${player_id}>:** \`Lv.${current_level} -> Lv.${Math.floor(newexp**0.5)}\``
+  }else{
+    return "none"
   }
-  return "none"
 }
 
 async function win_process(channel_id,exp){
