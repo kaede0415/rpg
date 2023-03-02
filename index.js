@@ -153,12 +153,21 @@ async function _item(channel_id,item_name,mentions,message){
   }else if(["エリクサー","elixir","e"].includes(item_name)){
     message.reply("エリ草")
   }else if(["祈りの書","i"].includes(item_name)){
-    const embed = new MessageEmbed()
-    .setDescription(`>>> \`\`\`${await pray(message.author.id,message.channel.id,mentions,message)}\`\`\``)
-    .setColor("RANDOM")
-    message.reply({ embeds:[embed] })
+    const msg = await pray(message.author.id,message.channel.id,mentions,message)
+    if(msg != undefined){
+      const embed = new MessageEmbed()
+      .setDescription(`>>> \`\`\`${msg}\`\`\``)
+      .setColor("RANDOM")
+      message.reply({ embeds:[embed] })
+    }
   }else{
     message.reply("Undefined_Item")
+  }
+}
+
+async function elixir(player_id,channel_id,message){
+  if(await consume_item("1",1,player_id) == false){
+    return ``
   }
 }
 
@@ -239,7 +248,8 @@ async function pray(player_id,channel_id,mentions,message){
   const intobattle = await into_battle(player_id,channel_id)
   const error_message = intobattle[1]
   if(error_message != ""){
-    return message.reply(error_message)
+    message.reply(error_message)
+    return
   }
   prayed_status.splice(1,1,1)
   await player_status.set(prayed_id,prayed_status)
