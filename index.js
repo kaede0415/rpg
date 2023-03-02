@@ -149,8 +149,18 @@ async function _item(channel_id,item_name,mentions,message){
     embed.setDescription(`>>> ${content}`)
     message.reply({ embeds:[embed] })
   }else if(["ファイアボールの書","fire","f"].includes(item_name)){
-    messag
+    message.reply("ファイアボール！")
+  }else if(["エリクサー","elixir","e"].includes(item_name)){
+    message.reply("エリ草")
+  }else if(["祈りの書","i"].includes(item_name)){
+    message.reply("今から降るよ")
+  }else{
+    message.reply("Undefined_Item")
   }
+}
+
+async function fireball(player_id,channel_id,message){
+  
 }
 
 function get_player_attack(player_attack,rand){
