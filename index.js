@@ -149,7 +149,7 @@ async function _item(channel_id,item_name,mentions,message){
     embed.setDescription(`>>> ${content}`)
     message.reply({ embeds:[embed] })
   }else if(["ファイアボールの書","fire","f"].includes(item_name)){
-    message.reply("ファイアボール！")
+    fireball(message.author.id,message.channel.id,message)
   }else if(["エリクサー","elixir","e"].includes(item_name)){
     message.reply("エリ草")
   }else if(["祈りの書","i"].includes(item_name)){
@@ -168,21 +168,22 @@ async function fireball(player_id,channel_id,message){
   if(error_message != ""){
     return message.reply(error_message)
   }
-  if(await consume_item(2,1,player_id) == false){
+  if(await consume_item("2",1,player_id) == false){
     const embed = new MessageEmbed()
     .setDescription(`<@${player_id}>はファイボールの書を持っていない！`)
     .setColor("RANDOM")
     return message.reply({ embeds:[embed] })
   }
   const player_level = status[0]
+  const player_attack = player_level*2+10
   const monster_level = m_status[0]
-  const monster_hp = m_status[1]
+  let monster_hp = m_status[1]
   const monster_name = m_status[2]
-  const player_attack = Number(player_attack * (1 + Math.random()) / 10)
-  monster_hp -= player_attack
-  const atk_msg = `+ ファイアボール！${monster_name}に${player_attack}のダメージを与えた！`
+  const damage = Number(player_attack * (1 + Math.random()) / 10)
+  monster_hp -= damage
+  const atk_msg = `+ ファイアボール！${monster_name}に${damage}のダメージを与えた！`
   if(monster_hp <= 0){
-    const win_message = await win_process(channel_id,m_level)
+    const win_message = await win_process(channel_id,monster_level)
     const embed = new MessageEmbed()
     .setTitle("戦闘結果:")
     .setDescription(`**${monster_name}を倒した！**\n>>> ${win_message[0]}`)
@@ -206,7 +207,9 @@ async function fireball(player_id,channel_id,message){
     .setColor("RANDOM")
     message.reply({ content:`\`\`\`diff\n${atk_msg}\`\`\``, embeds:[embed,embed2] })
   }else{
-    
+    m_status.splice(1,1,monster_hp)
+    await monster_status.set(channel_id,m_status)
+    message.channel.send(`\`\`\`diff\n${atk_msg}\n- ${monster_name}のHP:${monster_hp}/${monster_level * 10 + 50}\`\`\``)
   }
 }
 
