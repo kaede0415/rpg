@@ -327,7 +327,7 @@ async function experiment(player_id,exp){
   const current_level = status[0]
   status.splice(2,1,newexp)
   await player_status.set(player_id,status)
-  if(newexp > (current_level+1)**2){
+  if(newexp >= (current_level+1)**2){
     status.splice(0,1,Math.floor(newexp**0.5))
     await player_status.set(player_id,status)
     return `**<@${player_id}>:** \`Lv.${current_level} -> Lv.${Math.floor(newexp**0.5)}\``
@@ -344,8 +344,9 @@ async function win_process(channel_id,exp){
   const members = ch_status[2]
   for(let i=0;i<members.length;i++){
     exp_members.push(`<@${members[i]}>は**${exp}EXP**を獲得した。`)
-    if(await experiment(members[i],exp) != "none"){
-      levelup_members.push(await experiment(members[i],exp))
+    const msg = await experiment(members[i],exp)
+    if(msg != "none"){
+      levelup_members.push(msg)
     }
     const status = await player_status.get(members[i])
     const p = Math.min((0.02*(exp**2))/status[2],0.1)
