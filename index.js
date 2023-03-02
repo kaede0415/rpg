@@ -342,7 +342,9 @@ async function win_process(channel_id,exp){
   const members = ch_status[2]
   for(let i=0;i<members.length;i++){
     exp_members.push(`<@${members[i]}>は**${exp}EXP**を獲得した。`)
-    levelup_members.push(await experiment(members[i],exp))
+    if(await experiment(members[i],exp) != ""){
+      levelup_members.push(await experiment(members[i],exp))
+    }
     const status = await player_status.get(members[i])
     const p = Math.min((0.02*(exp**2))/status[2],0.1)
     if(exp % 50 == 0 || Math.random() < p){
@@ -362,7 +364,6 @@ async function win_process(channel_id,exp){
   const levelup_message = levelup_members.join("\n")
   const item_message = item_members.join("\n")
   return [exp_message,levelup_message,item_message]
-  console
 }
 
 async function into_battle(player_id,channel_id){
