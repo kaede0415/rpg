@@ -96,7 +96,7 @@ async function _attack(player_id,channel_id,message){
     if(win_message[2] != ""){
       embed.addField("**アイテムを獲得:**",`>>> ${win_message[2]}`)
     }
-    await reset_battle(channel_id,true)
+    await reset_battle(channel_id,1)
     const m_info = await monster_status.get(channel_id)
     const m_level = m_info[0]
     const m_hp = m_info[1]
@@ -221,7 +221,7 @@ async function fireball(player_id,channel_id,message){
     if(win_message[2] != ""){
       embed.addField("**アイテムを獲得:**",`>>> ${win_message[2]}`)
     }
-    await reset_battle(channel_id,true)
+    await reset_battle(channel_id,1)
     const m_info = await monster_status.get(channel_id)
     const m_level = m_info[0]
     const m_hp = m_info[1]
@@ -304,7 +304,7 @@ async function ki(player_id,channel_id,message){
     if(win_message[2] != ""){
       embed.addField("**アイテムを獲得:**",`>>> ${win_message[2]}`)
     }
-    await reset_battle(channel_id,true)
+    await reset_battle(channel_id,1)
     const m_info = await monster_status.get(channel_id)
     const m_level = m_info[0]
     const m_hp = m_info[1]
@@ -661,7 +661,7 @@ client.on("messageCreate", async message => {
       message.reply({ embeds:[embed] })
     }
     if(command == "reset" || command == "re"){
-      const reset = await reset_battle(message.channel.id,false)
+      const reset = await reset_battle(message.channel.id,0)
       if(reset == "このchで戦闘は行われていませんよ...？"){
         return message.reply("このchで戦闘は行われていませんよ...？")
       }
