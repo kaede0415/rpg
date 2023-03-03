@@ -165,7 +165,7 @@ async function _item(channel_id,item_name,mentions,message){
       message.reply({ embeds:[embed] })
     }
   }else if(["気","k"].includes(item_name)){
-    
+    await ki(message.author.id,message.channel.id,message)
   }else{
     message.reply("Undefined_Item")
   }
@@ -269,6 +269,56 @@ async function pray(player_id,channel_id,mentions,message){
   return `祈りを捧げ、<@${prayed_id}>は復活した！\n<@${prayed_id}> 残りHP: 1`
 }
 
+async function ki(player_id,channel_id,message){
+  const intobattle = await into_battle(player_id,channel_id)
+  const status = await player_status.get(player_id)
+  const m_status = await monster_status.get(channel_id)
+  let player_hp = intobattle[0]
+  const error_message = intobattle[1]
+  if(error_message != ""){
+    return message.reply(error_message)
+  }
+  if(await consume_item("4",1,player_id) == false){
+    const embed = new MessageEmbed()
+    .setDescription(`>>> <@${player_id}>は気を持っていない！`)
+    .setColor("RANDOM")
+    return message.reply({ embeds:[embed] })
+  }
+  const player_level = status[0]
+  const player_attack = player_level*2+10
+  const monster_level = m_status[0]
+  let monster_hp = m_status[1]
+  const monster_name = m_status[2]
+  const damage = monster_hp
+  monster_hp -= damage
+  const atk_msg = `+ 破...！${monster_name}に即死を与えた！`
+  if(monster_hp <= 0){
+    const win_message = await win_process(channel_id,monster_level)
+    const embed = new MessageEmbed()
+    .setTitle("戦闘結果:")
+    .setDescription(`**${monster_name}を倒した！**\n>>> ${win_message[0]}`)
+    .setColor("RANDOM")
+    if(win_message[1] != ""){
+      embed.addField("**レベルアップ:**",`>>> ${win_message[1]}`)
+    }
+    if(win_message[2] != ""){
+      embed.addField("**アイテムを獲得:**",`>>> ${win_message[2]}`)
+    }
+    await reset_battle(channel_id,true)
+    const m_info = await monster_status.get(channel_id)
+    const m_level = m_info[0]
+    const m_hp = m_info[1]
+    const m_name = m_info[2]
+    const m_rank = m_info[3]
+    const m_img = m_info[4]
+    const embed2 = new MessageEmbed()
+    .setTitle(`ランク:${m_rank}\n${m_name}が待ち構えている...！\nLv.${m_level} HP:${m_hp}`)
+    .setImage(m_img)
+    .setColor("RANDOM")
+    message.reply({ content:`\`\`\`diff\n${atk_msg}\`\`\``, embeds:[embed,embed2] })
+  }
+}
+
 function get_player_attack(player_attack,rand){
   if(rand < 0.01) return 0
   else if(rand > 0.96) return player_attack*(2) + 10
@@ -366,7 +416,6 @@ async function consume_item(item_id,quantity,player_id){
         const func = itemList.splice(num,1)
         return
       }
-      console.log(itemIds)
       x.pop()
       x.push(hoge-Number(quantity))
     }
