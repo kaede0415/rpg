@@ -151,7 +151,11 @@ async function _item(channel_id,item_name,mentions,message){
   }else if(["ファイアボールの書","fire","f"].includes(item_name)){
     await fireball(message.author.id,message.channel.id,message)
   }else if(["エリクサー","elixir","e"].includes(item_name)){
-    message.reply("エリ草")
+    const msg = await elixir(message.author.id,message.channel.id,message)
+    const embed = new MessageEmbed()
+    .setDescription(`>>> ${msg}`)
+    .setColor("RANDOM")
+    message.reply({ embeds:[embed] })
   }else if(["祈りの書","i"].includes(item_name)){
     const msg = await pray(message.author.id,message.channel.id,mentions,message)
     if(msg != undefined){
@@ -169,7 +173,15 @@ async function elixir(player_id,channel_id,message){
   if(await consume_item("1",1,player_id) == false){
     return `<@${player_id}>はエリクサーを持っていない！`
   }
-  
+  const ch_status = await channel_status.get(channel_id)
+  const btl_members = ch_status[2]
+  for(let i=0;i<btl_members.length;i++){
+    const p_st = await player_status.get(btl_members[i])
+    const p_lv = p_st[0]
+    p_st.splice(1,1,p_lv*5+50)
+    await player_status.set(btl_members[i],p_st)
+  }
+  return `<@${player_id}>はエリクサーを使用した！このチャンネルの仲間全員が全回復した！`
 }
 
 async function fireball(player_id,channel_id,message){
