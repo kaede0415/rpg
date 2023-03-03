@@ -167,8 +167,9 @@ async function _item(channel_id,item_name,mentions,message){
 
 async function elixir(player_id,channel_id,message){
   if(await consume_item("1",1,player_id) == false){
-    return ``
+    return `<@${player_id}>はエリクサーを持っていない！`
   }
+  
 }
 
 async function fireball(player_id,channel_id,message){
