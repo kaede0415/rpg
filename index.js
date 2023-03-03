@@ -166,6 +166,8 @@ async function _item(channel_id,item_name,mentions,message){
     }
   }else if(["気","k"].includes(item_name)){
     await ki(message.author.id,message.channel.id,message)
+  }else if(["超新星爆発","b"].includes(item_name)){
+    await bigbang(message.author.id,message.channel.id,message)
   }else{
     message.reply("Undefined_Item")
   }
@@ -289,31 +291,29 @@ async function ki(player_id,channel_id,message){
   const damage = monster_hp
   monster_hp -= damage
   const atk_msg = `+ 破...！${monster_name}に即死を与えた！`
-  if(monster_hp <= 0){
-    const win_message = await win_process(channel_id,monster_level)
-    const embed = new MessageEmbed()
-    .setTitle("戦闘結果:")
-    .setDescription(`**${monster_name}を倒した！**\n>>> ${win_message[0]}`)
-    .setColor("RANDOM")
-    if(win_message[1] != ""){
-      embed.addField("**レベルアップ:**",`>>> ${win_message[1]}`)
-    }
-    if(win_message[2] != ""){
-      embed.addField("**アイテムを獲得:**",`>>> ${win_message[2]}`)
-    }
-    await reset_battle(channel_id,1)
-    const m_info = await monster_status.get(channel_id)
-    const m_level = m_info[0]
-    const m_hp = m_info[1]
-    const m_name = m_info[2]
-    const m_rank = m_info[3]
-    const m_img = m_info[4]
-    const embed2 = new MessageEmbed()
-    .setTitle(`ランク:${m_rank}\n${m_name}が待ち構えている...！\nLv.${m_level} HP:${m_hp}`)
-    .setImage(m_img)
-    .setColor("RANDOM")
-    message.reply({ content:`\`\`\`diff\n${atk_msg}\`\`\``, embeds:[embed,embed2] })
+  const win_message = await win_process(channel_id,monster_level)
+  const embed = new MessageEmbed()
+  .setTitle("戦闘結果:")
+  .setDescription(`**${monster_name}を倒した！**\n>>> ${win_message[0]}`)
+  .setColor("RANDOM")
+  if(win_message[1] != ""){
+    embed.addField("**レベルアップ:**",`>>> ${win_message[1]}`)
   }
+  if(win_message[2] != ""){
+    embed.addField("**アイテムを獲得:**",`>>> ${win_message[2]}`)
+  }
+  await reset_battle(channel_id,1)
+  const m_info = await monster_status.get(channel_id)
+  const m_level = m_info[0]
+  const m_hp = m_info[1]
+  const m_name = m_info[2]
+  const m_rank = m_info[3]
+  const m_img = m_info[4]
+  const embed2 = new MessageEmbed()
+  .setTitle(`ランク:${m_rank}\n${m_name}が待ち構えている...！\nLv.${m_level} HP:${m_hp}`)
+  .setImage(m_img)
+  .setColor("RANDOM")
+  message.reply({ content:`\`\`\`diff\n${atk_msg}\`\`\``, embeds:[embed,embed2] })
 }
 
 async function bigbang(player_id,channel_id,message){
@@ -325,7 +325,7 @@ async function bigbang(player_id,channel_id,message){
   if(error_message != ""){
     return message.reply(error_message)
   }
-  if(await consume_item("5",50,player_id) == false){
+  if(await consume_item("5",1,player_id) == false){
     const embed = new MessageEmbed()
     .setDescription(`>>> <@${player_id}>は超新星爆発を持っていない！`)
     .setColor("RANDOM")
@@ -338,7 +338,7 @@ async function bigbang(player_id,channel_id,message){
   const monster_name = m_status[2]
   const damage = Math.floor(player_attack*100000000*Math.random())
   monster_hp -= damage
-  const atk_msg = `+ ビッグバン！${monster_name}に${damage}を与えた！\n! 先の50体の`
+  let atk_msg = `+ ビッグバン！${monster_name}に${damage}を与えた！\n! 先の50体の敵が吹っ飛んだ！`
   if(monster_hp <= 0){
     const win_message = await win_process(channel_id,monster_level)
     const embed = new MessageEmbed()
@@ -351,7 +351,7 @@ async function bigbang(player_id,channel_id,message){
     if(win_message[2] != ""){
       embed.addField("**アイテムを獲得:**",`>>> ${win_message[2]}`)
     }
-    await reset_battle(channel_id,1)
+    await reset_battle(channel_id,50)
     const m_info = await monster_status.get(channel_id)
     const m_level = m_info[0]
     const m_hp = m_info[1]
@@ -363,6 +363,11 @@ async function bigbang(player_id,channel_id,message){
     .setImage(m_img)
     .setColor("RANDOM")
     message.reply({ content:`\`\`\`diff\n${atk_msg}\`\`\``, embeds:[embed,embed2] })
+  }else{
+    m_status.splice(1,1,monster_hp)
+    await monster_status.set(channel_id,m_status)
+    atk_msg = `+ ビッグバン！${monster_name}に${damage}を与えた！`
+    message.channel.send(`\`\`\`diff\n${atk_msg}\n- ${monster_name}のHP:${monster_hp}/${monster_level * 10 + 50}\`\`\``)
   }
 }
 
