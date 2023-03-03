@@ -169,7 +169,10 @@ async function _item(channel_id,item_name,mentions,message){
   }else if(["超新星爆発","b"].includes(item_name)){
     await bigbang(message.author.id,message.channel.id,message)
   }else{
-    message.reply("Undefined_Item")
+    const embed = new MessageEmbed()
+    .setDescription(`>>> ${item_name}？なんすか${item_name}って...`)
+    .setColor("RANDOM")
+    message.reply({ embeds:[embed] })
   }
 }
 
