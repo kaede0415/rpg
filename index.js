@@ -605,7 +605,7 @@ async function training(player_id,message){
   const p_status = await player_status.get(player_id)
   const nowexp = p_status[2]
   const exp = Math.ceil(Math.sqrt(nowexp) * 3 / 5)
-  let comment = `${exp.toLocaleString()}の経験値を得た。`
+  let comment = `正解！${exp.toLocaleString()}の経験値を得た。`
   const q_embed = new MessageEmbed()
   .setDescription(`「${q}」の読み方をひらがなで答えなさい。`)
   .setColor("RANDOM")
@@ -618,10 +618,39 @@ async function training(player_id,message){
       if(expe != "none"){
         comment.concat(`\n${await experiment(player_id,exp)}`)
       }
-      
+      if(Math.random() < 0.005){
+        comment.concat(`\n\`エリクサー\`を手に入れた！`)
+        await obtain_item(1,1,player_id)
+      }
+      if(Math.random() < 0.1){
+        comment.concat(`\n\`ファイアボールの書\`を手に入れた！`)
+        await obtain_item(2,1,player_id)
+      }
+      if(Math.random() < 0.1){
+        comment.concat(`\n\`祈りの書\`を手に入れた！`)
+        await obtain_item(3,1,player_id)
+      }
+      const t_embed = new MessageEmbed()
+      .setDescription(comment)
+      .setColor("RANDOM")
+      msg.edit({ embeds:[t_embed] })
+      collector.stop();
     }else{
-      
+      const f_embed = new MessageEmbed()
+      .setDescription(`不正解！正解は「${a}」だ。`)
+      .setColor("RANDOM")
+      msg.edit({ embeds:[f_embed] })
+      collector.stop();
     }
+  });
+  collector.on('end', async (collected, reason) => {
+    if(reason == "time"){
+      const l_embed = new MessageEmbed()
+      .setDescription(`時間切れ！正解は「${a}」だ。`)
+      .setColor("RANDOM")
+      msg.edit({ embeds:[l_embed] })
+    }
+  });
 }
 
 function generate_monster(rank){
@@ -741,6 +770,9 @@ client.on("messageCreate", async message => {
       .setDescription(`<@${message.author.id}>は<#${message.channel.id}>の戦闘に参加した！`)
       .setColor("RANDOM")
       message.reply({ embeds:[embed] })
+    }
+    if(command == "training" || command == "t"){
+      await training(message.author.id,message)
     }
     if(command == "reset" || command == "re"){
       const reset = await reset_battle(message.channel.id,0)
