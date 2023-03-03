@@ -506,7 +506,7 @@ async function into_battle(player_id,channel_id){
   return [player_hp,error_message]
 }
 
-async function reset_battle(channel_id,level_up){
+async function reset_battle(channel_id,level){
   let ch_status = await channel_status.get(channel_id)
   if(ch_status[1] == false){
     return "このchで戦闘は行われていませんよ...？"
@@ -519,9 +519,14 @@ async function reset_battle(channel_id,level_up){
   ch_status.splice(1,1,false)
   ch_status.splice(2,1,[])
   await channel_status.set(channel_id,ch_status)
-  if(level_up == true){
+  if(level == 0){
     ch_status = await channel_status.get(channel_id)
-    const boss_level = ch_status[0]+1
+    const monster_info = [ch_status[0],ch_status[0]*10+50]
+    const info = generate_monster("normal")
+    await monster_status.set(channel_id,monster_info.concat(info))
+  }else{
+    ch_status = await channel_status.get(channel_id)
+    const boss_level = ch_status[0]+level
     ch_status.splice(0,1,boss_level)
     await channel_status.set(channel_id,ch_status)
     const monster_info = [boss_level,boss_level*10+50]
@@ -533,11 +538,6 @@ async function reset_battle(channel_id,level_up){
     }else{
       info = generate_monster("random")
     }
-    await monster_status.set(channel_id,monster_info.concat(info))
-  }else if(level_up == false){
-    ch_status = await channel_status.get(channel_id)
-    const monster_info = [ch_status[0],ch_status[0]*10+50]
-    const info = generate_monster("normal")
     await monster_status.set(channel_id,monster_info.concat(info))
   }
 }
