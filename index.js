@@ -597,6 +597,10 @@ async function reset_battle(channel_id,level){
   }
 }
 
+async function training(player_id,message){
+  
+}
+
 function generate_monster(rank){
   try{
     if(rank == "random"){
