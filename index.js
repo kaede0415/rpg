@@ -31,8 +31,9 @@ const newbutton = (buttondata) => {
 };
 const prefix = "_"
 const cmd_list = ["help","status","st","attack","atk","item","i"]
-const json = require("./jsons/command.json")
+const command_json = require("./jsons/command.json")
 const item_json = require("./jsons/item.json")
+const training_json = require("./jsons/training.json")
 const admin_list = ["945460382733058109"];
 process.env.TZ = 'Asia/Tokyo'
 
@@ -598,7 +599,29 @@ async function reset_battle(channel_id,level){
 }
 
 async function training(player_id,message){
-  
+  const random = Math.floor(Math.random()*training_json.length);
+  const q = training_json[random][0]
+  const a = training_json[random][1]
+  const p_status = await player_status.get(player_id)
+  const nowexp = p_status[2]
+  const exp = Math.ceil(Math.sqrt(nowexp) * 3 / 5)
+  let comment = `${exp.toLocaleString()}の経験値を得た。`
+  const q_embed = new MessageEmbed()
+  .setDescription(`「${q}」の読み方をひらがなで答えなさい。`)
+  .setColor("RANDOM")
+  const msg = await message.reply({ embeds:[q_embed] })
+  const filter = m => m.author.id == message.author.id;
+  const collector = message.channel.createMessageCollector({ filter: filter, time: 15000 });
+  collector.on('collect', async m => {
+    if(m.content == a){
+      const expe = await experiment(player_id,exp)
+      if(expe != "none"){
+        comment.concat(`\n${await experiment(player_id,exp)}`)
+      }
+      
+    }else{
+      
+    }
 }
 
 function generate_monster(rank){
