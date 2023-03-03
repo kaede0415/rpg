@@ -164,6 +164,8 @@ async function _item(channel_id,item_name,mentions,message){
       .setColor("RANDOM")
       message.reply({ embeds:[embed] })
     }
+  }else if(["気","k"].includes(item_name)){
+    
   }else{
     message.reply("Undefined_Item")
   }
@@ -247,8 +249,6 @@ async function pray(player_id,channel_id,mentions,message){
   const ch_status = await channel_status.get(channel_id)
   const prayed_hp = prayed_status[1]
   const btl_members = ch_status[2]
-  const prayed_tag = client.users.cache.get(prayed_id).tag
-  const player_tag = client.users.cache.get(player_id).tag
   if(prayed_id == player_id){
     return `自分を祈ることは出来ない！`
   }else if(!btl_members.includes(prayed_id)){
@@ -266,7 +266,7 @@ async function pray(player_id,channel_id,mentions,message){
   }
   prayed_status.splice(1,1,1)
   await player_status.set(prayed_id,prayed_status)
-  return `祈りを捧げ、${prayed_tag}は復活した！\n${prayed_tag} 残りHP: 1`
+  return `祈りを捧げ、<@${prayed_id}>は復活した！\n<@${prayed_id}> 残りHP: 1`
 }
 
 function get_player_attack(player_attack,rand){
