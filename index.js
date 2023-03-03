@@ -156,7 +156,7 @@ async function _item(channel_id,item_name,mentions,message){
     const msg = await pray(message.author.id,message.channel.id,mentions,message)
     if(msg != undefined){
       const embed = new MessageEmbed()
-      .setDescription(`>>> \`\`\`${msg}\`\`\``)
+      .setDescription(`>>> ${msg}`)
       .setColor("RANDOM")
       message.reply({ embeds:[embed] })
     }
@@ -182,7 +182,7 @@ async function fireball(player_id,channel_id,message){
   }
   if(await consume_item("2",1,player_id) == false){
     const embed = new MessageEmbed()
-    .setDescription(`<@${player_id}>はファイボールの書を持っていない！`)
+    .setDescription(`>>> <@${player_id}>はファイボールの書を持っていない！`)
     .setColor("RANDOM")
     return message.reply({ embeds:[embed] })
   }
@@ -239,11 +239,11 @@ async function pray(player_id,channel_id,mentions,message){
   if(prayed_id == player_id){
     return `自分を祈ることは出来ない！`
   }else if(!btl_members.includes(prayed_id)){
-    return `${prayed_tag}は戦闘に参加していない！`
+    return `<@${prayed_id}>は戦闘に参加していない！`
   }else if(prayed_hp != 0){
-    return `${prayed_tag}はまだ生きている！`
+    return `<@${prayed_id}>はまだ生きている！`
   }else if(await consume_item("3",1,player_id) == false){
-    return `${player_tag}は祈りの書を持っていない！`
+    return `<@${player_id}>は祈りの書を持っていない！`
   }
   const intobattle = await into_battle(player_id,channel_id)
   const error_message = intobattle[1]
