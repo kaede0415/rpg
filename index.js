@@ -616,18 +616,18 @@ async function training(player_id,message){
     if(m.content == a){
       const expe = await experiment(player_id,exp)
       if(expe != "none"){
-        comment.concat(`\n${await experiment(player_id,exp)}`)
+        comment = comment.concat(`\n${await experiment(player_id,exp)}`)
       }
       if(Math.random() < 0.005){
-        comment.concat(`\n\`エリクサー\`を手に入れた！`)
+        comment = comment.concat(`\n\`エリクサー\`を手に入れた！`)
         await obtain_item(1,1,player_id)
       }
       if(Math.random() < 0.1){
-        comment.concat(`\n\`ファイアボールの書\`を手に入れた！`)
+        comment = comment.concat(`\n\`ファイアボールの書\`を手に入れた！`)
         await obtain_item(2,1,player_id)
       }
       if(Math.random() < 0.1){
-        comment.concat(`\n\`祈りの書\`を手に入れた！`)
+        comment = comment.concat(`\n\`祈りの書\`を手に入れた！`)
         await obtain_item(3,1,player_id)
       }
       const t_embed = new MessageEmbed()
@@ -651,6 +651,11 @@ async function training(player_id,message){
       msg.edit({ embeds:[l_embed] })
     }
   });
+}
+
+async function get_monster_rank(channel_id){
+  const m_info = await monster_status.get(channel_id)
+  return m_info[3]
 }
 
 function generate_monster(rank){
