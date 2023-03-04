@@ -616,7 +616,7 @@ async function training(player_id,message){
     if(m.content == a){
       const expe = await experiment(player_id,exp)
       if(expe != "none"){
-        comment += `\n${await experiment(player_id,exp)}`
+        comment += `\n${expe}`
       }
       if(Math.random() < 0.005){
         comment += `\n\`エリクサー\`を手に入れた！`
@@ -756,7 +756,7 @@ client.on("messageCreate", async message => {
       }else{
         embed.addField("戦闘状況",`<#${status[4]}>で戦闘中`,true)
       }
-      message.reply({ embeds:[embed] })
+      message.reply({ embeds:[embed], allowedMentions: { parse: [] } })
     }
     if(command == "attack" || command == "atk"){
       await _attack(message.author.id,message.channel.id,message)
@@ -769,12 +769,12 @@ client.on("messageCreate", async message => {
       const intobattle = await into_battle(message.author.id,message.channel.id)
       const error_message = intobattle[1]
       if(error_message != ""){
-        return message.reply(error_message)
+        return message.reply({ content:error_message, allowedMentions: { parse: [] } })
       }
       const embed = new MessageEmbed()
       .setDescription(`<@${message.author.id}>は<#${message.channel.id}>の戦闘に参加した！`)
       .setColor("RANDOM")
-      message.reply({ embeds:[embed] })
+      message.reply({ embeds:[embed], allowedMentions: { parse: [] } })
     }
     if(command == "training" || command == "t"){
       await training(message.author.id,message)
@@ -782,14 +782,14 @@ client.on("messageCreate", async message => {
     if(command == "reset" || command == "re"){
       const reset = await reset_battle(message.channel.id,0)
       if(reset == "このchで戦闘は行われていませんよ...？"){
-        return message.reply("このchで戦闘は行われていませんよ...？")
+        return message.reply({ content: "このchで戦闘は行われていませんよ...？", allowedMentions: { parse: [] } })
       }
       const m_info = await monster_status.get(message.channel.id)
       const embed = new MessageEmbed()
       .setTitle(`ランク:${m_info[3]}\n${m_info[2]}が待ち構えている...！\nLv.${m_info[0]} HP:${m_info[1]}`)
       .setImage(m_info[4])
       .setColor("RANDOM")
-      message.channel.send({ embeds:[embed] })
+      message.channel.send({ embeds:[embed], allowedMentions: { parse: [] } })
     }
     if(command == "itemid")
       if(admin_list.includes(message.author.id)){
