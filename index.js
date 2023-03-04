@@ -579,11 +579,15 @@ async function reset_battle(channel_id,level){
     ch_status = await channel_status.get(channel_id)
     const monster_info = [ch_status[0],ch_status[0]*10+50]
     let info;
-    const nowrank = get_monster_rank(channel_id)
-    if(get_monster_rank(channel_id) != "【強敵】" || get_monster_rank(channel_id) != "【超強敵】"){
+    const nowrank = await get_monster_rank(channel_id)
+    if(nowrank != "【強敵】" && nowrank != "【超強敵】"){
       info = generate_monster("normal")
     }else{
-      if()
+      if(nowrank == "【強敵】"){
+        info = generate_monster("kyouteki")
+      }else if(nowrank == "【超強敵】"){
+        info = generate_monster("super_kyouteki")
+      }
     }
     await monster_status.set(channel_id,monster_info.concat(info))
   }else{
