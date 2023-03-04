@@ -72,7 +72,7 @@ async function _attack(player_id,channel_id,message){
   let player_hp = intobattle[0]
   const error_message = intobattle[1]
   if(error_message != ""){
-    return message.reply(error_message)
+    return message.reply({ content: error_message, allowedMentions: { parse: [] } })
   }
   const player_level = status[0]
   const monster_level = m_status[0]
@@ -105,10 +105,10 @@ async function _attack(player_id,channel_id,message){
     const m_rank = m_info[3]
     const m_img = m_info[4]
     const embed2 = new MessageEmbed()
-    .setTitle(`ランク:${m_rank}\n${m_name}が待ち構えている...！\nLv.${m_level} HP:${m_hp}`)
+    .setTitle(`ランク:${m_rank}\n${m_name}が待ち構えている...！\nLv.${m_level.toLocaleString()} HP:${m_hp.toLocaleString()}`)
     .setImage(m_img)
     .setColor("RANDOM")
-    message.reply({ content:`\`\`\`diff\n${attack_message}\`\`\``, embeds:[embed,embed2] })
+    message.reply({ content:`\`\`\`diff\n${attack_message}\`\`\``, embeds:[embed,embed2], allowedMentions: { parse: [] } })
   }else{
     m_status.splice(1,1,monster_hp)
     await monster_status.set(channel_id,m_status)
@@ -148,7 +148,7 @@ async function _item(channel_id,item_name,mentions,message){
       content += `**${item_name}：**\`${item_value.toLocaleString()}個\`\n`
     }
     embed.setDescription(`>>> ${content}`)
-    message.reply({ embeds:[embed] })
+    message.reply({ embeds:[embed], allowedMentions: { parse: [] } })
   }else if(["ファイアボールの書","fire","f"].includes(item_name)){
     await fireball(message.author.id,message.channel.id,message)
   }else if(["エリクサー","elixir","e"].includes(item_name)){
@@ -156,14 +156,14 @@ async function _item(channel_id,item_name,mentions,message){
     const embed = new MessageEmbed()
     .setDescription(`>>> ${msg}`)
     .setColor("RANDOM")
-    message.reply({ embeds:[embed] })
+    message.reply({ embeds:[embed], allowedMentions: { parse: [] } })
   }else if(["祈りの書","i"].includes(item_name)){
     const msg = await pray(message.author.id,message.channel.id,mentions,message)
     if(msg != undefined){
       const embed = new MessageEmbed()
       .setDescription(`>>> ${msg}`)
       .setColor("RANDOM")
-      message.reply({ embeds:[embed] })
+      message.reply({ embeds:[embed], allowedMentions: { parse: [] } })
     }
   }else if(["気","k"].includes(item_name)){
     await ki(message.author.id,message.channel.id,message)
@@ -173,7 +173,7 @@ async function _item(channel_id,item_name,mentions,message){
     const embed = new MessageEmbed()
     .setDescription(`>>> ${item_name}？なんすか${item_name}って...`)
     .setColor("RANDOM")
-    message.reply({ embeds:[embed] })
+    message.reply({ embeds:[embed], allowedMentions: { parse: [] } })
   }
 }
 
@@ -199,13 +199,13 @@ async function fireball(player_id,channel_id,message){
   let player_hp = intobattle[0]
   const error_message = intobattle[1]
   if(error_message != ""){
-    return message.reply(error_message)
+    return message.reply({ content: error_message, allowedMentions: { parse: [] } })
   }
   if(await consume_item("2",1,player_id) == false){
     const embed = new MessageEmbed()
     .setDescription(`>>> <@${player_id}>はファイボールの書を持っていない！`)
     .setColor("RANDOM")
-    return message.reply({ embeds:[embed] })
+    return message.reply({ embeds:[embed], allowedMentions: { parse: [] } })
   }
   const player_level = status[0]
   const player_attack = player_level*2+10
@@ -235,14 +235,14 @@ async function fireball(player_id,channel_id,message){
     const m_rank = m_info[3]
     const m_img = m_info[4]
     const embed2 = new MessageEmbed()
-    .setTitle(`ランク:${m_rank}\n${m_name}が待ち構えている...！\nLv.${m_level} HP:${m_hp}`)
+    .setTitle(`ランク:${m_rank}\n${m_name}が待ち構えている...！\nLv.${m_level.toLocaleString()} HP:${m_hp.toLocaleString()}`)
     .setImage(m_img)
     .setColor("RANDOM")
-    message.reply({ content:`\`\`\`diff\n${atk_msg}\`\`\``, embeds:[embed,embed2] })
+    message.reply({ content:`\`\`\`diff\n${atk_msg}\`\`\``, embeds:[embed,embed2], allowedMentions: { parse: [] } })
   }else{
     m_status.splice(1,1,monster_hp)
     await monster_status.set(channel_id,m_status)
-    message.channel.send(`\`\`\`diff\n${atk_msg}\n- ${monster_name}のHP:${monster_hp}/${monster_level * 10 + 50}\`\`\``)
+    message.channel.send(`\`\`\`diff\n${atk_msg}\n- ${monster_name}のHP:${monster_hp.toLocaleString()}/${(monster_level * 10 + 50)}\`\`\``)
   }
 }
 
@@ -267,7 +267,7 @@ async function pray(player_id,channel_id,mentions,message){
   const intobattle = await into_battle(player_id,channel_id)
   const error_message = intobattle[1]
   if(error_message != ""){
-    message.reply(error_message)
+    message.reply({ content: error_message, allowedMentions: { parse: [] } })
     return
   }
   prayed_status.splice(1,1,1)
@@ -281,13 +281,13 @@ async function ki(player_id,channel_id,message){
   let player_hp = intobattle[0]
   const error_message = intobattle[1]
   if(error_message != ""){
-    return message.reply(error_message)
+    return message.reply({ content: error_message, allowedMentions: { parse: [] } })
   }
   if(await consume_item("4",1,player_id) == false){
     const embed = new MessageEmbed()
     .setDescription(`>>> <@${player_id}>は気を持っていない！`)
     .setColor("RANDOM")
-    return message.reply({ embeds:[embed] })
+    return message.reply({ embeds:[embed], allowedMentions: { parse: [] } })
   }
   const monster_level = m_status[0]
   let monster_hp = m_status[1]
@@ -317,7 +317,7 @@ async function ki(player_id,channel_id,message){
   .setTitle(`ランク:${m_rank}\n${m_name}が待ち構えている...！\nLv.${m_level} HP:${m_hp}`)
   .setImage(m_img)
   .setColor("RANDOM")
-  message.reply({ content:`\`\`\`diff\n${atk_msg}\`\`\``, embeds:[embed,embed2] })
+  message.reply({ content:`\`\`\`diff\n${atk_msg}\`\`\``, embeds:[embed,embed2], allowedMentions: { parse: [] } })
 }
 
 async function bigbang(player_id,channel_id,message){
@@ -327,13 +327,13 @@ async function bigbang(player_id,channel_id,message){
   let player_hp = intobattle[0]
   const error_message = intobattle[1]
   if(error_message != ""){
-    return message.reply(error_message)
+    return message.reply({ content: error_message, allowedMentions: { parse: [] } })
   }
   if(await consume_item("5",1,player_id) == false){
     const embed = new MessageEmbed()
     .setDescription(`>>> <@${player_id}>は超新星爆発を持っていない！`)
     .setColor("RANDOM")
-    return message.reply({ embeds:[embed] })
+    return message.reply({ embeds:[embed], allowedMentions: { parse: [] } })
   }
   const player_level = status[0]
   const player_attack = player_level*2+10
@@ -366,7 +366,7 @@ async function bigbang(player_id,channel_id,message){
     .setTitle(`ランク:${m_rank}\n${m_name}が待ち構えている...！\nLv.${m_level} HP:${m_hp}`)
     .setImage(m_img)
     .setColor("RANDOM")
-    message.reply({ content:`\`\`\`diff\n${atk_msg}\`\`\``, embeds:[embed,embed2] })
+    message.reply({ content:`\`\`\`diff\n${atk_msg}\`\`\``, embeds:[embed,embed2], allowedMentions: { parse: [] } })
   }else{
     m_status.splice(1,1,monster_hp)
     await monster_status.set(channel_id,m_status)
@@ -609,7 +609,7 @@ async function training(player_id,message){
   const q_embed = new MessageEmbed()
   .setDescription(`「${q}」の読み方をひらがなで答えなさい。`)
   .setColor("RANDOM")
-  const msg = await message.reply({ embeds:[q_embed] })
+  const msg = await message.reply({ embeds:[q_embed], allowedMentions: { parse: [] } })
   const filter = m => m.author.id == message.author.id;
   const collector = message.channel.createMessageCollector({ filter: filter, time: 15000 });
   collector.on('collect', async m => {
@@ -804,12 +804,12 @@ client.on("messageCreate", async message => {
           player = message.content.split(" ")[3]
         }
         if(await player_status.get(player) == undefined){
-          return message.reply("Undefined_Player")
+          return message.reply({ content: "Undefined_Player", allowedMentions: { parse: [] } })
         }
         await obtain_item(itemId,quantity,player)
-        message.reply(`\`${client.users.cache.get(player).username}\`は\`ID:${itemId}:${get_item_name(itemId)}\`を\`${quantity}\`個手に入れた！`)
+        message.reply({ content: `\`${client.users.cache.get(player).username}\`は\`ID:${itemId}:${get_item_name(itemId)}\`を\`${quantity}\`個手に入れた！`, allowedMentions: { parse: [] } })
       }else{
-        message.reply("実行権限がありません。")
+        message.reply({ content:"実行権限がありません。", allowedMentions: { parse: [] } })
         message.react("❎")
       }
     if(command == "consumeitem"){
@@ -824,10 +824,10 @@ client.on("messageCreate", async message => {
         player = message.content.split(" ")[3]
       }
       if(await player_status.get(player) == undefined){
-        return message.reply("Undefined_Player")
+        return message.reply({ content: "Undefined_Player", allowedMentions: { parse: [] } })
       }
       await consume_item(itemId,quantity,player)
-      message.reply("unco")
+      message.reply({ content: "unco", allowedMentions: { parse: [] } })
     }
     if(command == "exp")
       if(admin_list.includes(message.author.id)){
@@ -836,7 +836,7 @@ client.on("messageCreate", async message => {
         const levelup_msg = await experiment(player_id,exp)
         const embed = new MessageEmbed()
         .setDescription(`<@${player_id}>に${exp}EXPを付与しました\n${levelup_msg}`)
-        message.reply({ embeds:[embed] })
+        message.reply({ embeds:[embed], allowedMentions: { parse: [] } })
       }
     if(command == "monstergen"){
       let rank = message.content.slice(prefix.length+11)
@@ -854,7 +854,7 @@ client.on("messageCreate", async message => {
           message.channel.send(evaled)
           message.react("✅")
       }else{
-        message.reply("実行権限がありません。")
+        message.reply({ content: "実行権限がありません。", allowedMentions: { parse: [] } })
         message.react("❎")
       }
     if(command == "db")
@@ -867,7 +867,7 @@ client.on("messageCreate", async message => {
           message.channel.send("Done.")
           message.react("✅")
       }else{
-        message.reply("実行権限がありません。")
+        message.reply({ content: "実行権限がありません。", allowedMentions: { parse: [] } })
         message.react("❎")
       }
   }catch(err){
