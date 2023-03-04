@@ -488,7 +488,7 @@ async function experiment(player_id,exp){
   const current_level = status[0]
   status.splice(2,1,newexp)
   await player_status.set(player_id,status)
-  if(newexp >= (current_level+1)**2){
+  if(Math.floor(newexp**0.5) != current_level){
     status.splice(0,1,Math.floor(newexp**0.5))
     await player_status.set(player_id,status)
     return `**<@${player_id}>:** \`Lv.${current_level} -> Lv.${Math.floor(newexp**0.5)}\``
@@ -616,18 +616,18 @@ async function training(player_id,message){
     if(m.content == a){
       const expe = await experiment(player_id,exp)
       if(expe != "none"){
-        comment = comment.concat(`\n${await experiment(player_id,exp)}`)
+        comment += `\n${await experiment(player_id,exp)}`
       }
       if(Math.random() < 0.005){
-        comment = comment.concat(`\n\`エリクサー\`を手に入れた！`)
+        comment += `\n\`エリクサー\`を手に入れた！`
         await obtain_item(1,1,player_id)
       }
       if(Math.random() < 0.1){
-        comment = comment.concat(`\n\`ファイアボールの書\`を手に入れた！`)
+        comment += `\n\`ファイアボールの書\`を手に入れた！`
         await obtain_item(2,1,player_id)
       }
       if(Math.random() < 0.1){
-        comment = comment.concat(`\n\`祈りの書\`を手に入れた！`)
+        comment += `\n\`祈りの書\`を手に入れた！`
         await obtain_item(3,1,player_id)
       }
       const t_embed = new MessageEmbed()
