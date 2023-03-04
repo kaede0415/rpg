@@ -214,7 +214,7 @@ async function fireball(player_id,channel_id,message){
   const monster_name = m_status[2]
   const damage = Math.floor(player_level * (1 + Math.random()) /10)
   monster_hp -= damage
-  const atk_msg = `+ ファイアボール！${monster_name}に${damage}のダメージを与えた！`
+  const atk_msg = `+ ファイアボール！${monster_name}に${damage.toLocaleString()}のダメージを与えた！`
   if(monster_hp <= 0){
     const win_message = await win_process(channel_id,monster_level)
     const embed = new MessageEmbed()
@@ -242,7 +242,7 @@ async function fireball(player_id,channel_id,message){
   }else{
     m_status.splice(1,1,monster_hp)
     await monster_status.set(channel_id,m_status)
-    message.channel.send(`\`\`\`diff\n${atk_msg}\n- ${monster_name}のHP:${monster_hp.toLocaleString()}/${(monster_level * 10 + 50)}\`\`\``)
+    message.channel.send(`\`\`\`diff\n${atk_msg}\n- ${monster_name}のHP:${monster_hp.toLocaleString()}/${(monster_level * 10 + 50).toLocaleString()}\`\`\``)
   }
 }
 
@@ -314,7 +314,7 @@ async function ki(player_id,channel_id,message){
   const m_rank = m_info[3]
   const m_img = m_info[4]
   const embed2 = new MessageEmbed()
-  .setTitle(`ランク:${m_rank}\n${m_name}が待ち構えている...！\nLv.${m_level} HP:${m_hp}`)
+  .setTitle(`ランク:${m_rank}\n${m_name}が待ち構えている...！\nLv.${m_level.toLocaleString()} HP:${m_hp.toLocaleString()}`)
   .setImage(m_img)
   .setColor("RANDOM")
   message.reply({ content:`\`\`\`diff\n${atk_msg}\`\`\``, embeds:[embed,embed2], allowedMentions: { parse: [] } })
@@ -342,7 +342,7 @@ async function bigbang(player_id,channel_id,message){
   const monster_name = m_status[2]
   const damage = Math.floor(player_attack*100000000*Math.random())
   monster_hp -= damage
-  let atk_msg = `+ ビッグバン！${monster_name}に${damage}を与えた！\n! 先の50体の敵が吹っ飛んだ！`
+  let atk_msg = `+ ビッグバン！${monster_name}に${damage.toLocaleString()}を与えた！\n! 先の50体の敵が吹っ飛んだ！`
   if(monster_hp <= 0){
     const win_message = await win_process(channel_id,monster_level)
     const embed = new MessageEmbed()
@@ -363,15 +363,15 @@ async function bigbang(player_id,channel_id,message){
     const m_rank = m_info[3]
     const m_img = m_info[4]
     const embed2 = new MessageEmbed()
-    .setTitle(`ランク:${m_rank}\n${m_name}が待ち構えている...！\nLv.${m_level} HP:${m_hp}`)
+    .setTitle(`ランク:${m_rank}\n${m_name}が待ち構えている...！\nLv.${m_level.toLocaleString()} HP:${m_hp.toLocaleString()}`)
     .setImage(m_img)
     .setColor("RANDOM")
     message.reply({ content:`\`\`\`diff\n${atk_msg}\`\`\``, embeds:[embed,embed2], allowedMentions: { parse: [] } })
   }else{
     m_status.splice(1,1,monster_hp)
     await monster_status.set(channel_id,m_status)
-    atk_msg = `+ ビッグバン！${monster_name}に${damage}を与えた！`
-    message.channel.send(`\`\`\`diff\n${atk_msg}\n- ${monster_name}のHP:${monster_hp}/${monster_level * 10 + 50}\`\`\``)
+    atk_msg = `+ ビッグバン！${monster_name}に${damage.toLocaleString()}を与えた！`
+    message.channel.send(`\`\`\`diff\n${atk_msg}\n- ${monster_name}のHP:${monster_hp.toLocaleString()}/${(monster_level * 10 + 50).toLocaleString()}\`\`\``)
   }
 }
 
@@ -383,17 +383,17 @@ function get_player_attack(player_attack,rand){
 
 function get_attack_message(player_name,player_attack,monster_name,monster_level,monster_hp,rand){
   if(player_attack == 0)
-    return `+ ${player_name}の攻撃！${monster_name}にかわされてしまった！\n- ${monster_name}のHP:${monster_hp}/${monster_level * 10 + 50}`
+    return `+ ${player_name}の攻撃！${monster_name}にかわされてしまった！\n- ${monster_name}のHP:${monster_hp.toLocaleString()}/${(monster_level * 10 + 50).toLocaleString()}`
   else if(rand > 0.96)
     if(monster_hp <= 0)
-      return `+ ${player_name}の攻撃！会心の一撃！${monster_name}に${player_attack}のダメージを与えた！`
+      return `+ ${player_name}の攻撃！会心の一撃！${monster_name}に${player_attack.toLocaleString()}のダメージを与えた！`
     else
-      return `+ ${player_name}の攻撃！会心の一撃！${monster_name}に${player_attack}のダメージを与えた！\n- ${monster_name}のHP:${monster_hp}/${monster_level * 10 + 50}`
+      return `+ ${player_name}の攻撃！会心の一撃！${monster_name}に${player_attack.toLocaleString()}のダメージを与えた！\n- ${monster_name}のHP:${monster_hp.toLocaleString()}/${(monster_level * 10 + 50).toLocaleString()}`
   else
     if(monster_hp <= 0)
-      return `+ ${player_name}の攻撃！${monster_name}に${player_attack}のダメージを与えた！`
+      return `+ ${player_name}の攻撃！${monster_name}に${player_attack.toLocaleString()}のダメージを与えた！`
     else
-      return `+ ${player_name}の攻撃！${monster_name}に${player_attack}のダメージを与えた！\n- ${monster_name}のHP:${monster_hp}/${monster_level * 10 + 50}`
+      return `+ ${player_name}の攻撃！${monster_name}に${player_attack.toLocaleString()}のダメージを与えた！\n- ${monster_name}のHP:${monster_hp.toLocaleString()}/${(monster_level * 10 + 50).toLocaleString()}`
 }
 
 function get_monster_attack(monster_level){
@@ -410,11 +410,11 @@ function get_monster_attack(monster_level){
 
 function monster_attack_process(player_name,player_level,player_hp,monster_name,monster_attack){
   if(monster_attack == 0)
-    return `+ ${monster_name}の攻撃！${player_name}は華麗にかわした！\n- ${player_name}のHP:${player_hp}/${player_level * 5 + 50}`
+    return `+ ${monster_name}の攻撃！${player_name}は華麗にかわした！\n- ${player_name}のHP:${player_hp.toLocaleString()}/${(player_level * 5 + 50).toLocaleString()}`
   else if(player_hp <= 0)
-    return `+ ${monster_name}の攻撃！${player_name}は${monster_attack}のダメージを受けた。\n- ${player_name}のHP:0/${player_level * 5 + 50}\n- ${player_name}はやられてしまった。。。`
+    return `+ ${monster_name}の攻撃！${player_name}は${monster_attack.toLocaleString()}のダメージを受けた。\n- ${player_name}のHP:0/${(player_level * 5 + 50).toLocaleString()}\n- ${player_name}はやられてしまった。。。`
   else 
-    return `+ ${monster_name}の攻撃！${player_name}は${monster_attack}のダメージを受けた。\n- ${player_name}のHP:${player_hp}/${player_level * 5 + 50}`
+    return `+ ${monster_name}の攻撃！${player_name}は${monster_attack.toLocaleString()}のダメージを受けた。\n- ${player_name}のHP:${player_hp.toLocaleString()}/${(player_level * 5 + 50).toLocaleString()}`
 }
 
 async function get_item_quantity(player_id,item_id){
@@ -491,7 +491,7 @@ async function experiment(player_id,exp){
   if(Math.floor(newexp**0.5) != current_level){
     status.splice(0,1,Math.floor(newexp**0.5))
     await player_status.set(player_id,status)
-    return `**<@${player_id}>:** \`Lv.${current_level} -> Lv.${Math.floor(newexp**0.5)}\``
+    return `**<@${player_id}>:** \`Lv.${current_level.toLocaleString()} -> Lv.${Math.floor(newexp**0.5).toLocaleString()}\``
   }else{
     return "none"
   }
@@ -504,7 +504,7 @@ async function win_process(channel_id,exp){
   const item_members = []
   const members = ch_status[2]
   for(let i=0;i<members.length;i++){
-    exp_members.push(`<@${members[i]}>は**${exp}EXP**を獲得した。`)
+    exp_members.push(`<@${members[i]}>は**${exp.toLocaleString()}EXP**を獲得した。`)
     const msg = await experiment(members[i],exp)
     if(msg != "none"){
       levelup_members.push(msg)
@@ -786,7 +786,7 @@ client.on("messageCreate", async message => {
       }
       const m_info = await monster_status.get(message.channel.id)
       const embed = new MessageEmbed()
-      .setTitle(`ランク:${m_info[3]}\n${m_info[2]}が待ち構えている...！\nLv.${m_info[0]} HP:${m_info[1]}`)
+      .setTitle(`ランク:${m_info[3]}\n${m_info[2]}が待ち構えている...！\nLv.${m_info[0].toLocaleString()} HP:${m_info[1].toLocaleString()}`)
       .setImage(m_info[4])
       .setColor("RANDOM")
       message.channel.send({ embeds:[embed], allowedMentions: { parse: [] } })
@@ -807,7 +807,7 @@ client.on("messageCreate", async message => {
           return message.reply({ content: "Undefined_Player", allowedMentions: { parse: [] } })
         }
         await obtain_item(itemId,quantity,player)
-        message.reply({ content: `\`${client.users.cache.get(player).username}\`は\`ID:${itemId}:${get_item_name(itemId)}\`を\`${quantity}\`個手に入れた！`, allowedMentions: { parse: [] } })
+        message.reply({ content: `\`${client.users.cache.get(player).username}\`は\`ID:${itemId}:${get_item_name(itemId)}\`を\`${quantity.toLocaleString()}\`個手に入れた！`, allowedMentions: { parse: [] } })
       }else{
         message.reply({ content:"実行権限がありません。", allowedMentions: { parse: [] } })
         message.react("❎")
@@ -835,7 +835,7 @@ client.on("messageCreate", async message => {
         const exp = Number(message.content.split(" ")[2])
         const levelup_msg = await experiment(player_id,exp)
         const embed = new MessageEmbed()
-        .setDescription(`<@${player_id}>に${exp}EXPを付与しました\n${levelup_msg}`)
+        .setDescription(`<@${player_id}>に${exp.toLocaleString()}EXPを付与しました\n${levelup_msg}`)
         message.reply({ embeds:[embed], allowedMentions: { parse: [] } })
       }
     if(command == "monstergen"){
