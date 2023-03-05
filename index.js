@@ -825,9 +825,12 @@ async function training(player_id,message){
   });
 }
 
-async function mine(player_id,channel_id,message){
+async function mine(player_id,channel_id){
   let comment = []
-  
+  const quantity = Math.floor( Math.random() * 30 ) + 15
+  comment.push(`+ 木材:${quantity}個`)
+  await obtain_sozai("1",quantity,player_id)
+  return comment
 }
 
 async function get_monster_rank(channel_id){
@@ -955,6 +958,13 @@ client.on("messageCreate", async message => {
       .setImage(m_info[4])
       .setColor("RANDOM")
       message.channel.send({ embeds:[embed], allowedMentions: { parse: [] } })
+    }
+    if(command == "mine"){
+      const msg = await mine(message.author.id,message.channel.id)
+      const embed = new MessageEmbed()
+      .setDescription(`\`\`\`diff\n${msg}\`\`\``)
+      .setColor("RANDOM")
+      message.reply({ embeds:[embed], allowedMentions: { parse: [] } })
     }
     if(command == "itemid")
       if(admin_list.includes(message.author.id)){
