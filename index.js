@@ -134,25 +134,58 @@ async function _attack(player_id,channel_id,message){
 async function _item(channel_id,item_name,mentions,message){
   if(item_name == undefined){
     const p_items = await player_items.get(message.author.id)
+    const p_sozais = await player_sozais.get(message.author.id)
     const comparefunction = function(a,b){
       return a[0] - b[0]
     }
     p_items.sort(comparefunction)
-    let content = "";
-    const embed = new MessageEmbed()
+    p_sozais.soer(comparefunction)
+    let i_content = [];
+    const i_embed = new MessageEmbed()
     .setTitle(`${message.author.username}のアイテムリスト:`)
     .setColor("RANDOM")
     if(!p_items.length){
-      content = "なし"
+      i_content.push("なし")
     }
-    const time = p_items.length
-    for(let i=0;i<time;i++){
+    const i_time = p_items.length
+    for(let i=0;i<i_time;i++){
       const item_name = get_item_name(p_items[i][0])
       const item_value = p_items[i][1]
-      content += `**${item_name}：**\`${item_value.toLocaleString()}個\`\n`
+      i_content.push(`**${item_name}：**\`${item_value.toLocaleString()}個\``)
     }
-    embed.setDescription(`>>> ${content}`)
-    message.reply({ embeds:[embed], allowedMentions: { parse: [] } })
+    i_embed.setDescription(`>>> ${i_content}`)
+    let s_content = [];
+    const s_embed = new MessageEmbed()
+    .setTitle(`${message.author.username}の素材リスト:`)
+    .setColor("RANDOM")
+    if(!p_sozais.length){
+      s_content.push("なし")
+    }
+    const s_time = p_sozais.length
+    for(let i=0;i<s_time;i++){
+      const sozai_name = get_sozai_name(p_sozais[i][0])
+      const sozai_value = p_sozais[i][1]
+      i_content.push(`**${sozai_name}：**\`${sozai_value.toLocaleString()}個\``)
+    }
+    s_embed.setDescription(`>>> ${s_content}`)
+    const msg = message.reply({ embeds:[i_embed], allowedMentions: { parse: [] } })
+    const filter = m => m.author.id == message.author.id;
+    const collector = message.channel.createMessageCollector({ filter: filter, idle: 60000 });
+    collector.on('collect', async m => {
+      m.delete();
+      if(m.content == "1"){
+        msg.edit({ embeds:[i_embed] });
+      }else if(m.content == "2"){
+        msg.edit({ embeds:[s_embed] });
+      }else if(m.content == "0"){
+        
+      }
+    });
+    collector.on('end', async (collected, reason) => {
+      if(reason == "idle"){
+        msg.edit({ content:"```時間切れです...```" });
+      }
+    })
   }else if(["ファイアボールの書","fire","f"].includes(item_name)){
     await fireball(message.author.id,message.channel.id,message)
   }else if(["エリクサー","elixir","e"].includes(item_name)){
@@ -513,7 +546,7 @@ async function obtain_sozai(sozai_id,quantity,player_id){
   if(!sozaiIds.includes(sozai_id)){
     sozaiList.push([sozai_id,Number(quantity)])
   }
-  await player_items.set(player_id,sozaiList)
+  await player_sozais.set(player_id,sozaiList)
 }
 
 async function consume_sozai(sozai_id,quantity,player_id){
@@ -538,7 +571,7 @@ async function consume_sozai(sozai_id,quantity,player_id){
   if(!sozaiIds.includes(sozai_id)){
     return false
   }
-  await player_items.set(player_id,itemList)
+  await player_sozais.set(player_id,sozaiList)
 }
 
 async function experiment(player_id,exp){
@@ -944,6 +977,44 @@ client.on("messageCreate", async message => {
         return message.reply({ content: "Undefined_Player", allowedMentions: { parse: [] } })
       }
       await consume_item(itemId,quantity,player)
+      message.reply({ content: "unco", allowedMentions: { parse: [] } })
+    }
+    if(command == "sozaiid")
+      if(admin_list.includes(message.author.id)){
+        const sozaiId = message.content.split(" ")[1]
+        const quantity = message.content.split(" ")[2]
+        let player;
+        if(message.mentions.members.size == 1){
+          player = message.mentions.members.first().id
+        }else if(message.mentions.members.size >= 2){
+          player = undefined
+        }else{
+          player = message.content.split(" ")[3]
+        }
+        if(await player_status.get(player) == undefined){
+          return message.reply({ content: "Undefined_Player", allowedMentions: { parse: [] } })
+        }
+        await obtain_sozai(sozaiId,quantity,player)
+        message.reply({ content: `\`${client.users.cache.get(player).username}\`は\`ID:${sozaiId}:${get_sozai_name(sozaiId)}\`を\`${quantity.toLocaleString()}\`個手に入れた！`, allowedMentions: { parse: [] } })
+      }else{
+        message.reply({ content:"実行権限がありません。", allowedMentions: { parse: [] } })
+        message.react("❎")
+      }
+    if(command == "consumeitem"){
+      const sozaiId = message.content.split(" ")[1]
+      const quantity = message.content.split(" ")[2]
+      let player;
+      if(message.mentions.members.size == 1){
+        player = message.mentions.members.first().id
+      }else if(message.mentions.members.size >= 2){
+        player = undefined
+      }else{
+        player = message.content.split(" ")[3]
+      }
+      if(await player_status.get(player) == undefined){
+        return message.reply({ content: "Undefined_Player", allowedMentions: { parse: [] } })
+      }
+      await consume_sozai(sozaiId,quantity,player)
       message.reply({ content: "unco", allowedMentions: { parse: [] } })
     }
     if(command == "exp")
