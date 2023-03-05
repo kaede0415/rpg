@@ -828,7 +828,7 @@ async function training(player_id,message){
 async function mine(player_id,channel_id){
   let comment = []
   const quantity = Math.floor( Math.random() * 30 ) + 15
-  comment.push(`+ 木材:${quantity}個`)
+  comment.push(`+ 木材: ${quantity}個`)
   await obtain_sozai("1",quantity,player_id)
   return comment
 }
@@ -962,7 +962,7 @@ client.on("messageCreate", async message => {
     if(command == "mine"){
       const msg = await mine(message.author.id,message.channel.id)
       const embed = new MessageEmbed()
-      .setDescription(`\`\`\`diff\n${msg}\`\`\``)
+      .setDescription(`\`\`\`css\n[採掘者:${message.author.username}]\`\`\`\`\`\`diff\n${msg}\`\`\``)
       .setColor("RANDOM")
       message.reply({ embeds:[embed], allowedMentions: { parse: [] } })
     }
