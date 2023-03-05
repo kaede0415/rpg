@@ -825,6 +825,11 @@ async function training(player_id,message){
   });
 }
 
+async function mine(player_id,channel_id,message){
+  let comment = []
+  
+}
+
 async function get_monster_rank(channel_id){
   const m_info = await monster_status.get(channel_id)
   return m_info[3]
