@@ -6,6 +6,7 @@ const Keyv = require('keyv');
 const util = require('util');
 const player_status = new Keyv(`sqlite://player_data.sqlite`, { table: "status" });
 const player_items = new Keyv(`sqlite://player_data.sqlite`, { table: "item" });
+const player_sozais = new Keyv(`sqlite://player_data.sqlite`, { table: "sozai" });
 const monster_status = new Keyv(`sqlite://monster_data.sqlite`, { table: "status" });
 const channel_status = new Keyv(`sqlite://channel_data.sqlite`, { table: "channel" });
 const client = new Client({
@@ -33,6 +34,7 @@ const prefix = "_"
 const cmd_list = ["help","status","st","attack","atk","item","i"]
 const command_json = require("./jsons/command.json")
 const item_json = require("./jsons/item.json")
+const sozai_json = require("./jsons/sozai.json")
 const training_json = require("./jsons/training.json")
 const admin_list = ["945460382733058109"];
 process.env.TZ = 'Asia/Tokyo'
@@ -41,6 +43,7 @@ async function create_data(option,id){
   if(option == "player"){
     await player_status.set(id,[100,550,10000,0,false])
     await player_items.set(id,[])
+    await player_sozais.set(id,[])
   }else if(option == "monster"){
     const info = generate_monster("random")
     const array = [1,60].concat(info)
@@ -56,6 +59,7 @@ async function delete_data(option,id){
   if(option == "player"){
     await player_status.delete(id)
     await player_items.delete(id)
+    await player_sozais.delete(id)
   }else if(option == "monster"){
     await monster_status.delete(id)
   }else if(option == "channel"){
@@ -477,6 +481,61 @@ async function consume_item(item_id,quantity,player_id){
     }
   })
   if(!itemIds.includes(item_id)){
+    return false
+  }
+  await player_items.set(player_id,itemList)
+}
+
+function get_sozai_name(sozai_id){
+  const hoge = JSON.parse(JSON.stringify(sozai_json))
+  const keyList = Object.keys(hoge)
+  for(let key in keyList){
+    if(keyList[key] == sozai_id){
+      return `${hoge[keyList[key]]}`
+    }
+  }
+  return undefined
+}
+
+async function obtain_sozai(sozai_id,quantity,player_id){
+  if(get_sozai_name(sozai_id) == undefined) console.log("error")
+  const sozaiList = await player_sozais.get(player_id)
+  const sozaiIds = [];
+  sozaiList.forEach(x => {
+    sozaiIds.push(x[0])
+    if(x[0] == sozai_id){
+      const hoge = x[1]
+      x.pop()
+      x.push(hoge+Number(quantity))
+      return;
+    }
+  })
+  if(!sozaiIds.includes(sozai_id)){
+    sozaiList.push([sozai_id,Number(quantity)])
+  }
+  await player_items.set(player_id,sozaiList)
+}
+
+async function consume_sozai(sozai_id,quantity,player_id){
+  if(get_sozai_name(sozai_id) == undefined) console.log("error")
+  const sozaiList = await player_sozais.get(player_id)
+  const sozaiIds = [];
+  sozaiList.forEach(x => {
+    sozaiIds.push(x[0])
+    if(x[0] == sozai_id){
+      const hoge = x[1]
+      if(hoge < Number(quantity)){
+        return false
+      }else if(hoge == Number(quantity)){
+        const num = sozaiIds.indexOf(x[0])
+        const func = sozaiList.splice(num,1)
+        return
+      }
+      x.pop()
+      x.push(hoge-Number(quantity))
+    }
+  })
+  if(!sozaiIds.includes(sozai_id)){
     return false
   }
   await player_items.set(player_id,itemList)
