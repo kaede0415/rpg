@@ -172,11 +172,14 @@ async function _item(channel_id,item_name,mentions,message){
       s_content.push(`**${sozai_name}：**\`${sozai_value.toLocaleString()}個\``)
     }
     s_embed.setDescription(`>>> ${s_content.join("\n")}`)
-    const msg = await message.reply({ content: "```js\nページ数を送信してください。\n0で処理を終了します。```", embeds:[i_embed], allowedMentions: { parse: [] } })
+    const msg = await message.reply({ content: "```js\nページ数を送信してください。\n現在のページ:1/2\n0で処理を終了します。```", embeds:[i_embed], allowedMentions: { parse: [] } })
     const filter = m => m.author.id == message.author.id;
     const collector = message.channel.createMessageCollector({ filter: filter, idle: 60000 });
     collector.on('collect', async m => {
       m.delete();
+      if(Number.isInteger(Number(m.content)) && 1 <= Number(m.content) && Number(m.content) >= 2){
+        msg.edit({ content: `\`\`\`js\nページ数を送信してください。\n現在のページ:${m.content}/2\n0で処理を終了します。\`\`\`` })
+      }
       if(m.content == "1"){
         msg.edit({ embeds:[i_embed] });
       }else if(m.content == "2"){
