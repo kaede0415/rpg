@@ -138,8 +138,12 @@ async function _item(channel_id,item_name,mentions,message){
     const comparefunction = function(a,b){
       return a[0] - b[0]
     }
-    p_items.sort(comparefunction)
-    p_sozais.soer(comparefunction)
+    if(p_items){
+      p_items.sort(comparefunction)
+    }
+    if(p_sozais){
+      p_sozais.sort(comparefunction)
+    }
     let i_content = [];
     const i_embed = new MessageEmbed()
     .setTitle(`${message.author.username}のアイテムリスト:`)
@@ -153,7 +157,7 @@ async function _item(channel_id,item_name,mentions,message){
       const item_value = p_items[i][1]
       i_content.push(`**${item_name}：**\`${item_value.toLocaleString()}個\``)
     }
-    i_embed.setDescription(`>>> ${i_content}`)
+    i_embed.setDescription(`>>> ${i_content.join("\n")}`)
     let s_content = [];
     const s_embed = new MessageEmbed()
     .setTitle(`${message.author.username}の素材リスト:`)
@@ -165,10 +169,10 @@ async function _item(channel_id,item_name,mentions,message){
     for(let i=0;i<s_time;i++){
       const sozai_name = get_sozai_name(p_sozais[i][0])
       const sozai_value = p_sozais[i][1]
-      i_content.push(`**${sozai_name}：**\`${sozai_value.toLocaleString()}個\``)
+      s_content.push(`**${sozai_name}：**\`${sozai_value.toLocaleString()}個\``)
     }
-    s_embed.setDescription(`>>> ${s_content}`)
-    const msg = message.reply({ embeds:[i_embed], allowedMentions: { parse: [] } })
+    s_embed.setDescription(`>>> ${s_content.join("\n")}`)
+    const msg = await message.reply({ content: "```js\nページ数を送信してください。\n0で処理を終了します。```", embeds:[i_embed], allowedMentions: { parse: [] } })
     const filter = m => m.author.id == message.author.id;
     const collector = message.channel.createMessageCollector({ filter: filter, idle: 60000 });
     collector.on('collect', async m => {
@@ -178,7 +182,8 @@ async function _item(channel_id,item_name,mentions,message){
       }else if(m.content == "2"){
         msg.edit({ embeds:[s_embed] });
       }else if(m.content == "0"){
-        
+        msg.edit({ content:"```処理を終了しました...```" });
+        collector.stop();
       }
     });
     collector.on('end', async (collected, reason) => {
