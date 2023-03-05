@@ -504,8 +504,21 @@ async function win_process(channel_id,exp){
   const item_members = []
   const members = ch_status[2]
   for(let i=0;i<members.length;i++){
-    exp_members.push(`<@${members[i]}>は**${exp.toLocaleString()}EXP**を獲得した。`)
-    const msg = await experiment(members[i],exp)
+    let expcalc = exp
+    const rank = await get_monster_rank(channel_id)
+    if(rank == "【強敵】"){
+      expcalc = expcalc*2
+    }else if(rank == "【超強敵】"){
+      expcalc = expcalc*5
+    }else if(rank == "【レア】"){
+      expcalc = expcalc*10
+    }else if(rank == "【激レア】"){
+      expcalc = expcalc*100
+    }else if(rank == "【超激レア】"){
+      expcalc = expcalc*1000
+    }
+    exp_members.push(`<@${members[i]}>は**${expcalc.toLocaleString()}EXP**を獲得した。`)
+    const msg = await experiment(members[i],expcalc)
     if(msg != "none"){
       levelup_members.push(msg)
     }
