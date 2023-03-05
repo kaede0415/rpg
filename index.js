@@ -508,6 +508,63 @@ async function win_process(channel_id,exp){
     const rank = await get_monster_rank(channel_id)
     if(rank == "【強敵】"){
       expcalc = expcalc*2
+      if(Math.random() <= 0.06){
+        item_members.push(`<@${members[i]}>はエリクサーを**1個**手に入れた！`)
+        await obtain_item("1",1,members[i])
+      }
+      if(Math.random() <= 0.11){
+        item_members.push(`<@${members[i]}>はファイアボールの書を**1個**手に入れた！`)
+        await obtain_item("2",1,members[i])
+      }
+      if(Math.random() <= 0.11){
+        item_members.push(`<@${members[i]}>は祈りの書を**1個**手に入れた！`)
+        await obtain_item("3",1,members[i])
+      }
+    }else if(rank == "【超強敵】"){
+      expcalc = expcalc*5
+      item_members.push(`<@${members[i]}>はエリクサーを**1個**手に入れた！`)
+      await obtain_item("1",1,members[i])
+      item_members.push(`<@${members[i]}>はファイアボールの書を**1個**手に入れた！`)
+      await obtain_item("2",1,members[i])
+      item_members.push(`<@${members[i]}>は祈りの書を**1個**手に入れた！`)
+      await obtain_item("3",1,members[i])
+    }else if(rank == "【レア】"){
+      if(Math.random() <= 0.1){
+        item_members.push(`<@${members[i]}>はエリクサーを**1個**手に入れた！`)
+        await obtain_item("1",1,members[i])
+      }
+      if(Math.random() <= 0.2){
+        item_members.push(`<@${members[i]}>はファイアボールの書を**1個**手に入れた！`)
+        await obtain_item("2",1,members[i])
+      }
+      if(Math.random() <= 0.2){
+        item_members.push(`<@${members[i]}>は祈りの書を**1個**手に入れた！`)
+        await obtain_item("3",1,members[i])
+      }
+      expcalc = expcalc*10
+    }else if(rank == "【激レア】"){
+      expcalc = expcalc*100
+      if(Math.random() <= 0.25){
+        item_members.push(`<@${members[i]}>はエリクサーを**1個**手に入れた！`)
+        await obtain_item("1",1,members[i])
+      }
+      if(Math.random() <= 0.5){
+        item_members.push(`<@${members[i]}>はファイアボールの書を**1個**手に入れた！`)
+        await obtain_item("2",1,members[i])
+      }
+      if(Math.random() <= 0.5){
+        item_members.push(`<@${members[i]}>は祈りの書を**1個**手に入れた！`)
+        await obtain_item("3",1,members[i])
+      }
+    }else if(rank == "【超激レア】"){
+      expcalc = expcalc*1000
+      item_members.push(`<@${members[i]}>はエリクサーを**1個**手に入れた！`)
+      await obtain_item("1",1,members[i])
+      item_members.push(`<@${members[i]}>はファイアボールの書を**1個**手に入れた！`)
+      await obtain_item("2",1,members[i])
+      item_members.push(`<@${members[i]}>は祈りの書を**1個**手に入れた！`)
+      await obtain_item("3",1,members[i])
+    }else{
       if(Math.random() <= 0.05){
         item_members.push(`<@${members[i]}>はエリクサーを**1個**手に入れた！`)
         await obtain_item("1",1,members[i])
@@ -520,14 +577,6 @@ async function win_process(channel_id,exp){
         item_members.push(`<@${members[i]}>は祈りの書を**1個**手に入れた！`)
         await obtain_item("3",1,members[i])
       }
-    }else if(rank == "【超強敵】"){
-      expcalc = expcalc*5
-    }else if(rank == "【レア】"){
-      expcalc = expcalc*10
-    }else if(rank == "【激レア】"){
-      expcalc = expcalc*100
-    }else if(rank == "【超激レア】"){
-      expcalc = expcalc*1000
     }
     exp_members.push(`<@${members[i]}>は**${expcalc.toLocaleString()}EXP**を獲得した。`)
     const msg = await experiment(members[i],expcalc)
