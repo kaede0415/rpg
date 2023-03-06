@@ -39,6 +39,7 @@ const training_json = require("./jsons/training.json")
 const admin_list = ["945460382733058109"];
 const mine_cooldown = []
 let timeout;
+let time;
 process.env.TZ = 'Asia/Tokyo'
 
 async function create_data(option,id){
@@ -834,14 +835,10 @@ async function mine(player_id,channel_id){
     timeout = setTimeout(function(){
       mine_cooldown.splice(mine_cooldown.indexOf(player_id),1)
     },3000)
+    time = Date.now()
   }else if(mine_cooldown.includes(player_id)){
-    return getTimeLeft(timeout)
-  }
-  function getTimeLeft(timeout){
-    console.log(timeout._idleStart)
-    console.log(timeout._idleTimeout)
-    console.log(Date.now())
-    return Math.ceil((timeout._idleStart + timeout._idleTimeout - new Date().getTime()) / 1000);
+    const now = Date.now()
+    return (timeout._idleTimeout - (now - time)) / 1000
   }
   const w_quantity = Math.floor( Math.random() * 30 ) + 15
   const s_quantity = Math.floor( Math.random() * 10 ) + 1
@@ -982,12 +979,14 @@ client.on("messageCreate", async message => {
     }
     if(command == "mine"){
       const msg = await mine(message.author.id,message.channel.id)
-      if(!isNaN(msg)){
-        return message.reply(`${msg}`)
-      }
       const embed = new MessageEmbed()
       .setDescription(`\`\`\`css\n[採掘者:${message.author.username}]\`\`\`\`\`\`diff\n${msg.join("\n")}\`\`\``)
       .setColor("RANDOM")
+      if(!Array.isArray(msg)){
+        embed.setDescription(`そのコマンドは${msg}秒後に使えます`)
+      }else{
+        embed.setDescription(`\`\`\`css\n[採掘者:${message.author.username}]\`\`\`\`\`\`diff\n${msg.join("\n")}\`\`\``)
+      }
       message.reply({ embeds:[embed], allowedMentions: { parse: [] } })
     }
     if(command == "itemid")
