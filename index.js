@@ -827,9 +827,11 @@ async function training(player_id,message){
 
 async function mine(player_id,channel_id){
   let comment = []
-  const quantity = Math.floor( Math.random() * 30 ) + 15
-  comment.push(`+ 木材: ${quantity}個`)
-  await obtain_sozai("1",quantity,player_id)
+  const w_quantity = Math.floor( Math.random() * 30 ) + 15
+  const s_quantity = Math.floor( Math.random() * 10 ) + 1
+    comment.push(`+ 木材: ${w_quantity}個`)
+    await obtain_sozai("1",w_quantity,player_id)
+  
   return comment
 }
 
