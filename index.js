@@ -1000,7 +1000,7 @@ client.on("messageCreate", async message => {
     if(command == "training" || command == "t"){
       await training(message.author.id,message)
     }
-    if(command == "reset" || command == "re"){
+    if(command == "reset" || command == "re" || command == "rs"){
       const reset = await reset_battle(message.channel.id,0)
       if(reset == "このchで戦闘は行われていませんよ...？"){
         return message.reply({ content: "このchで戦闘は行われていませんよ...？", allowedMentions: { parse: [] } })
