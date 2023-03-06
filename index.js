@@ -848,6 +848,18 @@ async function mine(player_id,channel_id){
     comment.push(`+ 丸石: ${s_quantity}個`)
     await obtain_sozai("2",s_quantity,player_id)
   }
+  if(Math.random() < 0.25){
+    comment.push(`+ 鉄: ${s_quantity}個`)
+    await obtain_sozai("3",s_quantity,player_id)
+  }
+  if(Math.random() < 0.5){
+    comment.push(`+ 石炭: ${s_quantity}個`)
+    await obtain_sozai("5",s_quantity,player_id)
+  }
+  if(Math.random() < 0.1){
+    comment.push(`+ ダイヤモンド: ${s_quantity}個`)
+    await obtain_sozai("4",s_quantity,player_id)
+  }
   return comment
 }
 
