@@ -773,6 +773,21 @@ async function reset_battle(channel_id,level){
   }
 }
 
+async function inquiry(channel_id,message){
+  let ch_status = await channel_status.get(channel_id)
+  if(ch_status[1] == false){
+    return message.reply({ content: "このchで戦闘は行われていませんよ...？", allowedMentions: { parse: [] } })
+  }
+  const channel_name = client.channels.cache.get(channel_id).name
+  const m_status = await monster_status.get(channel_id)
+  const embed = new MessageEmbed()
+  .setTitle(`${channel_name}の戦闘状況:`)
+  .addField("戦闘中のモンスター情報:",`>>> **ランク: ${m_status[3]}\n名前:** \`${m_status[2]}\`\n**Lv.** \`${m_status[0].toLocaleString()}\` **HP: ${m_status[1].toLocaleString()}/${(m_status[0]*10+50).toLocaleString()}**`)
+  .setThumbnail(m_status[4])
+  .setColor("RANDOM")
+  message.reply({ embeds:[embed], allowedMentions: { parse: [] } })
+}
+
 async function training(player_id,message){
   const random = Math.floor(Math.random()*training_json.length);
   const q = training_json[random][0]
@@ -988,6 +1003,9 @@ client.on("messageCreate", async message => {
       .setImage(m_info[4])
       .setColor("RANDOM")
       message.channel.send({ embeds:[embed], allowedMentions: { parse: [] } })
+    }
+    if(command == "inquiry" || command == "inq"){
+      await inquiry(message.channel.id,message)
     }
     if(command == "mine"){
       const msg = await mine(message.author.id,message.channel.id)
