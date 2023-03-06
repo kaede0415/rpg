@@ -780,9 +780,17 @@ async function inquiry(channel_id,message){
   }
   const channel_name = client.channels.cache.get(channel_id).name
   const m_status = await monster_status.get(channel_id)
+  const content = []
+  const btl_members = ch_status[2]
+  for(let i=0;i<btl_members.length;i++){
+    const status = await player_status.get(btl_members[i])
+    const p_name = client.users.cache.get(btl_members[i]).tag
+    content.push(`${p_name} HP: ${status[1].toLocaleString()}/${(status[0]*5+50).toLocaleString()}`)
+  }
   const embed = new MessageEmbed()
   .setTitle(`${channel_name}の戦闘状況:`)
   .addField("戦闘中のモンスター情報:",`>>> **ランク: ${m_status[3]}\n名前:** \`${m_status[2]}\`\n**Lv.** \`${m_status[0].toLocaleString()}\` **HP: ${m_status[1].toLocaleString()}/${(m_status[0]*10+50).toLocaleString()}**`)
+  .addField("戦闘中のPLAYER:",`**${content.join("\n")}**`)
   .setThumbnail(m_status[4])
   .setColor("RANDOM")
   message.reply({ embeds:[embed], allowedMentions: { parse: [] } })
