@@ -37,6 +37,7 @@ const item_json = require("./jsons/item.json")
 const sozai_json = require("./jsons/sozai.json")
 const training_json = require("./jsons/training.json")
 const admin_list = ["945460382733058109"];
+const mine_cooldown = []
 process.env.TZ = 'Asia/Tokyo'
 
 async function create_data(option,id){
@@ -826,8 +827,17 @@ async function training(player_id,message){
 }
 
 async function mine(player_id,channel_id){
-  let cooldown = []
+  if(mine_cooldown.includes(player_id)){
+    return getTimeLeft(timeout)
+  }
   let comment = []
+  mine_cooldown.push(player_id)
+  function getTimeLeft(timeout) {
+    return Math.ceil((timeout._idleStart + timeout._idleTimeout - Date.now()) / 1000);
+  }
+  const timeout = setTimeout(function(){
+    mine_cooldown.splice(mine_cooldown.indexOf(player_id),1)
+  },3000)
   const w_quantity = Math.floor( Math.random() * 30 ) + 15
   const s_quantity = Math.floor( Math.random() * 10 ) + 1
   comment.push(`+ 木材: ${w_quantity}個`)
