@@ -980,7 +980,6 @@ client.on("messageCreate", async message => {
     if(command == "mine"){
       const msg = await mine(message.author.id,message.channel.id)
       const embed = new MessageEmbed()
-      .setDescription(`\`\`\`css\n[採掘者:${message.author.username}]\`\`\`\`\`\`diff\n${msg.join("\n")}\`\`\``)
       .setColor("RANDOM")
       if(!Array.isArray(msg)){
         embed.setDescription(`そのコマンドは${msg}秒後に使えます`)
