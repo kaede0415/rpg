@@ -826,12 +826,16 @@ async function training(player_id,message){
 }
 
 async function mine(player_id,channel_id){
+  let cooldown = []
   let comment = []
   const w_quantity = Math.floor( Math.random() * 30 ) + 15
   const s_quantity = Math.floor( Math.random() * 10 ) + 1
-    comment.push(`+ 木材: ${w_quantity}個`)
-    await obtain_sozai("1",w_quantity,player_id)
-  
+  comment.push(`+ 木材: ${w_quantity}個`)
+  await obtain_sozai("1",w_quantity,player_id)
+  if(Math.random() < 0.5){
+    comment.push(`+ 丸石: ${s_quantity}個`)
+    await obtain_sozai("2",s_quantity,player_id)
+  }
   return comment
 }
 
@@ -964,7 +968,7 @@ client.on("messageCreate", async message => {
     if(command == "mine"){
       const msg = await mine(message.author.id,message.channel.id)
       const embed = new MessageEmbed()
-      .setDescription(`\`\`\`css\n[採掘者:${message.author.username}]\`\`\`\`\`\`diff\n${msg}\`\`\``)
+      .setDescription(`\`\`\`css\n[採掘者:${message.author.username}]\`\`\`\`\`\`diff\n${msg.join("\n")}\`\`\``)
       .setColor("RANDOM")
       message.reply({ embeds:[embed], allowedMentions: { parse: [] } })
     }
