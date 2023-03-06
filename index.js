@@ -838,6 +838,9 @@ async function mine(player_id,channel_id){
     return getTimeLeft(timeout)
   }
   function getTimeLeft(timeout){
+    console.log(timeout._idleStart)
+    console.log(timeout._idleTimeout)
+    console.log(Date.now())
     return Math.ceil((timeout._idleStart + timeout._idleTimeout - Date.now()) / 1000);
   }
   const w_quantity = Math.floor( Math.random() * 30 ) + 15
