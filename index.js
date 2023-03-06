@@ -243,6 +243,12 @@ async function elixir(player_id,channel_id,message){
 }
 
 async function fireball(player_id,channel_id,message){
+  if(await consume_item("2",1,player_id) == false){
+    const embed = new MessageEmbed()
+    .setDescription(`>>> <@${player_id}>はファイボールの書を持っていない！`)
+    .setColor("RANDOM")
+    return message.reply({ embeds:[embed], allowedMentions: { parse: [] } })
+  }
   const intobattle = await into_battle(player_id,channel_id)
   const status = await player_status.get(player_id)
   const m_status = await monster_status.get(channel_id)
@@ -250,12 +256,6 @@ async function fireball(player_id,channel_id,message){
   const error_message = intobattle[1]
   if(error_message != ""){
     return message.reply({ content: error_message, allowedMentions: { parse: [] } })
-  }
-  if(await consume_item("2",1,player_id) == false){
-    const embed = new MessageEmbed()
-    .setDescription(`>>> <@${player_id}>はファイボールの書を持っていない！`)
-    .setColor("RANDOM")
-    return message.reply({ embeds:[embed], allowedMentions: { parse: [] } })
   }
   const player_level = status[0]
   const player_attack = player_level*2+10
@@ -326,18 +326,18 @@ async function pray(player_id,channel_id,mentions,message){
 }
 
 async function ki(player_id,channel_id,message){
+  if(await consume_item("4",1,player_id) == false){
+    const embed = new MessageEmbed()
+    .setDescription(`>>> <@${player_id}>は気を持っていない！`)
+    .setColor("RANDOM")
+    return message.reply({ embeds:[embed], allowedMentions: { parse: [] } })
+  }
   const intobattle = await into_battle(player_id,channel_id)
   const m_status = await monster_status.get(channel_id)
   let player_hp = intobattle[0]
   const error_message = intobattle[1]
   if(error_message != ""){
     return message.reply({ content: error_message, allowedMentions: { parse: [] } })
-  }
-  if(await consume_item("4",1,player_id) == false){
-    const embed = new MessageEmbed()
-    .setDescription(`>>> <@${player_id}>は気を持っていない！`)
-    .setColor("RANDOM")
-    return message.reply({ embeds:[embed], allowedMentions: { parse: [] } })
   }
   const monster_level = m_status[0]
   let monster_hp = m_status[1]
@@ -371,6 +371,12 @@ async function ki(player_id,channel_id,message){
 }
 
 async function bigbang(player_id,channel_id,message){
+  if(await consume_item("5",1,player_id) == false){
+    const embed = new MessageEmbed()
+    .setDescription(`>>> <@${player_id}>は超新星爆発を持っていない！`)
+    .setColor("RANDOM")
+    return message.reply({ embeds:[embed], allowedMentions: { parse: [] } })
+  }
   const intobattle = await into_battle(player_id,channel_id)
   const status = await player_status.get(player_id)
   const m_status = await monster_status.get(channel_id)
@@ -378,12 +384,6 @@ async function bigbang(player_id,channel_id,message){
   const error_message = intobattle[1]
   if(error_message != ""){
     return message.reply({ content: error_message, allowedMentions: { parse: [] } })
-  }
-  if(await consume_item("5",1,player_id) == false){
-    const embed = new MessageEmbed()
-    .setDescription(`>>> <@${player_id}>は超新星爆発を持っていない！`)
-    .setColor("RANDOM")
-    return message.reply({ embeds:[embed], allowedMentions: { parse: [] } })
   }
   const player_level = status[0]
   const player_attack = player_level*2+10
