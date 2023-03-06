@@ -829,17 +829,16 @@ async function training(player_id,message){
 
 async function mine(player_id,channel_id){
   let comment = []
-  mine_cooldown.push(player_id)
   if(!mine_cooldown.includes(player_id)){
+    mine_cooldown.push(player_id)
     timeout = setTimeout(function(){
       mine_cooldown.splice(mine_cooldown.indexOf(player_id),1)
     },3000)
+  }else if(mine_cooldown.includes(player_id)){
+    return getTimeLeft(timeout)
   }
   function getTimeLeft(timeout){
     return Math.ceil((timeout._idleStart + timeout._idleTimeout - Date.now()) / 1000);
-  }
-  if(mine_cooldown.includes(player_id)){
-    return getTimeLeft(timeout)
   }
   const w_quantity = Math.floor( Math.random() * 30 ) + 15
   const s_quantity = Math.floor( Math.random() * 10 ) + 1
@@ -980,6 +979,9 @@ client.on("messageCreate", async message => {
     }
     if(command == "mine"){
       const msg = await mine(message.author.id,message.channel.id)
+      if(!isNaN(msg)){
+        return message.reply(`${msg}`)
+      }
       const embed = new MessageEmbed()
       .setDescription(`\`\`\`css\n[採掘者:${message.author.username}]\`\`\`\`\`\`diff\n${msg.join("\n")}\`\`\``)
       .setColor("RANDOM")
