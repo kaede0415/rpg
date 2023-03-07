@@ -47,29 +47,38 @@ process.env.TZ = 'Asia/Tokyo'
 async function bulk_change(option,instructions){
   if(option == "player_status"){
     for await(const [key, value] of player_status.iterator()){
-      const evaled = eval(instructions)
-      console.log(value)
-      await player_status.set(key,evaled)
+      let evaled = eval("(async () => {" + instructions + "})()");
+      if(typeof evaled != "string"){
+        evaled = util.inspect(evaled);
+      }
     };
   }else if(option == "player_items"){
     for await(const [key, value] of player_items.iterator()){
-      const evaled = eval(instructions)
-      await player_status.set(key,evaled)
+      let evaled = eval("(async () => {" + instructions + "})()");
+      if(typeof evaled != "string"){
+        evaled = util.inspect(evaled);
+      }
     };
   }else if(option == "player_sozais"){
     for await(const [key, value] of player_sozais.iterator()){
-      const evaled = eval(instructions)
-      await player_sozais.set(key,evaled)
+      let evaled = eval("(async () => {" + instructions + "})()");
+      if(typeof evaled != "string"){
+        evaled = util.inspect(evaled);
+      }
     };
   }else if(option == "monster_status"){
     for await(const [key, value] of monster_status.iterator()){
-      const evaled = eval(instructions)
-      await monster_status.set(key,evaled)
+      let evaled = eval("(async () => {" + instructions + "})()");
+      if(typeof evaled != "string"){
+        evaled = util.inspect(evaled);
+      }
     };
   }else if(option == "channel_status"){
     for await(const [key, value] of channel_status.iterator()){
-      const evaled = eval(instructions)
-      await channel_status.set(key,evaled)
+      let evaled = eval("(async () => {" + instructions + "})()");
+      if(typeof evaled != "string"){
+        evaled = util.inspect(evaled);
+      }
     };
   }else{
     return false
@@ -840,6 +849,24 @@ async function inquiry(channel_id,message){
 
 async function talent(player_id){
   
+}
+
+async function get_talent(option,player_id){
+  let num;
+  if(option == "hp"){
+    num = 0
+  }else if(option == "atk"){
+    num = 1
+  }else if(option == "def"){
+    num = 2
+  }else if(option == "rob"){
+    num = 3
+  }else if(option == "exp"){
+    num = 4
+  }else{
+    return undefined
+  }
+  return 
 }
 
 async function training(player_id,message){
