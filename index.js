@@ -884,7 +884,11 @@ async function talent(player_id,message){
         if(!Number.isInteger(Number(m.content))){
           return message.edot({ content: "```値が整数ではないので処理を終了しました...```" })
         }
-        return message.reply(await get_talent_level(talent_name,player_id))
+        const nowlevel = await get_talent_level(talent_name,player_id)
+        const lastembed = new MessageEmbed()
+        .setDescription(`[${talent_name}]\nLv.${nowlevel} -> Lv.${nowlevel+Number(m.content)}`)
+        .setColor("RANDOM")
+        msg.edit({ embeds:[lastembed] })
       })
       collector2.on('end', async (collected, reason) => {
       if(reason == "idle"){
