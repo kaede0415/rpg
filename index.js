@@ -855,7 +855,32 @@ async function talent(player_id,message){
   .setTitle(`${player_name}のタレント`)
   .setDescription(`\`\`\`css\n[1.体力] ${talents[0]}\n[2.攻撃力] ${talents[1]}\n[3.防御力] ${talents[2]}\n[4.盗み力] ${talents[3]}\n[5.経験値] ${talents[4]}\`\`\``)
   .setColor("RANDOM")
-  message.reply({ embeds:[embed], allowedMentions: { parse: [] } })
+  const msg = await message.reply({ content: "上げたいタレントの数字を送信してください", embeds:[embed], allowedMentions: { parse: [] } })
+  const filter = m => m.author.id == message.author.id;
+    const collector = message.channel.createMessageCollector({ filter: filter, idle: 60000, max: 1 });
+    collector.on('collect', async m => {
+      m.delete();
+      
+      if(m.content == "1"){
+        msg.edit({ content:"体力" })
+      }else if(m.content == "2"){
+        msg.edit({ content:"攻撃力" })
+      }else if(m.content == "3"){
+        msg.edit({ content:"防御力" })
+      }else if(m.content == "4"){
+        msg.edit({ content:"盗み力" })
+      }else if(m.content == "5"){
+        msg.edit({ content:"経験値" })
+      }else if(m.content == "0"){
+        msg.edit({ content:"```処理を終了しました...```" });
+        collector.stop();
+      }
+    });
+    collector.on('end', async (collected, reason) => {
+      if(reason == "idle"){
+        msg.edit({ content:"```時間切れです...```" });
+      }
+    })
 }
 
 async function get_talent(option,player_id){
