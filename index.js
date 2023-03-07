@@ -1114,7 +1114,7 @@ function gatya(time){
     const reward_list = require(`./gatya/normal/${reality}.json`)
     const number = Math.floor( Math.random() * Number( reward_list.length.toString()) )
     const reward = reward_list[number]
-    rewards.push([`【${reality.toUpperCase()}】レア`,reward.name,reward.type,reward.id,reward.quantity])
+    rewards.push([`【${reality.toUpperCase()}レア】`,reward.name,reward.type,reward.id,reward.quantity])
   }
   return rewards
 }
