@@ -42,9 +42,13 @@ let timeout;
 let time;
 process.env.TZ = 'Asia/Tokyo'
 
+async function bulk_change(){
+  
+}
+
 async function create_data(option,id){
   if(option == "player"){
-    await player_status.set(id,[100,550,10000,0,false,1])
+    await player_status.set(id,[100,550,10000,0,false,[0,0,0,0,0]])
     await player_items.set(id,[])
     await player_sozais.set(id,[])
   }else if(option == "monster"){
@@ -802,6 +806,10 @@ async function inquiry(channel_id,message){
   .setThumbnail(m_status[4])
   .setColor("RANDOM")
   message.reply({ embeds:[embed], allowedMentions: { parse: [] } })
+}
+
+async function talent(player_id){
+  
 }
 
 async function training(player_id,message){
