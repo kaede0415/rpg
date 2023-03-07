@@ -854,8 +854,9 @@ async function talent(player_id,message){
   const embed = new MessageEmbed()
   .setTitle(`${player_name}のタレント`)
   .setDescription(`\`\`\`css\n[1.体力] ${talents[0]}\n[2.攻撃力] ${talents[1]}\n[3.防御力] ${talents[2]}\n[4.盗み力] ${talents[3]}\n[5.経験値] ${talents[4]}\`\`\``)
+  .setFooter("上げたいタレントの数字を送信してください")
   .setColor("RANDOM")
-  const msg = await message.reply({ content: "上げたいタレントの数字を送信してください", embeds:[embed], allowedMentions: { parse: [] } })
+  const msg = await message.reply({ embeds:[embed], allowedMentions: { parse: [] } })
   const filter = m => m.author.id == message.author.id;
     const collector = message.channel.createMessageCollector({ filter: filter, idle: 60000, max: 1 });
     collector.on('collect', async m => {
@@ -876,7 +877,17 @@ async function talent(player_id,message){
       }
       const newembed = new MessageEmbed()
       .setDescription(`[${talent_name}]\n上げたいレベルを送信してください`)
-      msg.edit({ embeds:[newembed] });
+      .setColor("RANDOM")
+      msg.edit({ embeds:[newembed] })
+      const collector2 = message.channel.createMessageCollector({ filter: filter, idle: 60000, max: 1 });
+      collector2.on('collect', async m => {
+        
+      })
+      collector2.on('end', async (collected, reason) => {
+      if(reason == "idle"){
+        msg.edit({ content:"```時間切れです...```" });
+      }
+    })
     });
     collector.on('end', async (collected, reason) => {
       if(reason == "idle"){
