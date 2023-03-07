@@ -1095,7 +1095,9 @@ function generate_monster(rank){
   }
 }
 
-function gatya(time)
+function gatya(time){
+  
+}
 
 http
   .createServer(function(request, response) {
