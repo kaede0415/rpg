@@ -881,7 +881,9 @@ async function talent(player_id,message){
       msg.edit({ embeds:[newembed] })
       const collector2 = message.channel.createMessageCollector({ filter: filter, idle: 60000, max: 1 });
       collector2.on('collect', async m => {
-        
+        if(!Number(m.content).isInteger){
+          return 
+        }
       })
       collector2.on('end', async (collected, reason) => {
       if(reason == "idle"){
