@@ -1,5 +1,5 @@
 const http = require('http')
-const { Client, Intents, MessageEmbed, MessageActionRow, MessageButton } = require("discord.js");
+const { Client, Intents, MessageEmbed, MessageActionRow, MessageButton, MessageAttachment } = require("discord.js");
 const { Pagination } = require("discordjs-button-embed-pagination");
 const moment = require('moment');
 const Keyv = require('keyv');
@@ -1111,11 +1111,12 @@ function gatya(time){
     }else{
       reality = "n"
     }
-    const monsters = require(`./monsters/${rank}.json`)
-      const number = Math.floor( Math.random() * Number( monsters.length.toString()) )
-      const monster = monsters[number]
-      return [monster.name,monster.rank,monster.img]
+    const reward_list = require(`./gatya/normal/${reality}.json`)
+    const number = Math.floor( Math.random() * Number( reward_list.length.toString()) )
+    const reward = reward_list[number]
+    rewards.push([reward.name,reward.type,reward.id,reward.quantity])
   }
+  return rewards
 }
 
 http
