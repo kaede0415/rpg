@@ -887,8 +887,10 @@ async function talent(player_id,message){
         return msg.edit({ content: "```値が整数ではないので処理を終了しました...```" })
       }
       const nowlevel = await get_talent_level(talent_name,player_id)
+      const value = Number(m.content)
+      const newlevel = nowlevel+value
       const q_embed = new MessageEmbed()
-      .setDescription(`\`\`\`css\n[${talent_name}]\nLv.${nowlevel} -> Lv.${nowlevel+Number(m.content)}\nレベルを上げますか？\`\`\``)
+      .setDescription(`\`\`\`css\n[${talent_name}]\nLv.${nowlevel} -> Lv.${newlevel}\nレベルを上げますか？\`\`\``)
       .setFooter("ok or 0")
       .setColor("RANDOM")
       msg.edit({ embeds:[q_embed] })
@@ -896,10 +898,10 @@ async function talent(player_id,message){
       collector3.on('collect', async m => {
         if(m.content.toLowerCase() == "ok"){
           const lastembed = new MessageEmbed()
-          .setDescription(`\`\`\`diff\n+ レベルを上げました！\`\`\``)
+          .setDescription(`\`\`\`diff\n+ レベルを${value}上げました！\`\`\``)
           .setColor("RANDOM")
           msg.edit({ embeds:[lastembed] })
-          await add_talent_level(talent_name,)
+          await add_talent_level(talent_name,player_id,value)
         }else if(m.content == "0"){
           return msg.edit({ content:"```処理を終了しました...```" });
         }else{
@@ -962,6 +964,7 @@ async function add_talent_level(option,player_id,value){
   const status = await player_status.get(player_id)
   const nowlv =  status[5][num]
   status[5].splice(num,1,nowlv+value)
+  await player_status.set(player_id,status)
 }
 
 async function training(player_id,message){
