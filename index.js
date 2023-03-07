@@ -44,7 +44,7 @@ process.env.TZ = 'Asia/Tokyo'
 
 async function create_data(option,id){
   if(option == "player"){
-    await player_status.set(id,[100,550,10000,0,false])
+    await player_status.set(id,[100,550,10000,0,false,1])
     await player_items.set(id,[])
     await player_sozais.set(id,[])
   }else if(option == "monster"){
