@@ -881,9 +881,10 @@ async function talent(player_id,message){
       msg.edit({ embeds:[newembed] })
       const collector2 = message.channel.createMessageCollector({ filter: filter, idle: 60000, max: 1 });
       collector2.on('collect', async m => {
-        if(!Number(m.content).isInteger){
-          return 
+        if(!Number.isInteger(Number(m.content))){
+          return message.edot({ content: "```値が整数ではないので処理を終了しました...```" })
         }
+        return message.reply(await get_talent_level(talent_name,player_id))
       })
       collector2.on('end', async (collected, reason) => {
       if(reason == "idle"){
@@ -898,17 +899,17 @@ async function talent(player_id,message){
     })
 }
 
-async function get_talent(option,player_id){
+async function get_talent_level(option,player_id){
   let num;
-  if(option == "hp"){
+  if(option == "体力"){
     num = 0
-  }else if(option == "atk"){
+  }else if(option == "攻撃力"){
     num = 1
-  }else if(option == "def"){
+  }else if(option == "防御力"){
     num = 2
-  }else if(option == "rob"){
+  }else if(option == "盗み力"){
     num = 3
-  }else if(option == "exp"){
+  }else if(option == "経験値"){
     num = 4
   }else{
     return undefined
