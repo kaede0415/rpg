@@ -847,8 +847,15 @@ async function inquiry(channel_id,message){
   message.reply({ embeds:[embed], allowedMentions: { parse: [] } })
 }
 
-async function talent(player_id){
-  
+async function talent(player_id,message){
+  const player_name = client.users.cache.get(player_id).username
+  const status = await player_status.get(player_id)
+  const talents = status[5]
+  const embed = new MessageEmbed()
+  .setTitle(`${player_name}のタレント`)
+  .setDescription(`\`\`\`css\n[1.体力] ${talents[0]}\n[2.攻撃力] ${talents[1]}\n[3.防御力] ${talents[2]}\n[4.盗み力] ${talents[3]}\n[5.経験値] ${talents[4]}\`\`\``)
+  .setColor("RANDOM")
+  message.reply({ embeds:[embed], allowedMentions: { parse: [] } })
 }
 
 async function get_talent(option,player_id){
@@ -866,7 +873,8 @@ async function get_talent(option,player_id){
   }else{
     return undefined
   }
-  return 
+  const status = await player_status.get(player_id)
+  return status[5][num]
 }
 
 async function training(player_id,message){
@@ -1098,6 +1106,9 @@ client.on("messageCreate", async message => {
         embed.setDescription(`\`\`\`css\n[採掘者:${message.author.username}]\`\`\`\`\`\`diff\n${msg.join("\n")}\`\`\``)
       }
       message.reply({ embeds:[embed], allowedMentions: { parse: [] } })
+    }
+    if(command == "talent"){
+      await talent(message.author.id,message)
     }
     if(command == "itemid")
       if(admin_list.includes(message.author.id)){
