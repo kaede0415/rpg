@@ -1096,7 +1096,12 @@ function generate_monster(rank){
 }
 
 function gatya(time){
-  
+  const random = Math.random()
+  if(random <= 0.001){
+    
+  }else if(0.001 < random && random <= 0.005){
+    
+  }
 }
 
 http
