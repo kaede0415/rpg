@@ -899,6 +899,7 @@ async function talent(player_id,message){
           .setDescription(`\`\`\`diff\n+ レベルを上げました！\`\`\``)
           .setColor("RANDOM")
           msg.edit({ embeds:[lastembed] })
+          await add_talent_level(talent_name,)
         }else if(m.content == "0"){
           return msg.edit({ content:"```処理を終了しました...```" });
         }else{
@@ -941,6 +942,26 @@ async function get_talent_level(option,player_id){
   }
   const status = await player_status.get(player_id)
   return status[5][num]
+}
+
+async function add_talent_level(option,player_id,value){
+  let num;
+  if(option == "体力"){
+    num = 0
+  }else if(option == "攻撃力"){
+    num = 1
+  }else if(option == "防御力"){
+    num = 2
+  }else if(option == "盗み力"){
+    num = 3
+  }else if(option == "経験値"){
+    num = 4
+  }else{
+    return undefined
+  }
+  const status = await player_status.get(player_id)
+  const nowlv =  status[5][num]
+  status[5].splice(num,1,nowlv+value)
 }
 
 async function training(player_id,message){
