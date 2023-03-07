@@ -860,21 +860,23 @@ async function talent(player_id,message){
     const collector = message.channel.createMessageCollector({ filter: filter, idle: 60000, max: 1 });
     collector.on('collect', async m => {
       m.delete();
-      
+      let talent_name
       if(m.content == "1"){
-        msg.edit({ content:"体力" })
+        talent_name = "体力"
       }else if(m.content == "2"){
-        msg.edit({ content:"攻撃力" })
+        talent_name = "攻撃力"
       }else if(m.content == "3"){
-        msg.edit({ content:"防御力" })
+        talent_name = "防御力"
       }else if(m.content == "4"){
-        msg.edit({ content:"盗み力" })
+        talent_name = "盗み力"
       }else if(m.content == "5"){
-        msg.edit({ content:"経験値" })
+        talent_name = "経験値"
       }else if(m.content == "0"){
-        msg.edit({ content:"```処理を終了しました...```" });
-        collector.stop();
+        return msg.edit({ content:"```処理を終了しました...```" });
       }
+      const newembed = new MessageEmbed()
+      .setDescription(`[${talent_name}]\n上げたいレベルを送信してください`)
+      msg.edit({ embeds:[newembed] });
     });
     collector.on('end', async (collected, reason) => {
       if(reason == "idle"){
