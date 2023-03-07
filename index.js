@@ -1096,11 +1096,25 @@ function generate_monster(rank){
 }
 
 function gatya(time){
-  const random = Math.random()
-  if(random <= 0.001){
-    
-  }else if(0.001 < random && random <= 0.005){
-    
+  const rewards = []
+  for(let i=0;i<time;i++){
+    let reality
+    const random = Math.random()
+    if(random <= 0.001){
+      reality = "sur"
+    }else if(0.001 < random && random <= 0.005){
+      reality = "ur"
+    }else if(0.005 < random && random <= 0.105){
+      reality = "sr"
+    }else if(0.015 < random && random <= 0.405){
+      reality = "r"
+    }else{
+      reality = "n"
+    }
+    const monsters = require(`./monsters/${rank}.json`)
+      const number = Math.floor( Math.random() * Number( monsters.length.toString()) )
+      const monster = monsters[number]
+      return [monster.name,monster.rank,monster.img]
   }
 }
 
