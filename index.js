@@ -858,49 +858,50 @@ async function talent(player_id,message){
   .setColor("RANDOM")
   const msg = await message.reply({ embeds:[embed], allowedMentions: { parse: [] } })
   const filter = m => m.author.id == message.author.id;
-    const collector = message.channel.createMessageCollector({ filter: filter, idle: 60000, max: 1 });
-    collector.on('collect', async m => {
-      m.delete();
-      let talent_name
-      if(m.content == "1"){
-        talent_name = "体力"
-      }else if(m.content == "2"){
-        talent_name = "攻撃力"
-      }else if(m.content == "3"){
-        talent_name = "防御力"
-      }else if(m.content == "4"){
-        talent_name = "盗み力"
-      }else if(m.content == "5"){
-        talent_name = "経験値"
-      }else if(m.content == "0"){
-        return msg.edit({ content:"```処理を終了しました...```" });
+  const collector = message.channel.createMessageCollector({ filter: filter, idle: 60000, max: 1 });
+  collector.on('collect', async m => {
+    m.delete();
+    let talent_name
+    if(m.content == "1"){
+      talent_name = "体力"
+    }else if(m.content == "2"){
+      talent_name = "攻撃力"
+    }else if(m.content == "3"){
+      talent_name = "防御力"
+    }else if(m.content == "4"){
+      talent_name = "盗み力"
+    }else if(m.content == "5"){
+      talent_name = "経験値"
+    }else if(m.content == "0"){
+      return msg.edit({ content:"```処理を終了しました...```" });
+    }
+    const newembed = new MessageEmbed()
+    .setDescription(`[${talent_name}]\n上げたいレベルを送信してください`)
+    .setColor("RANDOM")
+    msg.edit({ embeds:[newembed] })
+    const collector2 = message.channel.createMessageCollector({ filter: filter, idle: 60000, max: 1 });
+    collector2.on('collect', async m => {
+      if(!Number.isInteger(Number(m.content))){
+        return message.edot({ content: "```値が整数ではないので処理を終了しました...```" })
       }
-      const newembed = new MessageEmbed()
-      .setDescription(`[${talent_name}]\n上げたいレベルを送信してください`)
+      const nowlevel = await get_talent_level(talent_name,player_id)
+      const lastembed = new MessageEmbed()
+      .setDescription(`\`\`\`css\n[${talent_name}]\nLv.${nowlevel} -> Lv.${nowlevel+Number(m.content)}\nレベルを上げますか？\`\`\``)
+      .setFooter("ok or 0")
       .setColor("RANDOM")
-      msg.edit({ embeds:[newembed] })
-      const collector2 = message.channel.createMessageCollector({ filter: filter, idle: 60000, max: 1 });
-      collector2.on('collect', async m => {
-        if(!Number.isInteger(Number(m.content))){
-          return message.edot({ content: "```値が整数ではないので処理を終了しました...```" })
-        }
-        const nowlevel = await get_talent_level(talent_name,player_id)
-        const lastembed = new MessageEmbed()
-        .setDescription(`[${talent_name}]\nLv.${nowlevel} -> Lv.${nowlevel+Number(m.content)}`)
-        .setColor("RANDOM")
-        msg.edit({ embeds:[lastembed] })
-      })
-      collector2.on('end', async (collected, reason) => {
+      msg.edit({ embeds:[lastembed] })
+    })
+    collector2.on('end', async (collected, reason) => {
       if(reason == "idle"){
         msg.edit({ content:"```時間切れです...```" });
       }
     })
-    });
-    collector.on('end', async (collected, reason) => {
-      if(reason == "idle"){
-        msg.edit({ content:"```時間切れです...```" });
-      }
-    })
+  });
+  collector.on('end', async (collected, reason) => {
+    if(reason == "idle"){
+      msg.edit({ content:"```時間切れです...```" });
+    }
+  })
 }
 
 async function get_talent_level(option,player_id){
