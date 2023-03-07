@@ -633,6 +633,10 @@ async function win_process(channel_id,exp){
       await obtain_item("2",1,members[i])
       item_members.push(`<@${members[i]}>は祈りの書を**1個**手に入れた！`)
       await obtain_item("3",1,members[i])
+      if(Math.random() <= 0.01){
+        item_members.push(`<@${members[i]}>は気を**1個**手に入れた！`)
+      await obtain_item("4",1,members[i])
+      }
     }else if(rank == "【レア】"){
       if(Math.random() <= 0.1){
         item_members.push(`<@${members[i]}>はエリクサーを**1個**手に入れた！`)
@@ -669,6 +673,10 @@ async function win_process(channel_id,exp){
       await obtain_item("2",1,members[i])
       item_members.push(`<@${members[i]}>は祈りの書を**1個**手に入れた！`)
       await obtain_item("3",1,members[i])
+      if(Math.random() <= 0.5){
+        item_members.push(`<@${members[i]}>は超新星爆発を**1個**手に入れた！`)
+        await obtain_item("5",1,members[i])
+      }
     }else{
       if(Math.random() <= 0.05){
         item_members.push(`<@${members[i]}>はエリクサーを**1個**手に入れた！`)
@@ -1085,7 +1093,7 @@ client.on("messageCreate", async message => {
         message.reply({ content:"実行権限がありません。", allowedMentions: { parse: [] } })
         message.react("❎")
       }
-    if(command == "consumeitem"){
+    if(command == "consumesozai"){
       const sozaiId = message.content.split(" ")[1]
       const quantity = message.content.split(" ")[2]
       let player;
