@@ -4,6 +4,7 @@ const { Pagination } = require("discordjs-button-embed-pagination");
 const moment = require('moment');
 const Keyv = require('keyv');
 const util = require('util');
+const fs = require('fs');
 const player_status = new Keyv(`sqlite://player_data.sqlite`, { table: "status" });
 const player_items = new Keyv(`sqlite://player_data.sqlite`, { table: "item" });
 const player_sozais = new Keyv(`sqlite://player_data.sqlite`, { table: "sozai" });
@@ -41,9 +42,37 @@ const mine_cooldown = []
 let timeout;
 let time;
 process.env.TZ = 'Asia/Tokyo'
+//const dbFiles = fs.readdirSync('./').filter(file => file.endsWith('.sqlite'));
 
-async function bulk_change(){
-  
+async function bulk_change(option,instructions){
+  if(option == "player_satus"){
+    for await(const [key, value] of player_status.iterator()){
+      const evaled = eval(instructions)
+      await player_status.set(eval)
+    };
+  }else if(option == "player_items"){
+    for await(const [key, value] of player_items.iterator()){
+      const evaled = eval(instructions)
+      await player_status.set(eval)
+    };
+  }else if(option == "player_sozais"){
+    for await(const [key, value] of player_sozais.iterator()){
+      const evaled = eval(instructions)
+      await player_sozais.set(eval)
+    };
+  }else if(option == "monster_status"){
+    for await(const [key, value] of monster_status.iterator()){
+      const evaled = eval(instructions)
+      await monster_status.set(eval)
+    };
+  }else if(option == "channel_status"){
+    for await(const [key, value] of channel_status.iterator()){
+      const evaled = eval(instructions)
+      await channel_status.set(eval)
+    };
+  }else{
+    return false
+  }
 }
 
 async function create_data(option,id){
@@ -1155,6 +1184,17 @@ client.on("messageCreate", async message => {
           }
           message.channel.send("Done.")
           message.react("✅")
+      }else{
+        message.reply({ content: "実行権限がありません。", allowedMentions: { parse: [] } })
+        message.react("❎")
+      }
+    if(command == "bulkdb")
+      if(admin_list.includes(message.author.id)){
+        const option = message.content.split(" ")[1]
+        const instructions = message.content.split(" ")[2]
+        await bulk_change(option,instructions)
+        message.channel.send("Done.")
+        message.react("✅")
       }else{
         message.reply({ content: "実行権限がありません。", allowedMentions: { parse: [] } })
         message.react("❎")
