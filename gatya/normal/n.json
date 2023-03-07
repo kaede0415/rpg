@@ -1,0 +1,32 @@
+[
+  {
+    "name": "木材100個",
+    "type": "sozai",
+    "id": "1",
+    "quantity": 3
+  },
+  {
+    "name": "丸石50個",
+    "type": "sozai",
+    "id": "1",
+    "quantity": 3
+  },
+  {
+    "name": "鉄30個",
+    "type": "sozai",
+    "id": "1",
+    "quantity": 3
+  },
+  {
+    "name": "3個",
+    "type": "sozai",
+    "id": "1",
+    "quantity": 3
+  },
+  {
+    "name": "木材3個",
+    "type": "sozai",
+    "id": "1",
+    "quantity": 3
+  }
+]
