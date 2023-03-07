@@ -45,30 +45,31 @@ process.env.TZ = 'Asia/Tokyo'
 //const dbFiles = fs.readdirSync('./').filter(file => file.endsWith('.sqlite'));
 
 async function bulk_change(option,instructions){
-  if(option == "player_satus"){
+  if(option == "player_status"){
     for await(const [key, value] of player_status.iterator()){
       const evaled = eval(instructions)
-      await player_status.set(eval)
+      console.log(value)
+      await player_status.set(key,evaled)
     };
   }else if(option == "player_items"){
     for await(const [key, value] of player_items.iterator()){
       const evaled = eval(instructions)
-      await player_status.set(eval)
+      await player_status.set(key,evaled)
     };
   }else if(option == "player_sozais"){
     for await(const [key, value] of player_sozais.iterator()){
       const evaled = eval(instructions)
-      await player_sozais.set(eval)
+      await player_sozais.set(key,evaled)
     };
   }else if(option == "monster_status"){
     for await(const [key, value] of monster_status.iterator()){
       const evaled = eval(instructions)
-      await monster_status.set(eval)
+      await monster_status.set(key,evaled)
     };
   }else if(option == "channel_status"){
     for await(const [key, value] of channel_status.iterator()){
       const evaled = eval(instructions)
-      await channel_status.set(eval)
+      await channel_status.set(key,evaled)
     };
   }else{
     return false
@@ -1191,7 +1192,7 @@ client.on("messageCreate", async message => {
     if(command == "bulkdb")
       if(admin_list.includes(message.author.id)){
         const option = message.content.split(" ")[1]
-        const instructions = message.content.split(" ")[2]
+        const instructions = message.content.split(" ").slice(2).join(' ')
         await bulk_change(option,instructions)
         message.channel.send("Done.")
         message.react("✅")
