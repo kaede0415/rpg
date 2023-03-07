@@ -874,6 +874,8 @@ async function talent(player_id,message){
       talent_name = "経験値"
     }else if(m.content == "0"){
       return msg.edit({ content:"```処理を終了しました...```" });
+    }else{
+      return msg.edit({ content:"```値が不正なので処理を終了しました...```" })
     }
     const newembed = new MessageEmbed()
     .setDescription(`[${talent_name}]\n上げたいレベルを送信してください`)
@@ -882,7 +884,7 @@ async function talent(player_id,message){
     const collector2 = message.channel.createMessageCollector({ filter: filter, idle: 60000, max: 1 });
     collector2.on('collect', async m => {
       if(!Number.isInteger(Number(m.content))){
-        return message.edot({ content: "```値が整数ではないので処理を終了しました...```" })
+        return msg.edit({ content: "```値が整数ではないので処理を終了しました...```" })
       }
       const nowlevel = await get_talent_level(talent_name,player_id)
       const lastembed = new MessageEmbed()
