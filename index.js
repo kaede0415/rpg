@@ -1095,6 +1095,8 @@ function generate_monster(rank){
   }
 }
 
+function gatya(time)
+
 http
   .createServer(function(request, response) {
     response.writeHead(200, { 'Content-Type': 'text/plain;charset=utf-8' })

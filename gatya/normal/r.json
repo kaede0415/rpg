@@ -1,0 +1,20 @@
+[
+  {
+    "name": "鉄30個",
+    "type": "sozai",
+    "id": "3",
+    "quantity": 30
+  },
+  {
+    "name": "ダイヤモンド10個",
+    "type": "sozai",
+    "id": "4",
+    "quantity": 10
+  },
+  {
+    "name": "石炭30個",
+    "type": "sozai",
+    "id": "5",
+    "quantity": 30
+  }
+]
