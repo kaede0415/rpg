@@ -886,6 +886,9 @@ async function talent(player_id,message){
       if(!Number.isInteger(Number(m.content))){
         return msg.edit({ content: "```値が整数ではないので処理を終了しました...```" })
       }
+      if(Number(m.content) <= 0){
+        return msg.edit({ content: "```値は1以上の整数にしてください```" })
+      }
       const nowlevel = await get_talent_level(talent_name,player_id)
       const value = Number(m.content)
       const newlevel = nowlevel+value
