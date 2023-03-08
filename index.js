@@ -1116,7 +1116,12 @@ function gatya(time){
     const reward = reward_list[number]
     rewards.push([`【${reality.toUpperCase()}レア】`,reward.name,reward.type,reward.id,reward.quantity])
   }
-  
+  let count = {};
+  for(let i=0;i<rewards.length;i++) {
+    var elm = rewards[i][1];
+    count[elm] = (count[elm] || 0) + 1;
+  }
+  console.log(count);
   return rewards
 }
 
