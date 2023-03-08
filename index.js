@@ -1122,6 +1122,7 @@ function gatya(time){
     count[elm] = (count[elm] || 0) + 1;
   }
   const length = Object.keys(count).length
+  
   return rewards
 }
 
