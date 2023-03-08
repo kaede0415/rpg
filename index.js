@@ -1116,6 +1116,7 @@ function gatya(time){
     const reward = reward_list[number]
     rewards.push([`【${reality.toUpperCase()}レア】`,reward.name,reward.type,reward.id,reward.quantity])
   }
+  
   return rewards
 }
 
