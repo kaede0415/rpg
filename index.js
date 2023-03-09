@@ -1097,6 +1097,7 @@ function generate_monster(rank){
 
 function gatya(time){
   const rewards = []
+  const rewards_name = []
   for(let i=0;i<time;i++){
     let reality
     const random = Math.random()
@@ -1115,15 +1116,22 @@ function gatya(time){
     const number = Math.floor( Math.random() * Number( reward_list.length.toString()) )
     const reward = reward_list[number]
     rewards.push([`【${reality.toUpperCase()}レア】`,reward.name,reward.type,reward.id,reward.quantity])
+    rewards_name.push(reward.name)
   }
   let count = {};
   for(let i=0;i<rewards.length;i++) {
     var elm = rewards[i][1];
     count[elm] = (count[elm] || 0) + 1;
   }
+  console.log(count)
   const length = Object.keys(count).length
   for(let i=0;i<length;i++){
-    console.log(`${Object.keys(count)[i]}:${count[rewards[i][1]]}`)
+    const name = Object.keys(count)[i]
+    const quant = Object.values(count)[i]
+    const num = rewards_name.indexOf(name)
+    const quantity = rewards[num][4]
+    rewards[num].splice(4,1,quantity*quant)
+    
   }
   return rewards
 }
