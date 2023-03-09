@@ -1136,22 +1136,10 @@ function gatya(option,time){
     console.log(this[i[1]])
     if(!this[i[1]]){
       return this[i[1]] = true
-    }else if(this[i[1]] == true){
-      return this[i[1]] = false
     }else if(this[i[1]] == false){
-      return this[i[1]] = true
+      return this[i[1]] = false
     }
   });
-}
-
-function gatya_remove_duplicates(array){
-  const newarray = array.filter(i => {
-    if(!this[i[1]]){
-      return this[i[1]] = true
-    }
-  });
-  console.log(newarray)
-  return newarray
 }
 
 http
