@@ -1263,10 +1263,11 @@ client.on("messageCreate", async message => {
       }else{
         time = Number(time)
       }
-      if(await consume_item("100000",time,message.author.id) == false){
+      if(await get_item_quantity(message.author.id,100000) < time){
         return message.reply({ content: "がちゃちけがたりん！" })
       }
       message.reply({ content: "```diff\n+ ガチャを引き終わるまでしばらくお待ち下さい```" })
+      await consume_item("100000",time,message.author.id)
       const result = gatya("normal",time)
       const msgs = []
       for(let i=0;i<result.length;i++){
