@@ -1266,6 +1266,7 @@ client.on("messageCreate", async message => {
       if(await consume_item("100000",time,message.author.id) == false){
         return message.reply({ content: "がちゃちけがたりん！" })
       }
+      message.reply({ content: "```diff\n+ ガチャを引き終わるまでしばらくお待ち下さい```" })
       const result = gatya("normal",time)
       const msgs = []
       for(let i=0;i<result.length;i++){
@@ -1279,7 +1280,7 @@ client.on("messageCreate", async message => {
       const embed = new MessageEmbed()
       .setTitle(`ガチャ結果${time}枚`)
       .setDescription(msgs.join("\n"))
-      message.reply({ embeds:[embed] })
+      message.channel.send({ embeds:[embed] })
     }
     if(command == "mine"){
       const msg = await mine(message.author.id,message.channel.id)
