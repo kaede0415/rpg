@@ -1132,7 +1132,7 @@ function gatya(option,time){
     rewards[num].splice(4,1,quantity*quant)
   }
   const new_rewards = [...new Set(rewards.map(JSON.stringify))].map(JSON.parse);
-  console.log(rewards)
+  console.log(new_rewards)
   return new_rewards
 }
 
