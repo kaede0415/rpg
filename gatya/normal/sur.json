@@ -10,5 +10,11 @@
     "type": "item",
     "id": "100000",
     "quantity": 100
+  },
+  {
+    "name": "豪運の証1個",
+    "type": "item",
+    "id": "-100000",
+    "quantity": 1
   }
 ]
