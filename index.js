@@ -10,6 +10,7 @@ const player_items = new Keyv(`sqlite://player_data.sqlite`, { table: "item" });
 const player_sozais = new Keyv(`sqlite://player_data.sqlite`, { table: "sozai" });
 const monster_status = new Keyv(`sqlite://monster_data.sqlite`, { table: "status" });
 const channel_status = new Keyv(`sqlite://channel_data.sqlite`, { table: "channel" });
+const lists = new Keyv(`sqlite://db.sqlite`, { table: "list" });
 const client = new Client({
   partials: ["CHANNEL"],
   intents: new Intents(32767),

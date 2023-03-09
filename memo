@@ -1,0 +1,11 @@
+[DB保存方法]
+1.status
+["Level","HP(leftover)","EXP","Subjugations","Now_in_battle",["talent_hp","talent_atk","talent_def","talent_rob","talent_exp"]]
+2.item
+[["ID","個数"],["ID","個数"],["ID","個数"]]
+3.enemy_status
+["Level","HP(leftover)","Name","Rank","Image"]
+4.channel
+["Level","On_battle",["id1","id2"]]
+5.lists
+[["LOGINLIST"],["BANLIST"]]
