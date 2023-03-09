@@ -520,6 +520,16 @@ async function get_item_quantity(player_id,item_id){
   return 0
 }
 
+async function get_sozai_quantity(player_id,sozai_id){
+  const sozaiList = await player_sozais.get(player_id)
+  sozaiList.forEach(x => {
+    if(x[0] == sozai_id){
+      return x[1]
+    }
+  })
+  return 0
+}
+
 function get_item_name(item_id){
   const hoge = JSON.parse(JSON.stringify(item_json))
   const keyList = Object.keys(hoge)
@@ -1239,7 +1249,14 @@ client.on("messageCreate", async message => {
       await inquiry(message.channel.id,message)
     }
     if(command == "gatya"){
-      const time = Number(message.content.slice(prefix.length+6).trim())
+      let time = message.content.slice(prefix.length+6).trim()
+      if(!time){
+        return message.reply({ content: "回数を入力してください" })
+      }else if(time != "max" && Number.isInteger(Number(time))){
+        return message.reply({ content: "引数が不正です" })
+      }else if(time == "max"){
+        time = await get_item_quantity(message.author.id,"100000")
+      }
       if(await consume_item("100000",time,message.author.id) == false){
         return message.reply({ content: "がちゃちけがたりん！" })
       }
