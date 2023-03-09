@@ -511,23 +511,27 @@ function monster_attack_process(player_name,player_level,player_hp,monster_name,
 }
 
 async function get_item_quantity(player_id,item_id){
+  let quantity;
   const itemList = await player_items.get(player_id)
   itemList.forEach(x => {
     if(x[0] == item_id){
-      return x[1]
+      quantity = x[1]
     }
   })
-  return 0
+  if(quantity) return quantity
+  else return 0
 }
 
 async function get_sozai_quantity(player_id,sozai_id){
+  let quantity;
   const sozaiList = await player_sozais.get(player_id)
   sozaiList.forEach(x => {
     if(x[0] == sozai_id){
-      return x[1]
+      quantity = x[1]
     }
   })
-  return 0
+  if(quantity) return quantity
+  else return 0
 }
 
 function get_item_name(item_id){
@@ -1273,7 +1277,7 @@ client.on("messageCreate", async message => {
         msgs.push(`\`\`\`${result[i][0]}${result[i][1]}\`\`\`->${result[i][4]}個`)
       }
       const embed = new MessageEmbed()
-      .setTitle("ガチャ結果")
+      .setTitle(`ガチャ結果${time}枚`)
       .setDescription(msgs.join("\n"))
       message.reply({ embeds:[embed] })
     }
