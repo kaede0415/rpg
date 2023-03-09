@@ -1095,9 +1095,9 @@ function generate_monster(rank){
   }
 }
 
-function gatya(time){
-  const rewards = []
-  const rewards_name = []
+function gatya(option,time){
+  let rewards = []
+  let rewards_name = []
   for(let i=0;i<time;i++){
     let reality
     const random = Math.random()
@@ -1112,7 +1112,7 @@ function gatya(time){
     }else{
       reality = "n"
     }
-    const reward_list = require(`./gatya/normal/${reality}.json`)
+    const reward_list = require(`./gatya/${option}/${reality}.json`)
     const number = Math.floor( Math.random() * Number( reward_list.length.toString()) )
     const reward = reward_list[number]
     rewards.push([`【${reality.toUpperCase()}レア】`,reward.name,reward.type,reward.id,reward.quantity])
@@ -1123,7 +1123,6 @@ function gatya(time){
     var elm = rewards[i][1];
     count[elm] = (count[elm] || 0) + 1;
   }
-  console.log(count)
   const length = Object.keys(count).length
   for(let i=0;i<length;i++){
     const name = Object.keys(count)[i]
@@ -1131,9 +1130,13 @@ function gatya(time){
     const num = rewards_name.indexOf(name)
     const quantity = rewards[num][4]
     rewards[num].splice(4,1,quantity*quant)
-    
   }
-  return rewards
+  let new_rewards = rewards.filter(function (i) {
+    if(!this[i[1]]){
+      return this[i[1]] = true;
+    }
+  });
+  return new_rewards
 }
 
 http
@@ -1229,6 +1232,15 @@ client.on("messageCreate", async message => {
     }
     if(command == "inquiry" || command == "inq"){
       await inquiry(message.channel.id,message)
+    }
+    if(command == "gatya"){
+      const time = message.content.slice(prefix.length+6).trim()
+      const result = gatya("normal",time)
+      const msgs = []
+      for(let i=0;i<result.length;i++){
+        msgs.push(`\`\`\`${result[i][0]}${result[i][1]}\`\`\`->${result[i][3]}個`)
+      }
+      
     }
     if(command == "mine"){
       const msg = await mine(message.author.id,message.channel.id)
