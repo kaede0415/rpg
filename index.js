@@ -1136,8 +1136,10 @@ function gatya(option,time){
     console.log(this[i[1]])
     if(!this[i[1]]){
       return this[i[1]] = true
-    }else{
+    }else if(this[i[1]] == true){
       return this[i[1]] = false
+    }else if(this[i[1]] == false){
+      return this[i[1]] = true
     }
   });
 }
