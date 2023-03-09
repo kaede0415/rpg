@@ -666,6 +666,10 @@ async function win_process(channel_id,exp){
   const item_members = []
   const members = ch_status[2]
   for(let i=0;i<members.length;i++){
+    const status = await player_status.get(members[i])
+    const sub = status[3]
+    status.splice(3,1,sub+1)
+    await player_status.set(members[i],status)
     let expcalc = exp
     const rank = await get_monster_rank(channel_id)
     if(rank == "【強敵】"){
@@ -696,7 +700,7 @@ async function win_process(channel_id,exp){
       await obtain_item("3",1,members[i])
       if(Math.random() <= 0.01){
         item_members.push(`<@${members[i]}>は気を**1個**手に入れた！`)
-      await obtain_item("4",1,members[i])
+        await obtain_item("4",1,members[i])
       }
       if(Math.random() <= 0.03){
         item_members.push(`<@${members[i]}>は100円硬貨を**1個**手に入れた！`)
