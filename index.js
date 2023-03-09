@@ -1256,10 +1256,12 @@ client.on("messageCreate", async message => {
       let time = message.content.slice(prefix.length+6).trim()
       if(!time){
         return message.reply({ content: "回数を入力してください" })
-      }else if(time != "max" && !Number.isInteger(Number(time))){
+      }else if(time != "max" && !Number.isInteger(Number(time)) || Number(time) <= 0){
         return message.reply({ content: "引数が不正です" })
       }else if(time == "max"){
         time = Number(await get_item_quantity(message.author.id,100000))
+      }else if(time == 0){
+        return message.reply({ content: "がちゃちけないやん" })
       }else{
         time = Number(time)
       }
