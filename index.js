@@ -1132,7 +1132,6 @@ function gatya(option,time){
     rewards[num].splice(4,1,quantity*quant)
   }
   const newrewards = rewards.filter(i => {
-    console.log(this[i[1]])
     if(!this[i[1]] || this[i[1]] == false){
       return this[i[1]] = true
     }
@@ -1247,10 +1246,10 @@ client.on("messageCreate", async message => {
       const result = gatya("normal",time)
       const msgs = []
       for(let i=0;i<result.length;i++){
-        if(result[i][1] == "item"){
-          await obtain_item(result[i][2],result[i][3],message.author.id)
-        }else if(result[i][1] == "sozai"){
-          await obtain_sozai(result[i][2],result[i][3],message.author.id)
+        if(result[i][2] == "item"){
+          await obtain_item(result[i][3],result[i][4],message.author.id)
+        }else if(result[i][2] == "sozai"){
+          await obtain_sozai(result[i][3],result[i][4],message.author.id)
         }
         msgs.push(`\`\`\`${result[i][0]}${result[i][1]}\`\`\`->${result[i][4]}個`)
       }
