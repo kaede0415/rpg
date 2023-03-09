@@ -1096,8 +1096,8 @@ function generate_monster(rank){
 }
 
 function gatya(option,time){
-  let rewards = []
-  let rewards_name = []
+  const rewards = []
+  const rewards_name = []
   for(let i=0;i<time;i++){
     let reality
     const random = Math.random()
@@ -1131,9 +1131,9 @@ function gatya(option,time){
     const quantity = rewards[num][4]
     rewards[num].splice(4,1,quantity*quant)
   }
-  let new_rewards = rewards.filter(function (i) {
+  const new_rewards = rewards.filter(function(i){
     if(!this[i[1]]){
-      return this[i[1]] = true;
+		  return this[i[1]] = true;
     }
   });
   return new_rewards
@@ -1234,13 +1234,16 @@ client.on("messageCreate", async message => {
       await inquiry(message.channel.id,message)
     }
     if(command == "gatya"){
-      const time = message.content.slice(prefix.length+6).trim()
+      const time = Number(message.content.slice(prefix.length+6).trim())
       const result = gatya("normal",time)
       const msgs = []
       for(let i=0;i<result.length;i++){
-        msgs.push(`\`\`\`${result[i][0]}${result[i][1]}\`\`\`->${result[i][3]}個`)
+        msgs.push(`\`\`\`${result[i][0]}${result[i][1]}\`\`\`->${result[i][4]}個`)
       }
-      
+      const embed = new MessageEmbed()
+      .setTitle("ガチャ結果")
+      .setDescription(msgs.join("\n"))
+      message.reply({ embeds:[embed] })
     }
     if(command == "mine"){
       const msg = await mine(message.author.id,message.channel.id)
