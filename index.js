@@ -1131,10 +1131,11 @@ function gatya(option,time){
     const quantity = rewards[num][4]
     rewards[num].splice(4,1,quantity*quant)
   }
-  for(let i=0;i<rewards.length;i++){
-    
-  }
-  console.log(new_rewards)
+  const new_rewards = rewards.filter(i => {
+    if(!i[1]){
+  		return i[1] = true;
+	  }
+  });
   return new_rewards
 }
 
