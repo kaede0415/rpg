@@ -4,5 +4,11 @@
     "type": "sozai",
     "id": "1",
     "quantity": 10000
+  },
+  {
+    "name": "ガチャチケ100個",
+    "type": "item",
+    "id": "100000",
+    "quantity": 100
   }
 ]
