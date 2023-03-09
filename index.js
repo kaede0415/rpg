@@ -1131,14 +1131,13 @@ function gatya(option,time){
     const quantity = rewards[num][4]
     rewards[num].splice(4,1,quantity*quant)
   }
-  rewards.filter(i => {
-    if(this[i[1]]){
-      return this[i[1]] = true
-    }
-  })
+  console.log(rewards)
   return rewards.filter(i => {
+    console.log(this[i[1]])
     if(!this[i[1]]){
       return this[i[1]] = true
+    }else{
+      return this[i[1]] = false
     }
   });
 }
