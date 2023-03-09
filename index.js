@@ -682,6 +682,10 @@ async function win_process(channel_id,exp){
         item_members.push(`<@${members[i]}>は祈りの書を**1個**手に入れた！`)
         await obtain_item("3",1,members[i])
       }
+      if(Math.random() <= 0.02){
+        item_members.push(`<@${members[i]}>は100円硬貨を**1個**手に入れた！`)
+        await obtain_item("100000",1,members[i])
+      }
     }else if(rank == "【超強敵】"){
       expcalc = expcalc*5
       item_members.push(`<@${members[i]}>はエリクサーを**1個**手に入れた！`)
@@ -693,6 +697,10 @@ async function win_process(channel_id,exp){
       if(Math.random() <= 0.01){
         item_members.push(`<@${members[i]}>は気を**1個**手に入れた！`)
       await obtain_item("4",1,members[i])
+      }
+      if(Math.random() <= 0.03){
+        item_members.push(`<@${members[i]}>は100円硬貨を**1個**手に入れた！`)
+        await obtain_item("100000",1,members[i])
       }
     }else if(rank == "【レア】"){
       if(Math.random() <= 0.1){
@@ -706,6 +714,10 @@ async function win_process(channel_id,exp){
       if(Math.random() <= 0.2){
         item_members.push(`<@${members[i]}>は祈りの書を**1個**手に入れた！`)
         await obtain_item("3",1,members[i])
+      }
+      if(Math.random() <= 0.05){
+        item_members.push(`<@${members[i]}>は100円硬貨を**1個**手に入れた！`)
+        await obtain_item("100000",1,members[i])
       }
       expcalc = expcalc*10
     }else if(rank == "【激レア】"){
@@ -722,6 +734,10 @@ async function win_process(channel_id,exp){
         item_members.push(`<@${members[i]}>は祈りの書を**1個**手に入れた！`)
         await obtain_item("3",1,members[i])
       }
+      if(Math.random() <= 0.1){
+        item_members.push(`<@${members[i]}>は100円硬貨を**1個**手に入れた！`)
+        await obtain_item("100000",1,members[i])
+      }
     }else if(rank == "【超激レア】"){
       expcalc = expcalc*1000
       item_members.push(`<@${members[i]}>はエリクサーを**1個**手に入れた！`)
@@ -730,6 +746,8 @@ async function win_process(channel_id,exp){
       await obtain_item("2",1,members[i])
       item_members.push(`<@${members[i]}>は祈りの書を**1個**手に入れた！`)
       await obtain_item("3",1,members[i])
+      item_members.push(`<@${members[i]}>は100円硬貨を**1個**手に入れた！`)
+      await obtain_item("100000",1,members[i])
       if(Math.random() <= 0.5){
         item_members.push(`<@${members[i]}>は超新星爆発を**1個**手に入れた！`)
         await obtain_item("5",1,members[i])
@@ -746,6 +764,10 @@ async function win_process(channel_id,exp){
       if(Math.random() <= 0.1){
         item_members.push(`<@${members[i]}>は祈りの書を**1個**手に入れた！`)
         await obtain_item("3",1,members[i])
+      }
+      if(Math.random() <= 0.01){
+        item_members.push(`<@${members[i]}>は100円硬貨を**1個**手に入れた！`)
+        await obtain_item("100000",1,members[i])
       }
     }
     exp_members.push(`<@${members[i]}>は**${expcalc.toLocaleString()}EXP**を獲得した。`)
