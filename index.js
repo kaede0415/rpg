@@ -1132,11 +1132,19 @@ function gatya(option,time){
     rewards[num].splice(4,1,quantity*quant)
   }
   const new_rewards = rewards.filter(i => {
-    if(!i[1]){
-  		return i[1] = true;
-	  }
+    if(!this[i[1]]){
+      return this[i[1]] = true
+    }
   });
   return new_rewards
+}
+
+function multi_array_remove_duplicates(array){
+  rewards.filter(i => {
+    if(!this[i[1]]){
+      return this[i[1]] = true
+    }
+  });
 }
 
 http
