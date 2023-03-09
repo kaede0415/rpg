@@ -1131,13 +1131,18 @@ function gatya(option,time){
     const quantity = rewards[num][4]
     rewards[num].splice(4,1,quantity*quant)
   }
-  console.log(rewards)
-  return rewards.filter(i => {
+  const newrewards = rewards.filter(i => {
     console.log(this[i[1]])
-    if(!this[i[1]]){
+    if(!this[i[1]] || this[i[1]] == false){
       return this[i[1]] = true
     }
   });
+  rewards.filter(i => {
+    if(this[i[1]] == true || this[i[1]] == false){
+      return this[i[1]] = undefined
+    }
+  });
+  return newrewards
 }
 
 http
@@ -1236,9 +1241,17 @@ client.on("messageCreate", async message => {
     }
     if(command == "gatya"){
       const time = Number(message.content.slice(prefix.length+6).trim())
+      if(await consume_item("100000",time,message.author.id) == false){
+        return message.reply({ content: "がちゃちけがたりん！" })
+      }
       const result = gatya("normal",time)
       const msgs = []
       for(let i=0;i<result.length;i++){
+        if(result[i][1] == "item"){
+          await obtain_item(result[i][2],result[i][3],message.author.id)
+        }else if(result[i][1] == "sozai"){
+          await obtain_sozai(result[i][2],result[i][3],message.author.id)
+        }
         msgs.push(`\`\`\`${result[i][0]}${result[i][1]}\`\`\`->${result[i][4]}個`)
       }
       const embed = new MessageEmbed()
