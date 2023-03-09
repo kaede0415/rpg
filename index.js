@@ -5,6 +5,7 @@ const moment = require('moment');
 const Keyv = require('keyv');
 const util = require('util');
 const fs = require('fs');
+const cron = require('node-cron');
 const player_status = new Keyv(`sqlite://player_data.sqlite`, { table: "status" });
 const player_items = new Keyv(`sqlite://player_data.sqlite`, { table: "item" });
 const player_sozais = new Keyv(`sqlite://player_data.sqlite`, { table: "sozai" });
@@ -1198,10 +1199,10 @@ if (process.env.DISCORD_BOT_TOKEN == undefined) {
 }
 
 client.on('ready', async () => {
-    client.user.setActivity(`${prefix}help`, {
-      type: 'PLAYING'
-    });
-    client.user.setStatus("idle");
+  client.user.setActivity(`${prefix}help`, {
+    type: 'PLAYING'
+  });
+  client.user.setStatus("idle");
   console.log(`${client.user.tag} is ready!`);
   const embed = new MessageEmbed()
   .setTitle("起動しました！")
@@ -1209,6 +1210,14 @@ client.on('ready', async () => {
   .setThumbnail(client.user.displayAvatarURL())
   .setColor("RANDOM")
   client.channels.cache.get("1072311355606048839").send({ embeds:[embed] })
+});
+
+cron.schedule('0 0 0 * * *', async () => {
+  const list = await lists.get(client.user.id)
+  const login_list = list[0]
+  list.splice(1,1,[])
+  await lists.set(client.user.id,list)
+  console.log("ログイン情報をリセットしました。")
 });
 
 client.on("messageCreate", async message => {
@@ -1219,8 +1228,17 @@ client.on("messageCreate", async message => {
   }
   if(message.content.startsWith(prefix) && cmd_list.includes(command)){
     const p_status = await player_status.get(message.author.id)
+    const list = await lists.get(client.user.id)
+    const login_list = list[0]
     if(!p_status){
       await create_data("player",message.author.id)
+    }
+    if(!login_list.includes(message.author.id)){
+      const embed = new MessageEmbed()
+      .setTitle("ろぐいん")
+      message.channel.send({ embeds:[embed] })
+      login_list.push(message.author.id)
+      await list.set(client.user.id,list)
     }
   }
   try{
