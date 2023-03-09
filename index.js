@@ -1132,7 +1132,7 @@ function gatya(option,time){
     rewards[num].splice(4,1,quantity*quant)
   }
   const newarray = gatya_remove_duplicates(rewards)
-  return gatya_remove_duplicates(rewards)
+  return newarray
 }
 
 function gatya_remove_duplicates(array){
