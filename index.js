@@ -32,7 +32,7 @@ const newbutton = (buttondata) => {
   };
 };
 const prefix = "_"
-const cmd_list = ["help","status","st","attack","atk","item","i"]
+const cmd_list = ["help","status","st","attack","atk","item","i","in","reset","re","rs","inquiry","inq","talent","training","t","mine","gatya","itemid","consumeitem","sozaiid","consumesozai","exp","eval","db","bulkdb"]
 const command_json = require("./jsons/command.json")
 const item_json = require("./jsons/item.json")
 const sozai_json = require("./jsons/sozai.json")
