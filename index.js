@@ -104,6 +104,8 @@ async function create_data(option,id){
 }
 
 async function generate_detection(player_id,message){
+  const player = client.users.cache.get(player_id)
+  let status = await player_status.get(player_id)
   const deru = await get_item_quantity(player_id,999)
   const denai = await get_item_quantity(player_id,-999)
   let probability = 0.001
@@ -113,7 +115,43 @@ async function generate_detection(player_id,message){
     probability = probability + (deru * 0.001)
   }
   if(Math.random() < probability){
-    
+    status.splice(7,1,true)
+    await status.set(player_id,status)
+    const embed = new MessageEmbed()
+      .setTitle("マクロ検知")
+      .setDescription("ボタンを押してください。")
+      .setColor("RANDOM")
+      .setAuthor(`検知者:${player.tag}`,player.displayAvatarURL())
+      .setFooter("制限時間:1分")
+      const o_embed = new MessageEmbed()
+      .setTitle("マクロ検知")
+      .setDescription("認証しました。")
+      .setColor("RANDOM")
+      .setAuthor(`検知者:${player.tag}`,player.displayAvatarURL())
+      const x_embed = new MessageEmbed()
+      .setTitle("マクロ検知")
+      .setDescription("時間切れです。")
+      .setColor("RANDOM")
+      .setAuthor(`検知者:${player.tag}`,player.displayAvatarURL())
+      const msg = await message.reply({ embeds: [embed], components: [ newbutton([ { id: "ok", label: "私はBOTではありません。" } ]) ] })
+      const timer = setTimeout(async () => {
+        msg.edit({ embeds: [x_embed], components: [] })
+        await ban(player_id)
+        status = await player_status.get(player_id)
+      },1000*60);
+      client.on("interactionCreate", async interaction => {
+        if(interaction.user.id != message.author.id){
+          return;
+        }
+        if(interaction.customId == "ok"){
+          interaction.message.edit({ embeds: [o_embed], components: [] })
+          interaction.reply({ content: "認証しました。", ephemeral: true })
+          await p_kenti.set(message.author.id,false)
+          clearTimeout(timer);
+        }
+      });
+      return;
+    }
   }
 }
 
@@ -1288,6 +1326,11 @@ client.on("messageCreate", async message => {
       await obtain_item("100000",tlength,message.author.id)
       login_list.push(message.author.id)
       await lists.set(client.user.id,list)
+    }
+    for await(const [key, value] of player_status.iterator()){
+      if(client.users.cache.get(key) == undefined){
+        await delete_data("player",key)
+      }
     }
   }
   try{
