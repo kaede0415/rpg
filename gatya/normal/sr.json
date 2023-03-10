@@ -1,8 +1,8 @@
 [
   {
-    "name": "エリクサー100個",
+    "name": "エリクサー10個",
     "type": "item",
     "id": "1",
-    "quantity": 100
+    "quantity": 10
   }
 ]
