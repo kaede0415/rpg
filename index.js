@@ -103,6 +103,13 @@ async function create_data(option,id){
   }
 }
 
+async function generate_detection(player_id,message){
+  const deru = await get_item_quantity(player_id,999)
+  const denai = await get_item_quantity(player_id,-999)
+  let probability = 0.001
+  
+}
+
 async function delete_data(option,id){
   if(option == "player"){
     await player_status.delete(id)
@@ -120,13 +127,24 @@ async function delete_data(option,id){
 async function ban(player_id){
   const list = await lists.get(client.user.id)
   const ban_list = list[1]
-  ban_list.push(player_id)
+  if(ban_list.includes(player_id)){
+    return false
+  }else{
+    ban_list.push(player_id)
+  }
+  await lists.set(client.user.id,list)
 }
 
 async function unban(player_id){
   const list = await lists.get(client.user.id)
   const ban_list = list[1]
-  ban_list.push(player_id)
+  const index = ban_list.findIndex(n => n == player_id)
+  if(index == -1){
+    return false
+  }else{
+    ban_list.splice(index,1)
+  }
+  await lists.set(client.user.id,list)
 }
 
 async function _attack(player_id,channel_id,message){
