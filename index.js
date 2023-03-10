@@ -107,7 +107,14 @@ async function generate_detection(player_id,message){
   const deru = await get_item_quantity(player_id,999)
   const denai = await get_item_quantity(player_id,-999)
   let probability = 0.001
-  
+  if(denai >= 1){
+    probability = 0
+  }else if(deru => 1){
+    probability = probability + (deru * 0.001)
+  }
+  if(Math.random() < probability){
+    
+  }
 }
 
 async function delete_data(option,id){
