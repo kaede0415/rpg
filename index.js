@@ -104,7 +104,6 @@ async function create_data(option,id){
 }
 
 async function generate_detection(player_id,message){
-  const player = client.users.cache.get(player_id)
   let status = await player_status.get(player_id)
   const deru = await get_item_quantity(player_id,999)
   const denai = await get_item_quantity(player_id,-999)
@@ -116,42 +115,45 @@ async function generate_detection(player_id,message){
   }
   if(Math.random() < probability){
     status.splice(7,1,true)
-    await status.set(player_id,status)
+    await player_status.set(player_id,status)
     const embed = new MessageEmbed()
-      .setTitle("マクロ検知")
-      .setDescription("ボタンを押してください。")
-      .setColor("RANDOM")
-      .setAuthor(`検知者:${player.tag}`,player.displayAvatarURL())
-      .setFooter("制限時間:1分")
-      const o_embed = new MessageEmbed()
-      .setTitle("マクロ検知")
-      .setDescription("認証しました。")
-      .setColor("RANDOM")
-      .setAuthor(`検知者:${player.tag}`,player.displayAvatarURL())
-      const x_embed = new MessageEmbed()
-      .setTitle("マクロ検知")
-      .setDescription("時間切れです。")
-      .setColor("RANDOM")
-      .setAuthor(`検知者:${player.tag}`,player.displayAvatarURL())
-      const msg = await message.reply({ embeds: [embed], components: [ newbutton([ { id: "ok", label: "私はBOTではありません。" } ]) ] })
-      const timer = setTimeout(async () => {
-        msg.edit({ embeds: [x_embed], components: [] })
-        await ban(player_id)
+    .setTitle("マクロ検知")
+    .setDescription("ボタンを押してください。")
+    .setColor("RANDOM")
+    .setAuthor(`検知者:${message.author.tag}`,message.author.displayAvatarURL())
+    .setFooter("制限時間:1分")
+    const o_embed = new MessageEmbed()
+    .setTitle("マクロ検知")
+    .setDescription("認証しました。")
+    .setColor("RANDOM")
+    .setAuthor(`検知者:${message.author.tag}`,message.author.displayAvatarURL())
+    const x_embed = new MessageEmbed()
+    .setTitle("マクロ検知")
+    .setDescription("時間切れです。")
+    .setColor("RANDOM")
+    .setAuthor(`検知者:${message.author.tag}`,message.author.displayAvatarURL())
+    const msg = await message.reply({ embeds: [embed], components: [ newbutton([ { id: "ok", label: "私はBOTではありません。" } ]) ] })
+    const timer = setTimeout(async () => {
+      msg.edit({ embeds: [x_embed], components: [] })
+      await ban(player_id)
+      status = await player_status.get(player_id)
+      status.splice(7,1,false)
+      await status.set(player_id,status)
+    },1000*60);
+    client.on("interactionCreate", async interaction => {
+      if(interaction.user.id != player_id){
+        return;
+      }
+      if(interaction.customId == "ok"){
+        interaction.message.edit({ embeds: [o_embed], components: [] })
+        await interaction.reply({ content: "認証しました。", ephemeral: true })
         status = await player_status.get(player_id)
-      },1000*60);
-      client.on("interactionCreate", async interaction => {
-        if(interaction.user.id != message.author.id){
-          return;
-        }
-        if(interaction.customId == "ok"){
-          interaction.message.edit({ embeds: [o_embed], components: [] })
-          interaction.reply({ content: "認証しました。", ephemeral: true })
-          await p_kenti.set(message.author.id,false)
-          clearTimeout(timer);
-        }
-      });
-      return;
-    }
+        status.splice(7,1,false)
+        await player_status.set(player_id,status)
+        clearTimeout(timer);
+      }
+    });
+    return;
   }
 }
 
@@ -1332,6 +1334,7 @@ client.on("messageCreate", async message => {
         await delete_data("player",key)
       }
     }
+    return await generate_detection(message.author.id,message)
   }
   try{
     if(command == "status" || command == "st"){
