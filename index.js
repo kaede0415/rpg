@@ -132,13 +132,13 @@ async function generate_detection(player_id,message){
     .setDescription("時間切れです。")
     .setColor("RANDOM")
     .setAuthor(`検知者:${message.author.tag}`,message.author.displayAvatarURL())
-    const random = Math.random()
-    const msg = await message.reply({ embeds: [embed], components: [ newbutton([ { id: `ok${random}`, label: "私はBOTではありません。" } ]) ] })
+    const random = Math.random().toString(36).slice(-16)
+    const msg = await message.reply({ embeds: [embed], components: [ newbutton([ { id: `${random}`, label: "私はBOTではありません。" } ]) ] })
     client.on("interactionCreate", async interaction => {
       if(interaction.user.id != player_id){
         return;
       }
-      if(interaction.customId == `ok${random}`){
+      if(interaction.customId == `${random}`){
         interaction.message.edit({ embeds: [o_embed], components: [] })
         interaction.reply({ content: "認証しました。", ephemeral: true })
         status = await player_status.get(player_id)
