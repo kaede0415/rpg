@@ -1399,8 +1399,8 @@ client.on("messageCreate", async message => {
         .setTitle("HELP:")
         .setDescription("管理者のみ使用可能なコマンド")
         //.addField(`= ${prefix}summon [lv] [name] [rank] [img] =`,">>> モンスターを召喚",true)
-        .addField(`= ${prefix}ban [id/all] =`,">>> id指定または全員をBAN",true)
-        .addField(`= ${prefix}unban [id/all] =`,">>> id指定または全員をUNBAN",true)
+        .addField(`= ${prefix}ban [id/@mention] =`,">>> id指定または全員をBAN",true)
+        .addField(`= ${prefix}unban [id/@mention] =`,">>> id指定または全員をUNBAN",true)
         .addField(`= ${prefix}banlist =`,">>> BAN者のリストを表示",true)
         .addField(`= ${prefix}eval [code] =`,">>> 記述したコードを実行",true)
         .addField(`= ${prefix}db [code] =`,">>> 記述したコードを実行(非同期処理)",true)
@@ -1617,7 +1617,7 @@ client.on("messageCreate", async message => {
         }else if(message.mentions.members.size >= 2){
           player = undefined
         }else{
-          player = message.content.split(" ")[3]
+          player = message.content.split(" ")[1]
         }
         if(player == undefined){
           return message.reply({ content: "メンションは1人にしてください", allowedMentions: { parse: [] } })
@@ -1638,7 +1638,7 @@ client.on("messageCreate", async message => {
         }else if(message.mentions.members.size >= 2){
           player = undefined
         }else{
-          player = message.content.split(" ")[3]
+          player = message.content.split(" ")[1]
         }
         if(player == undefined){
           return message.reply({ content: "メンションは1人にしてください", allowedMentions: { parse: [] } })
@@ -1649,6 +1649,23 @@ client.on("messageCreate", async message => {
         const embed = new MessageEmbed()
         .setDescription(`${client.users.cache.get(player).tag}をUNBANしました`)
         .setColor("RANDOM")
+        message.reply({ embeds:[embed], allowedMentions: { parse: [] } })
+      }
+    if(command == "banlist")
+      if(admin_list.includes(message.author.id)){
+        const list = await lists.get(client.user.id)
+        const banlist = list[1]
+        const desc = banlist.map(x => client.users.cache.get(x).tag+`/${x}`).join("\n")
+        const embed = new MessageEmbed()
+        .setTitle("BAN者一覧")
+        .setColor("RANDOM")
+        if(!banlist.length){
+          embed
+            .setDescription("なし")
+        }else{
+          embed
+            .setDescription(desc)
+        }
         message.reply({ embeds:[embed], allowedMentions: { parse: [] } })
       }
     if(command == "eval")
