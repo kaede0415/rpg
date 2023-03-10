@@ -1234,9 +1234,21 @@ client.on("messageCreate", async message => {
       await create_data("player",message.author.id)
     }
     if(!login_list.includes(message.author.id)){
+      const day = await get_item_quantity(message.author.id,0)+1
+      const elength = day+29
+      const flength = day*3+52
+      const plength = day*3+42
+      const tlength = day+10
       const embed = new MessageEmbed()
-      .setTitle("ろぐいん")
+      .setDescription(`>>> **ログイン${day}日目です。\nログボをゲットしました！！！**\`\`\`ゲットした物:\n   冒険の証:1個\n   エリクサー:${elength}個\n   ファイアボールの書:${flength}個\n   祈りの書:${plength}個\n   100円硬貨:${tlength}個\`\`\``)
+      .setThumbnail(client.user.displayAvatarURL())
+      .setColor("RANDOM")
       message.channel.send({ embeds:[embed] })
+      await obtain_item("0",1,message.author.id)
+      await obtain_item("1",elength,message.author.id)
+      await obtain_item("2",flength,message.author.id)
+      await obtain_item("3",plength,message.author.id)
+      await obtain_item("100000",tlength,message.author.id)
       login_list.push(message.author.id)
       await lists.set(client.user.id,list)
     }
