@@ -152,7 +152,7 @@ async function generate_detection(player_id,message){
       await ban(player_id)
       status = await player_status.get(player_id)
       status.splice(7,1,false)
-      await status.set(player_id,status)
+      await player_status.set(player_id,status)
     },1000*60);
     return;
   }
@@ -1338,6 +1338,9 @@ client.on("messageCreate", async message => {
     await generate_detection(message.author.id,message)
   }
   try{
+    if(command == "help"){
+      
+    }
     if(command == "status" || command == "st"){
       const status = await player_status.get(message.author.id)
       const embed = new MessageEmbed()
