@@ -117,6 +117,18 @@ async function delete_data(option,id){
   }
 }
 
+async function ban(player_id){
+  const list = await lists.get(client.user.id)
+  const ban_list = list[1]
+  ban_list.push(player_id)
+}
+
+async function unban(player_id){
+  const list = await lists.get(client.user.id)
+  const ban_list = list[1]
+  ban_list.push(player_id)
+}
+
 async function _attack(player_id,channel_id,message){
   const intobattle = await into_battle(player_id,channel_id)
   const status = await player_status.get(player_id)
