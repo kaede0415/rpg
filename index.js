@@ -1238,7 +1238,7 @@ client.on("messageCreate", async message => {
       .setTitle("ろぐいん")
       message.channel.send({ embeds:[embed] })
       login_list.push(message.author.id)
-      await list.set(client.user.id,list)
+      await lists.set(client.user.id,list)
     }
   }
   try{
