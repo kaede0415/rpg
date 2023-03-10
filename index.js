@@ -1308,8 +1308,14 @@ client.on("messageCreate", async message => {
     const p_status = await player_status.get(message.author.id)
     const list = await lists.get(client.user.id)
     const login_list = list[0]
+    const ban_list = list[1]
     if(!p_status){
       await create_data("player",message.author.id)
+    }
+    if(ban_list.includes(message.author.id) && !admin_list.includes(message.author.id)){
+      return message.reply({ content: "BANされてますよ...?", allowedMentions: { parse: [] } })
+    }else if(p_status[7] == true){
+      return message.reply({ content: "質問に答えてください。", allowedMentions: { parse: [] } })
     }
     if(!login_list.includes(message.author.id)){
       const day = await get_item_quantity(message.author.id,0)+1
@@ -1603,6 +1609,48 @@ client.on("messageCreate", async message => {
       .setColor("RANDOM")
       message.channel.send({ embeds:[embed] })
     }
+    if(command == "ban")
+      if(admin_list.includes(message.author.id)){
+        let player;
+        if(message.mentions.members.size == 1){
+          player = message.mentions.members.first().id
+        }else if(message.mentions.members.size >= 2){
+          player = undefined
+        }else{
+          player = message.content.split(" ")[3]
+        }
+        if(player == undefined){
+          return message.reply({ content: "メンションは1人にしてください", allowedMentions: { parse: [] } })
+        }
+        if(await ban(player) == false){
+          return message.reply({ content: "そのプレイヤーは既にBANされています", allowedMentions: { parse: [] } })
+        }
+        const embed = new MessageEmbed()
+        .setDescription(`${client.users.cache.get(player).tag}をBANしました`)
+        .setColor("RANDOM")
+        message.reply({ embeds:[embed], allowedMentions: { parse: [] } })
+      }
+    if(command == "unban")
+      if(admin_list.includes(message.author.id)){
+        let player;
+        if(message.mentions.members.size == 1){
+          player = message.mentions.members.first().id
+        }else if(message.mentions.members.size >= 2){
+          player = undefined
+        }else{
+          player = message.content.split(" ")[3]
+        }
+        if(player == undefined){
+          return message.reply({ content: "メンションは1人にしてください", allowedMentions: { parse: [] } })
+        }
+        if(await unban(player) == false){
+          return message.reply({ content: "そのプレイヤーはBANされていません", allowedMentions: { parse: [] } })
+        }
+        const embed = new MessageEmbed()
+        .setDescription(`${client.users.cache.get(player).tag}をUNBANしました`)
+        .setColor("RANDOM")
+        message.reply({ embeds:[embed], allowedMentions: { parse: [] } })
+      }
     if(command == "eval")
       if(admin_list.includes(message.author.id)){
         var result = message.content.slice(prefix.length+5).trim();
