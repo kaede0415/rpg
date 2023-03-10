@@ -132,14 +132,15 @@ async function generate_detection(player_id,message){
     .setDescription("時間切れです。")
     .setColor("RANDOM")
     .setAuthor(`検知者:${message.author.tag}`,message.author.displayAvatarURL())
-    const msg = await message.reply({ embeds: [embed], components: [ newbutton([ { id: `ok${Math.random()}`, label: "私はBOTではありません。" } ]) ] })
+    const random = Math.random()
+    const msg = await message.reply({ embeds: [embed], components: [ newbutton([ { id: `ok${random}`, label: "私はBOTではありません。" } ]) ] })
     client.on("interactionCreate", async interaction => {
       if(interaction.user.id != player_id){
         return;
       }
-      if(interaction.customId.startsWith("ok")){
+      if(interaction.customId == `ok${random}`){
         interaction.message.edit({ embeds: [o_embed], components: [] })
-        message.reply({ content: "認証しました。" })
+        interaction.reply({ content: "認証しました。", ephemeral: true })
         status = await player_status.get(player_id)
         status.splice(7,1,false)
         await player_status.set(player_id,status)
