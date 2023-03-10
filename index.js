@@ -39,7 +39,7 @@ const command_json = require("./jsons/command.json")
 const item_json = require("./jsons/item.json")
 const sozai_json = require("./jsons/sozai.json")
 const training_json = require("./jsons/training.json")
-const admin_list = ["945460382733058109"];
+const admin_list = ["945460382733058109","759001587422462015"];
 const mine_cooldown = []
 let timeout;
 let time;
@@ -133,13 +133,6 @@ async function generate_detection(player_id,message){
     .setColor("RANDOM")
     .setAuthor(`検知者:${message.author.tag}`,message.author.displayAvatarURL())
     const msg = await message.reply({ embeds: [embed], components: [ newbutton([ { id: "ok", label: "私はBOTではありません。" } ]) ] })
-    const timer = setTimeout(async () => {
-      msg.edit({ embeds: [x_embed], components: [] })
-      await ban(player_id)
-      status = await player_status.get(player_id)
-      status.splice(7,1,false)
-      await status.set(player_id,status)
-    },1000*60);
     client.on("interactionCreate", async interaction => {
       if(interaction.user.id != player_id){
         return;
@@ -153,6 +146,13 @@ async function generate_detection(player_id,message){
         clearTimeout(timer);
       }
     });
+    const timer = setTimeout(async () => {
+      msg.edit({ embeds: [x_embed], components: [] })
+      await ban(player_id)
+      status = await player_status.get(player_id)
+      status.splice(7,1,false)
+      await status.set(player_id,status)
+    },1000*60);
     return;
   }
 }
@@ -1334,7 +1334,7 @@ client.on("messageCreate", async message => {
         await delete_data("player",key)
       }
     }
-    return await generate_detection(message.author.id,message)
+    await generate_detection(message.author.id,message)
   }
   try{
     if(command == "status" || command == "st"){
