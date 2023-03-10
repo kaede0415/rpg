@@ -1339,7 +1339,73 @@ client.on("messageCreate", async message => {
   }
   try{
     if(command == "help"){
-      
+      const args = message.content.split(" ")[1]
+      if(args){
+        if(cmd_list.includes(args.toLowerCase())){
+          const num = cmd_list.indexOf(args.toLowerCase())
+          const embed = new MessageEmbed()
+          .setTitle(`HELP of \`${command_json[num][0]}\``)
+          .addField("= コマンドの説明 =",`${command_json[num][1]}`)
+          .addField("= エイリアス =",`${command_json[num][2]}`)
+          .addField("= 使用例 =",`${command_json[num][3]}`)
+          .addField("= 使用可能 =",`${command_json[num][4]}`)
+          .setColor("RANDOM")
+          return message.reply({ embeds: [embed], allowedMentions: { parse: [] } })
+        }else{
+          return message.reply(`Command[\`${args.toLowerCase()}\`] not found.`)
+        } 
+      }
+      const embeds = [
+        new MessageEmbed()
+        .setTitle("HELP:")
+        .setDescription(`このbotは${client.users.cache.get(admin_list[0]).tag}が自己満で作ったげーむぼっとです。`)
+        .addField("= 注意 =", "浅はかすぎる知識でテンプレもなしに作っているのでバグが多発します。\nもし発見した際は開発者までdmください。")
+        .addField("= 管理者ズ =", `${admin_list.map(x => eval('client.users.cache.get("' + x + '").tag'))}`)
+        .setAuthor(`コマンド実行者:${message.author.tag}`, message.author.displayAvatarURL())
+        .setColor("RANDOM"),
+        new MessageEmbed()
+        .setTitle("HELP:")
+        .setDescription("全員使用可能なコマンド")
+        .addField(`= ${prefix}help ([cmd]) =`,">>> この画面",true)
+        .addField(`= ${prefix}status ([id]) | ${prefix}st ([id]) =`,">>> ステータス表示",true)
+        .addField(`= ${prefix}attack | ${prefix}atk =`,">>> 敵に攻撃",true)
+        .addField(`= ${prefix}item ([item名]) | ${prefix}i ([item名]) =`,">>> アイテムリスト/アイテムを使用",true)
+        .addField(`= ${prefix}training | ${prefix}t =`,">>> 四字熟語トレーニング",true)
+        //.addField(`= ${prefix}ranking | ${prefix}rank =`,">>> 各種ランキング",true)
+        .addField(`= ${prefix}in =`,">>> 戦闘に参加",true)
+        .addField(`= ${prefix}reset | ${prefix}re =`,">>> 戦闘をリセット",true)
+        .addField(`= ${prefix}inquiry | ${prefix}inq =`,">>> 戦闘状況の確認",true)
+        //.addField(`= ${prefix}dungeon | ${prefix}dung =`,">>> ダンジョン",true)
+        //.addField(`= ${prefix}retire =`,">>> ダンジョンからリタイア",true)
+        .addField(`= ${prefix}talent =`,">>> タレント",true)
+        .addField(`= ${prefix}monstergen [rarelity] =`,">>> モンスターを生成",true)
+        //.addField(`= ${prefix}inbox ([gift名]) =`,">>> 受信箱/ギフト受け取り",true)
+        //.addField(`= ${prefix}word =`,">>> 特別コードの入力",true)
+        .addField(`= ${prefix}mine =`,">>> 採掘(特に意味はない)",true)
+        .addField(`= ${prefix}gatya [回数] =`,">>> 採掘(特に意味はない)",true)
+        .addField(`= ${prefix}itemid [itemid] [個数] [@メンション/id] =`,">>> アイテム付与",true)
+        .addField(`= ${prefix}consumeitem [itemid] [個数] [@メンション/id] =`,">>> アイテム剥奪",true)
+        .addField(`= ${prefix}sozaiid [sozaiid] [個数] [@メンション/id] =`,">>> 素材付与",true)
+        .addField(`= ${prefix}consumesozai [sozaiid] [個数] [@メンション/id] =`,">>> 素材剥奪",true)
+        .setAuthor(`コマンド実行者:${message.author.tag}`, message.author.displayAvatarURL())
+        .setColor("RANDOM"),
+        new MessageEmbed()
+        .setTitle("HELP:")
+        .setDescription("管理者のみ使用可能なコマンド")
+        //.addField(`= ${prefix}summon [lv] [name] [rank] [img] =`,">>> モンスターを召喚",true)
+        .addField(`= ${prefix}ban [id/all] =`,">>> id指定または全員をBAN",true)
+        .addField(`= ${prefix}unban [id/all] =`,">>> id指定または全員をUNBAN",true)
+        .addField(`= ${prefix}banlist =`,">>> BAN者のリストを表示",true)
+        .addField(`= ${prefix}eval [code] =`,">>> 記述したコードを実行",true)
+        .addField(`= ${prefix}db [code] =`,">>> 記述したコードを実行(非同期処理)",true)
+        //.addField(`= ${prefix}delete [code] =`,">>> Dataを削除",true)
+        //.addField(`= ${prefix}test =`,">>> 登録されている敵の情報",true)
+        //.addField(`= ${prefix}file [ファイル名] =`,">>> 指定したファイルを表示",true)
+        //.addField(`= ${prefix}backup =`,">>> db出力",true)
+        .setAuthor(`コマンド実行者:${message.author.tag}`, message.author.displayAvatarURL())
+        .setColor("RANDOM")
+      ]
+      await new Pagination(message.channel, embeds, "page").paginate();
     }
     if(command == "status" || command == "st"){
       const status = await player_status.get(message.author.id)
