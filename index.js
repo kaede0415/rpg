@@ -87,8 +87,13 @@ async function bulk_change(option,instructions){
   }
 }
 
-async function splice_status(player_id){
-  
+async function splice_status(player_id,start,deleteCount,item1){
+  const player_name = client.users.cache.get(player_id).username
+  const status = await player_status.get(player_id)
+  const current_value = status[start]
+  status.splice(start,deleteCount,item1)
+  await player_status.set(player_id,status)
+  console.log(`${player_name}'s status[${start}] splice ${current_value} -> ${item1}`)
 }
 
 async function create_data(option,id){
