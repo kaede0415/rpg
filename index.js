@@ -87,6 +87,10 @@ async function bulk_change(option,instructions){
   }
 }
 
+async function splice_status(player_id){
+  
+}
+
 async function create_data(option,id){
   if(option == "player"){
     await player_status.set(id,[100,550,10000,0,false,[0,0,0,0,0]])
