@@ -557,12 +557,19 @@ async function bigbang(player_id,channel_id,message){
   }
 }
 
-async function kill(count,channel_id,message){
+async function kill(count,player_id,channel_id,message){
+  const intobattle = await into_battle(player_id,channel_id)
+  let player_hp = intobattle[0]
+  const error_message = intobattle[1]
+  if(error_message != ""){
+    return message.reply({ content: error_message, allowedMentions: { parse: [] } })
+  }
   const m_status = await monster_status.get(channel_id)
   const monster_level = m_status[0]
   let monster_hp = m_status[1]
   const monster_name = m_status[2]
-  let atk_msg = `+ 生有るものは死へと収束する...。${monster_name}に死を与えた！\n! ${count}体の敵が吹っ飛んだ！`
+  const player_name = client.users.cache.get(player_id).username
+  let atk_msg = `+ ${player_name}「生有るものは死へと収束する...。」\n+ ${monster_name}に死を与えた！\n! ${count}体の敵が吹っ飛んだ！`
   const embed = new MessageEmbed()
   .setTitle("戦闘結果:")
   .setDescription(`**${monster_name}を倒した！**\nキルコマンドは経験値が入りません。`)
@@ -1723,8 +1730,11 @@ client.on("messageCreate", async message => {
       }
     if(command == "kill")
       if(admin_list.includes(message.author.id)){
-        const count = Number(message.content.slice(prefix.length+5).trim())
-        await kill(count,message.channel.id,message)
+        let count = Number(message.content.slice(prefix.length+5).trim())
+        if(!count && count != 0){
+          count = 1
+        }
+        await kill(count,message.author.id,message.channel.id,message)
       }
     if(command == "eval")
       if(admin_list.includes(message.author.id)){
