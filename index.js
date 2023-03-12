@@ -125,8 +125,9 @@ async function generate_detection(player_id,message){
   if(Math.random() < probability){
     status.splice(7,1,true)
     await player_status.set(player_id,status)
-    const first_title = ["マクロ","まくろ"]
-    const second_title = ["Kenti","kenti","KENTI","検知","木僉矢口"," Detection"," detection"," DETECTION"]
+    const first = ["マクロ","まくろ","ﾏｸﾛ","ま＜ろ","マク口","Macro","macro","MACRO","マク❏","マク❒","マク□"]
+    const second = ["Kenti","kenti","KENTI","検知","木僉矢口"," Detection"," detection"," DETECTION","ケンチ","けんち","ｹﾝﾁ"]
+    const title = `${Math.floor(Math.random() * first.length)}${Math.floor(Math.random() * second.length)}`
     const embed = new MessageEmbed()
     .setTitle("マクロ検知")
     .setDescription("ボタンを押してください。")
