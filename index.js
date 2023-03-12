@@ -127,20 +127,20 @@ async function generate_detection(player_id,message){
     await player_status.set(player_id,status)
     const first = ["マクロ","まくろ","ﾏｸﾛ","ま＜ろ","マク口","Macro","macro","MACRO","マク❏","マク❒","マク□"]
     const second = ["Kenti","kenti","KENTI","検知","木僉矢口"," Detection"," detection"," DETECTION","ケンチ","けんち","ｹﾝﾁ"]
-    const title = `${Math.floor(Math.random() * first.length)}${Math.floor(Math.random() * second.length)}`
+    const title = `${first[Math.floor(Math.random()*first.length)]}${second[Math.floor(Math.random()*second.length)]}`
     const embed = new MessageEmbed()
-    .setTitle("マクロ検知")
+    .setTitle(title)
     .setDescription("ボタンを押してください。")
     .setColor("RANDOM")
     .setAuthor(`検知者:${message.author.tag}`,message.author.displayAvatarURL())
     .setFooter("制限時間:1分")
     const o_embed = new MessageEmbed()
-    .setTitle("マクロ検知")
+    .setTitle(title)
     .setDescription("認証しました。")
     .setColor("RANDOM")
     .setAuthor(`検知者:${message.author.tag}`,message.author.displayAvatarURL())
     const x_embed = new MessageEmbed()
-    .setTitle("マクロ検知")
+    .setTitle(title)
     .setDescription("時間切れです。")
     .setColor("RANDOM")
     .setAuthor(`検知者:${message.author.tag}`,message.author.displayAvatarURL())
