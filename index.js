@@ -1257,6 +1257,8 @@ function generate_monster(rank){
         rank = "super_ultra_rare"
       }else if(0.013 < random && random <= 0.023){
         rank = "zyakuteki"
+      }else if(0.013 < random && random <= 0.0131){
+        rank = "maboroshi"
       }else{
         rank = "normal"
       }
@@ -1459,6 +1461,7 @@ client.on("messageCreate", async message => {
         .setTitle("HELP:")
         .setDescription("管理者のみ使用可能なコマンド")
         //.addField(`= ${prefix}summon [lv] [name] [rank] [img] =`,">>> モンスターを召喚",true)
+        .addField(`= ${prefix}kill [count] =`,">>> 指定した数字の敵を殺害",true)
         .addField(`= ${prefix}ban [id/@mention] =`,">>> id指定または全員をBAN",true)
         .addField(`= ${prefix}unban [id/@mention] =`,">>> id指定または全員をUNBAN",true)
         .addField(`= ${prefix}banlist =`,">>> BAN者のリストを表示",true)
@@ -1730,9 +1733,11 @@ client.on("messageCreate", async message => {
       }
     if(command == "kill")
       if(admin_list.includes(message.author.id)){
-        let count = Number(message.content.slice(prefix.length+5).trim())
-        if(!count && count != 0){
+        let count = message.content.slice(prefix.length+5).trim()
+        if(count == "" || !Number.isInteger(Number(count))){
           count = 1
+        }else{
+          count = Number(count)
         }
         await kill(count,message.author.id,message.channel.id,message)
       }
