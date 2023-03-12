@@ -557,6 +557,30 @@ async function bigbang(player_id,channel_id,message){
   }
 }
 
+async function kill(count,channel_id,message){
+  const m_status = await monster_status.get(channel_id)
+  const monster_level = m_status[0]
+  let monster_hp = m_status[1]
+  const monster_name = m_status[2]
+  let atk_msg = `+ 生有るものは死へと収束する...。${monster_name}に死を与えた！\n! ${count}体の敵が吹っ飛んだ！`
+  const embed = new MessageEmbed()
+  .setTitle("戦闘結果:")
+  .setDescription(`**${monster_name}を倒した！**\nキルコマンドは経験値が入りません。`)
+  .setColor("RANDOM")
+  await reset_battle(channel_id,count)
+  const m_info = await monster_status.get(channel_id)
+  const m_level = m_info[0]
+  const m_hp = m_info[1]
+  const m_name = m_info[2]
+  const m_rank = m_info[3]
+  const m_img = m_info[4]
+  const embed2 = new MessageEmbed()
+  .setTitle(`ランク:${m_rank}\n${m_name}が待ち構えている...！\nLv.${m_level.toLocaleString()} HP:${m_hp.toLocaleString()}`)
+  .setImage(m_img)
+  .setColor("RANDOM")
+  message.reply({ content:`\`\`\`diff\n${atk_msg}\`\`\``, embeds:[embed,embed2], allowedMentions: { parse: [] } })
+}
+
 function get_player_attack(player_attack,rand){
   if(rand < 0.01) return 0
   else if(rand > 0.96) return player_attack*(2) + 10
@@ -857,8 +881,9 @@ async function win_process(channel_id,exp){
       await obtain_item("100000",1,members[i])
       item_members.push(`<@${members[i]}>は気を**1個**手に入れた！`)
       if(Math.random() <= 0.5 && i==0){
-        const member = Math.floor( Math.random() * members.length )
-        
+        const number = Math.floor( Math.random() * members.length )
+        item_members.push(`${members[number]}は幻の証を**1個**手に入れた！`)
+        await obtain_item("-100002",1,members[number])
       }
       if(Math.random() <= 0.5){
         item_members.push(`<@${members[i]}>は超新星爆発を**1個**手に入れた！`)
@@ -1695,6 +1720,11 @@ client.on("messageCreate", async message => {
             .setDescription(desc)
         }
         message.reply({ embeds:[embed], allowedMentions: { parse: [] } })
+      }
+    if(command == "kill")
+      if(admin_list.includes(message.author.id)){
+        const count = Number(message.content.slice(prefix.length+5).trim())
+        await kill(count,message.channel.id,message)
       }
     if(command == "eval")
       if(admin_list.includes(message.author.id)){
