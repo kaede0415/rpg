@@ -1339,19 +1339,18 @@ async function exchange(category,id,player_id,message){
   .setColor("RANDOM")
   const recipe = require(`./craft/${category}.json`)[0]
   const data = recipe[`${id}`]
-  const r_length = recipe.length
+  const r_length = Object.keys(recipe).length
   const i_length = Object.keys(data).length-1
-  const msgs = []
+  const recipes_txt = []
   const recipe_menu = new MessageEmbed()
   .setTitle("最初から作れるアイテム")
   .setColor("RANDOM")
   for(let x=0;x<r_length;x++){
     for(let y=0;y<i_length;y++){
-      const info = data[`item_${y+1}`]
-      msgs.push(`${info.name}(${info.type}id->${info.id})：${info.quantity}個`)
+      recipes_txt.push(`[1:すごい金床]\n・ダイヤモンド 30個`)
     }
   }
-  message.reply({ content: `${msgs.join("\n")}`, embeds:[menu] })
+  message.reply({ embeds:[menu] })
   //return message.reply(`**[${data["item_name"]}]**\n${msgs.join("\n")}`)
 }
 
