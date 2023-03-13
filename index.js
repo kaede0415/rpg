@@ -1332,6 +1332,8 @@ function gatya(option,time){
 
 async function exchange(category,id,player_id,message){
   const recipe = require(`./craft/${category}.json`)
+  const data = recipe[0]
+  console.log(data)
 }
 
 http
