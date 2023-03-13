@@ -1330,8 +1330,8 @@ function gatya(option,time){
   return newrewards
 }
 
-async function exchange(craft_id,player_id,message){
-  
+async function exchange(category,id,player_id,message){
+  const reward_list = require(`./gatya/${option}/${reality}.json`)
 }
 
 http
