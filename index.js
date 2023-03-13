@@ -1385,7 +1385,11 @@ async function exchange(player_id,message){
           const msgs = []
           for(let i=0;i<i_length;i++){
             const info = data[`item_${i+1}`]
-            msgs.push(`+ ${info.name}: ${info.quantity}個 | 所有:${await get_item_quantity(message.author.id,info.id)} 必要:${info.quantity}個`)
+            if(info.type == "item"){
+              msgs.push(`+ ${info.name}: ${info.quantity}個 | 所有:${await get_item_quantity(message.author.id,info.id)} 必要:${info.quantity}個`)
+            }else if(info.type == "sozai"){
+              msgs.push(`+ ${info.name}: ${info.quantity}個 | 所有:${await get_sozai_quantity(message.author.id,info.id)} 必要:${info.quantity}個`)
+            }
           }
           const check_embed = new MessageEmbed()
           .setDescription(`\`\`\`fix\n${data["item_name"]}\`\`\`\`\`\`diff\n${msgs.join("\n")}\`\`\`\`\`\`作成しますか？\`\`\``)
@@ -1401,7 +1405,17 @@ async function exchange(player_id,message){
             if(m.content.toLowerCase() == "ok"){
               collector3.stop()
               for(let i=0;i<i_length;i++){
-                await obtain_item()
+                const info = data[`item_${i+1}`]
+                if(info.type == "item"){
+                  await consume_item(info.id,info.quantity,message.author.id)
+                }else if(info.type == "sozai"){
+                  await consume_sozai(info.id,info.quantity,message.author.id)
+                }
+              }
+              if(data["item_type"] == "item"){
+                await obtain_item(data["item_id"],1,message.author.id)
+              }else if(data["item_type"] == "sozai"){
+                await obtain_sozai(data["item_id"],1,message.author.id)
               }
               msg.edit({ embeds:[o_embed] })
             }else if(m.content == "0"){
