@@ -1,10 +1,10 @@
 [
   {
-    {
+    "1": {
       "item_1": {
-        "name": "",
-        "type": "sozai",
-        "id": "1",
+        "name": "100円硬貨",
+        "type": "item",
+        "id": "100000",
         "quantity": 100
       }
     }
