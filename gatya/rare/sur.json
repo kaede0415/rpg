@@ -1,0 +1,20 @@
+[
+  {
+    "name": "木材100万個",
+    "type": "sozai",
+    "id": "1",
+    "quantity": 1000000
+  },
+  {
+    "name": "100円硬貨1万個",
+    "type": "item",
+    "id": "100000",
+    "quantity": 10000
+  },
+  {
+    "name": "貫通の証1個",
+    "type": "item",
+    "id": "-100001",
+    "quantity": 1
+  }
+]

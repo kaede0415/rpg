@@ -1386,16 +1386,30 @@ async function exchange(player_id,message){
           for(let i=0;i<i_length;i++){
             const info = data[`item_${i+1}`]
             if(info.type == "item"){
-              msgs.push(`+ ${info.name}: ${info.quantity}個 | 所有:${await get_item_quantity(message.author.id,info.id)} 必要:${info.quantity}個`)
+              if(info.quantity < await get_item_quantity(message.author.id,info.id)){
+                msgs.push(`+ ${info.name}: ${info.quantity}個 | 所有:${await get_item_quantity(message.author.id,info.id)} 必要:${info.quantity}個`)
+              }else{
+                msgs.push(`- ${info.name}: ${info.quantity}個 | 所有:${await get_item_quantity(message.author.id,info.id)} 必要:${info.quantity}個`)
+              }
             }else if(info.type == "sozai"){
-              msgs.push(`+ ${info.name}: ${info.quantity}個 | 所有:${await get_sozai_quantity(message.author.id,info.id)} 必要:${info.quantity}個`)
+              if(info.quantity < await get_sozai_quantity(message.author.id,info.id)){
+                msgs.push(`+ ${info.name}: ${info.quantity}個 | 所有:${await get_sozai_quantity(message.author.id,info.id)} 必要:${info.quantity}個`)
+              }else{
+                msgs.push(`- ${info.name}: ${info.quantity}個 | 所有:${await get_sozai_quantity(message.author.id,info.id)} 必要:${info.quantity}個`)
+              }
             }
           }
+          const mes = msgs.join("\n")
           const check_embed = new MessageEmbed()
-          .setDescription(`\`\`\`fix\n${data["item_name"]}\`\`\`\`\`\`diff\n${msgs.join("\n")}\`\`\`\`\`\`作成しますか？\`\`\``)
-          .setFooter("ok or 0")
           .setColor("RANDOM")
-          msg.edit({ embeds:[check_embed] })
+          if(mes.includes("-")){
+            check_embed.setDescription(`\`\`\`fix\n${data["item_name"]}\`\`\`\`\`\`diff\n${mes}\`\`\`\`\`\`素材が不足しています\`\`\``)
+            return msg.edit({ embeds:[check_embed] })
+          }else{
+            check_embed.setDescription(`\`\`\`fix\n${data["item_name"]}\`\`\`\`\`\`diff\n${mes}\`\`\`\`\`\`作成しますか？\`\`\``)
+            check_embed.setFooter("ok or 0")
+            msg.edit({ embeds:[check_embed] })
+          }
           const collector3 = message.channel.createMessageCollector({ filter: filter, idle: 60000 });
           collector3.on('collect', async m => {
             m.delete()
@@ -1669,6 +1683,39 @@ client.on("messageCreate", async message => {
       message.reply({ content: "```diff\n+ ガチャを引き終わるまでしばらくお待ち下さい```" })
       await consume_item("100000",time,message.author.id)
       const result = gatya("normal",time)
+      const msgs = []
+      for(let i=0;i<result.length;i++){
+        if(result[i][2] == "item"){
+          await obtain_item(result[i][3],result[i][4],message.author.id)
+        }else if(result[i][2] == "sozai"){
+          await obtain_sozai(result[i][3],result[i][4],message.author.id)
+        }
+        msgs.push(`\`\`\`${result[i][0]}${result[i][1]}\`\`\`->${result[i][4]}個`)
+      }
+      const embed = new MessageEmbed()
+      .setTitle(`ガチャ結果${time}枚`)
+      .setDescription(msgs.join("\n"))
+      message.channel.send({ embeds:[embed] })
+    }
+    if(command == "xgatya"){
+      let time = message.content.slice(prefix.length+7).trim()
+      if(!time){
+        return message.reply({ content: "回数を入力してください" })
+      }else if(time != "max" && !Number.isInteger(Number(time)) || Number(time) <= 0){
+        return message.reply({ content: "引数が不正です" })
+      }else if(time == "max"){
+        time = Number(await get_item_quantity(message.author.id,100001))
+      }else if(time == 0){
+        return message.reply({ content: "がちゃちけないやん" })
+      }else{
+        time = Number(time)
+      }
+      if(await get_item_quantity(message.author.id,100001) < time){
+        return message.reply({ content: "がちゃちけがたりん！" })
+      }
+      message.reply({ content: "```diff\n+ ガチャを引き終わるまでしばらくお待ち下さい```" })
+      await consume_item("100001",time,message.author.id)
+      const result = gatya("rare",time)
       const msgs = []
       for(let i=0;i<result.length;i++){
         if(result[i][2] == "item"){
