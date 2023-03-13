@@ -12,19 +12,19 @@
     "2": {
       "item_name": "錆びた石材",
       "item_1": {
-        "name": "木材50個",
+        "name": "木材",
         "type": "sozai",
         "id": "1",
         "quantity": 50
       },
       "item_2": {
-        "name": "丸石30個",
+        "name": "丸石",
         "type": "sozai",
         "id": "2",
         "quantity": 30
       },
       "item_3": {
-        "name": "鉄10個",
+        "name": "鉄",
         "type": "sozai",
         "id": "3",
         "quantity": 10

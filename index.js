@@ -1345,18 +1345,19 @@ async function exchange(category,id,player_id,message){
   const recipe_menu = new MessageEmbed()
   .setTitle("最初から作れるアイテム")
   .setColor("RANDOM")
+  console.log(r_length)
   for(let x=0;x<r_length;x++){
-    for(let y=0;y<i_length;y++){
-      const target = recipe[`${x+1}`]
-      const msgs = []
+    const target = recipe[`${x+1}`]
+    const length = Object.keys(target).length-1
+    const msgs = []
+    for(let y=0;y<length;y++){
       const info = target[`item_${y+1}`]
-      console.log(target)
       msgs.push(`・${info.name} ${info.quantity}個`)
-      recipes_txt.push(`[${x+1}:${target["item_name"]}]\n${msgs.join("\n")}`)
     }
+    recipes_txt.push(`[${x+1}:${target["item_name"]}]\n${msgs.join("\n")}`)
   }
-  message.reply({ content: recipes_txt, embeds:[menu] })
-  //return message.reply(`**[${data["item_name"]}]**\n${msgs.join("\n")}`)
+  recipe_menu.setDescription()
+  message.reply({ content: `\`\`\`css\n${recipes_txt.join("\n\n\n")}\`\`\``, embeds:[menu] })
 }
 
 http
