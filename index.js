@@ -1343,7 +1343,6 @@ async function exchange(player_id,message){
   const collector = message.channel.createMessageCollector({ filter: filter, idle: 60000 });
   collector.on('collect', async m => {
     m.delete();
-    if(Number.isInteger(Number(m.content)) && 1 <= Number(m.content) && Number(m.content) <= 1 && m.content != "0"){}
     if(m.content == "1"){
       category = "normal"
       collector.stop();
@@ -1372,10 +1371,10 @@ async function exchange(player_id,message){
       }
       recipe_menu.setDescription(`\`\`\`css\n${recipes_txt.join("\n\n\n")}\`\`\``)
       msg.edit({ embeds:[recipe_menu] })
-      const collector2 = message.channel.createMessageCollector({ filter: filter, idle: 60000, max: 1 });
+      const collector2 = message.channel.createMessageCollector({ filter: filter, idle: 60000 });
       collector2.on('collect', async m => {
         m.delete();
-        if(!Number.isInteger(Number(m.content)) || 1 >= Number(m.content) || Number(m.content) >= r_length || m.content != "0"){
+        if(!Number.isInteger(Number(m.content)) || 1 > Number(m.content) || Number(m.content) > r_length){
         }else if(m.content == "0"){
           msg.edit({ content:"```処理を終了しました...```" });
           return collector.stop();
