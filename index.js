@@ -1333,13 +1333,14 @@ function gatya(option,time){
 async function exchange(category,id,player_id,message){
   const recipe = require(`./craft/${category}.json`)[0]
   const data = recipe[`${id}`]
-  const length = Object.keys(data).length
+  const length = Object.keys(data).length-1
   const msgs = []
   for(let i=0;i<length;i++){
     const info = data[`item_${i+1}`]
-    msgs.push(`**[${data["name"]}]**\n${info.name}(${info.type}id->${info.id})：${info.quantity}個`)
+    console.log(info)
+    msgs.push(`${info.name}(${info.type}id->${info.id})：${info.quantity}個`)
   }
-  return message.reply(msgs.join("\n"))
+  return message.reply(`**[${data["item_name"]}]**\n${msgs.join("\n")}`)
 }
 
 http
