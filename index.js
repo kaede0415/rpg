@@ -187,7 +187,7 @@ async function delete_data(option,id){
 async function ban(player_id){
   const list = await lists.get(client.user.id)
   const ban_list = list[1]
-  if(ban_list.includes(player_id)){
+  if(ban_list.includes(player_id) || client.users.cache.get(player_id) == undefined){
     return false
   }else{
     ban_list.push(player_id)
@@ -199,7 +199,7 @@ async function unban(player_id){
   const list = await lists.get(client.user.id)
   const ban_list = list[1]
   const index = ban_list.findIndex(n => n == player_id)
-  if(index == -1){
+  if(index == -1 || client.users.cache.get(player_id) == undefined){
     return false
   }else{
     ban_list.splice(index,1)
@@ -1693,7 +1693,7 @@ client.on("messageCreate", async message => {
           return message.reply({ content: "メンションは1人にしてください", allowedMentions: { parse: [] } })
         }
         if(await ban(player) == false){
-          return message.reply({ content: "そのプレイヤーは既にBANされています", allowedMentions: { parse: [] } })
+          return message.reply({ content: "不正", allowedMentions: { parse: [] } })
         }
         const embed = new MessageEmbed()
         .setDescription(`${client.users.cache.get(player).tag}をBANしました`)
@@ -1714,7 +1714,7 @@ client.on("messageCreate", async message => {
           return message.reply({ content: "メンションは1人にしてください", allowedMentions: { parse: [] } })
         }
         if(await unban(player) == false){
-          return message.reply({ content: "そのプレイヤーはBANされていません", allowedMentions: { parse: [] } })
+          return message.reply({ content: "不正", allowedMentions: { parse: [] } })
         }
         const embed = new MessageEmbed()
         .setDescription(`${client.users.cache.get(player).tag}をUNBANしました`)
