@@ -1329,6 +1329,10 @@ function gatya(option,time){
   return newrewards
 }
 
+async function exchange(craft_id,player_id,message){
+  
+}
+
 http
   .createServer(function(request, response) {
     response.writeHead(200, { 'Content-Type': 'text/plain;charset=utf-8' })
