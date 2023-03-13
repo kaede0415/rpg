@@ -1,6 +1,7 @@
 [
   {
     "1": {
+      "name": "万札",
       "item_1": {
         "name": "100円硬貨",
         "type": "item",
@@ -9,17 +10,24 @@
       }
     },
     "2":{
+      "name": "錆びた石材",
       "item_1": {
-        "name": "100円硬貨",
-        "type": "item",
-        "id": "100000",
-        "quantity": 100
+        "name": "木材50個",
+        "type": "sozai",
+        "id": "1",
+        "quantity": 50
       },
       "item_2": {
-        "name": "100円硬貨",
-        "type": "item",
-        "id": "100000",
-        "quantity": 100
+        "name": "丸石30個",
+        "type": "sozai",
+        "id": "2",
+        "quantity": 30
+      },
+      "item_3": {
+        "name": "鉄10個",
+        "type": "sozai",
+        "id": "3",
+        "quantity": 10
       }
     }
   }
