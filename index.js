@@ -1347,10 +1347,15 @@ async function exchange(category,id,player_id,message){
   .setColor("RANDOM")
   for(let x=0;x<r_length;x++){
     for(let y=0;y<i_length;y++){
-      recipes_txt.push(`[1:すごい金床]\n・ダイヤモンド 30個`)
+      const target = recipe[`${x+1}`]
+      const msgs = []
+      const info = target[`item_${y+1}`]
+      console.log(target)
+      msgs.push(`・${info.name} ${info.quantity}個`)
+      recipes_txt.push(`[${x+1}:${target["item_name"]}]\n${msgs.join("\n")}`)
     }
   }
-  message.reply({ embeds:[menu] })
+  message.reply({ content: recipes_txt, embeds:[menu] })
   //return message.reply(`**[${data["item_name"]}]**\n${msgs.join("\n")}`)
 }
 
