@@ -1374,11 +1374,12 @@ async function exchange(player_id,message){
       const collector2 = message.channel.createMessageCollector({ filter: filter, idle: 60000 });
       collector2.on('collect', async m => {
         m.delete();
-        if(!Number.isInteger(Number(m.content)) || 1 > Number(m.content) || Number(m.content) > r_length){
+        if((!Number.isInteger(Number(m.content)) || 1 > Number(m.content) || Number(m.content) > r_length) && (m.content != "0")){
         }else if(m.content == "0"){
           msg.edit({ content:"```処理を終了しました...```" });
-          return collector.stop();
+          return collector2.stop();
         }else{
+          collector2.stop()
           const data = recipe[`${m.content}`]
           const i_length = Object.keys(data).length-1
           const msgs = []
@@ -1391,8 +1392,20 @@ async function exchange(player_id,message){
           .setFooter("ok or 0")
           .setColor("RANDOM")
           msg.edit({ embeds:[check_embed] })
-          const collector3 = message.channel.createMessageCollector({ filter: filter, idle: 60000, max: 1 });
+          const collector3 = message.channel.createMessageCollector({ filter: filter, idle: 60000 });
           collector3.on('collect', async m => {
+            m.delete()
+            const o_embed = new MessageEmbed()
+            .setDescription(`\`\`\`fix\n「${data["item_name"]}」を1個作りました\`\`\``)
+            .setColor("RANDOM")
+            if(m.content.toLowerCase() == "ok"){
+              collector3.stop()
+              msg.edit({ content: "DEMOなのでアイテムの変換は発生していません", embeds:[o_embed] })
+            }else if(m.content == "0"){
+              msg.edit({ content:"```処理を終了しました...```" });
+              return collector3.stop();
+            }else{
+            }
           })
           collector3.on('end', async (collected, reason) => {
             if(reason == "idle"){
