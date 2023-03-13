@@ -1386,13 +1386,13 @@ async function exchange(player_id,message){
           for(let i=0;i<i_length;i++){
             const info = data[`item_${i+1}`]
             if(info.type == "item"){
-              if(info.quantity < await get_item_quantity(message.author.id,info.id)){
+              if(info.quantity <= await get_item_quantity(message.author.id,info.id)){
                 msgs.push(`+ ${info.name}: ${info.quantity}個 | 所有:${await get_item_quantity(message.author.id,info.id)} 必要:${info.quantity}個`)
               }else{
                 msgs.push(`- ${info.name}: ${info.quantity}個 | 所有:${await get_item_quantity(message.author.id,info.id)} 必要:${info.quantity}個`)
               }
             }else if(info.type == "sozai"){
-              if(info.quantity < await get_sozai_quantity(message.author.id,info.id)){
+              if(info.quantity <= await get_sozai_quantity(message.author.id,info.id)){
                 msgs.push(`+ ${info.name}: ${info.quantity}個 | 所有:${await get_sozai_quantity(message.author.id,info.id)} 必要:${info.quantity}個`)
               }else{
                 msgs.push(`- ${info.name}: ${info.quantity}個 | 所有:${await get_sozai_quantity(message.author.id,info.id)} 必要:${info.quantity}個`)
