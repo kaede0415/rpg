@@ -1375,7 +1375,7 @@ async function exchange(player_id,message){
       const collector2 = message.channel.createMessageCollector({ filter: filter, idle: 60000, max: 1 });
       collector2.on('collect', async m => {
         m.delete();
-        if(Number.isInteger(Number(m.content)) && 1 <= Number(m.content) && Number(m.content) <= r_length && m.content != "0"){
+        if(!Number.isInteger(Number(m.content)) || 1 >= Number(m.content) || Number(m.content) >= r_length || m.content != "0"){
         }else if(m.content == "0"){
           msg.edit({ content:"```処理を終了しました...```" });
           return collector.stop();
@@ -1384,8 +1384,22 @@ async function exchange(player_id,message){
           const i_length = Object.keys(data).length-1
           const msgs = []
           for(let i=0;i<i_length;i++){
-            msgs.push(`+ ${data}`)
+            const info = data[`item_${i+1}`]
+            msgs.push(`+ ${info.name}: ${info.quantity}個 | 所有:${await get_item_quantity(message.author.id,info.id)} 必要:${info.quantity}個`)
           }
+          const check_embed = new MessageEmbed()
+          .setDescription(`\`\`\`fix\n${data["item_name"]}\`\`\`\`\`\`diff\n${msgs.join("\n")}\`\`\`\`\`\`作成しますか？\`\`\``)
+          .setFooter("ok or 0")
+          .setColor("RANDOM")
+          msg.edit({ embeds:[check_embed] })
+          const collector3 = message.channel.createMessageCollector({ filter: filter, idle: 60000, max: 1 });
+          collector3.on('collect', async m => {
+          })
+          collector3.on('end', async (collected, reason) => {
+            if(reason == "idle"){
+              msg.edit({ content:"```時間切れです...```" });
+            }
+          })
         }
       })
       collector2.on('end', async (collected, reason) => {
