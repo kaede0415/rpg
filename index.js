@@ -1331,7 +1331,7 @@ function gatya(option,time){
 }
 
 async function exchange(category,id,player_id,message){
-  const reward_list = require(`./gatya/${option}/${reality}.json`)
+  const recipe = require(`./craft/${category}.json`)
 }
 
 http
