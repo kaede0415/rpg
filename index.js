@@ -573,6 +573,7 @@ async function kill(count,player_id,channel_id,message){
   const monster_name = m_status[2]
   const player_name = client.users.cache.get(player_id).username
   let atk_msg = `+ ${player_name}「生有るものは死へと収束する...。」\n+ ${monster_name}に死を与えた！\n! ${count}体の敵が吹っ飛んだ！`
+  
   const embed = new MessageEmbed()
   .setTitle("戦闘結果:")
   .setDescription(`**${monster_name}を倒した！**\nキルコマンドは経験値が入りません。`)
