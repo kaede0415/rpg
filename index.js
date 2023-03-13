@@ -1343,36 +1343,52 @@ async function exchange(player_id,message){
   const collector = message.channel.createMessageCollector({ filter: filter, idle: 60000 });
   collector.on('collect', async m => {
     m.delete();
-    if(Number.isInteger(Number(m.content)) && 1 <= Number(m.content) && Number(m.content) <= 1){}
+    if(Number.isInteger(Number(m.content)) && 1 <= Number(m.content) && Number(m.content) <= 1 && m.content != "0"){}
     if(m.content == "1"){
       category = "normal"
+      collector.stop();
     }else if(m.content == "0"){
-      return msg.edit({ content:"```処理を終了しました...```" });
-      collector.stop()
+      msg.edit({ content:"```処理を終了しました...```" });
+      collector.stop();
+    }
+    if(category == undefined){
     }else{
-      
-    }
-    const recipe = require(`./craft/${category}.json`)[0]
-    //const data = recipe[`${id}`]
-    const r_length = Object.keys(recipe).length
-    //const i_length = Object.keys(data).length-1
-    const recipes_txt = []
-    const recipe_menu = new MessageEmbed()
-    .setTitle("最初から作れるアイテム")
-    .setColor("RANDOM")
-    .setFooter("作りたいアイテムの番号を送信してください(0で処理を終了)")
-    for(let x=0;x<r_length;x++){
-      const target = recipe[`${x+1}`]
-      const length = Object.keys(target).length-1
-      const msgs = []
-      for(let y=0;y<length;y++){
-        const info = target[`item_${y+1}`]
-        msgs.push(`・${info.name} ${info.quantity}個`)
+      const recipe = require(`./craft/${category}.json`)[0]
+      const r_length = Object.keys(recipe).length
+      const recipes_txt = []
+      const recipe_menu = new MessageEmbed()
+      .setTitle("最初から作れるアイテム")
+      .setColor("RANDOM")
+      .setFooter("作りたいアイテムの番号を送信してください(0で処理を終了)")
+      for(let x=0;x<r_length;x++){
+        const target = recipe[`${x+1}`]
+        const length = Object.keys(target).length-1
+        const msgs = []
+        for(let y=0;y<length;y++){
+          const info = target[`item_${y+1}`]
+          msgs.push(`・${info.name} ${info.quantity}個`)
+        }
+        recipes_txt.push(`[${x+1}:${target["item_name"]}]\n${msgs.join("\n")}`)
       }
-      recipes_txt.push(`[${x+1}:${target["item_name"]}]\n${msgs.join("\n")}`)
+      recipe_menu.setDescription(`\`\`\`css\n${recipes_txt.join("\n\n\n")}\`\`\``)
+      msg.edit({ embeds:[recipe_menu] })
+      const collector2 = message.channel.createMessageCollector({ filter: filter, idle: 60000, max: 1 });
+      collector2.on('collect', async m => {
+        m.delete();
+        if(Number.isInteger(Number(m.content)) && 1 <= Number(m.content) && Number(m.content) <= r_length && m.content != "0"){}
+        if(m.content == "0"){
+          msg.edit({ content:"```処理を終了しました...```" });
+          collector.stop();
+        }
+        const data = recipe[`${m}`]
+        const i_length = Object.keys(data).length-1
+      })
+      collector2.on('end', async (collected, reason) => {
+        if(reason == "idle"){
+          msg.edit({ content:"```時間切れです...```" });
+        }
+      })
     }
-    recipe_menu.setDescription(`\`\`\`css\n${recipes_txt.join("\n\n\n")}\`\`\``)
-    msg.edit({ embeds:[recipe_menu] })
   });
   collector.on('end', async (collected, reason) => {
     if(reason == "idle"){
