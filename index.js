@@ -1358,7 +1358,7 @@ client.on('ready', async () => {
 cron.schedule('0 0 0 * * *', async () => {
   const list = await lists.get(client.user.id)
   const login_list = list[0]
-  list.splice(1,1,[])
+  list.splice(0,1,[])
   await lists.set(client.user.id,list)
   console.log("ログイン情報をリセットしました。")
 });
