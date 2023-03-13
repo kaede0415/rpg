@@ -1330,7 +1330,7 @@ function gatya(option,time){
   return newrewards
 }
 
-async function exchange(id,player_id,message){
+async function exchange(player_id,message){
   let category;
   const menu = new MessageEmbed()
   .setTitle("レシピの目次")
@@ -1346,29 +1346,39 @@ async function exchange(id,player_id,message){
     if(Number.isInteger(Number(m.content)) && 1 <= Number(m.content) && Number(m.content) <= 1){}
     if(m.content == "1"){
       category = "normal"
+    }else if(m.content == "0"){
+      return msg.edit({ content:"```処理を終了しました...```" });
+      collector.stop()
+    }else{
+      
     }
+    const recipe = require(`./craft/${category}.json`)[0]
+    //const data = recipe[`${id}`]
+    const r_length = Object.keys(recipe).length
+    //const i_length = Object.keys(data).length-1
+    const recipes_txt = []
+    const recipe_menu = new MessageEmbed()
+    .setTitle("最初から作れるアイテム")
+    .setColor("RANDOM")
+    .setFooter("作りたいアイテムの番号を送信してください(0で処理を終了)")
+    for(let x=0;x<r_length;x++){
+      const target = recipe[`${x+1}`]
+      const length = Object.keys(target).length-1
+      const msgs = []
+      for(let y=0;y<length;y++){
+        const info = target[`item_${y+1}`]
+        msgs.push(`・${info.name} ${info.quantity}個`)
+      }
+      recipes_txt.push(`[${x+1}:${target["item_name"]}]\n${msgs.join("\n")}`)
+    }
+    recipe_menu.setDescription(`\`\`\`css\n${recipes_txt.join("\n\n\n")}\`\`\``)
+    msg.edit({ embeds:[recipe_menu] })
   });
-  const recipe = require(`./craft/${category}.json`)[0]
-  const data = recipe[`${id}`]
-  const r_length = Object.keys(recipe).length
-  const i_length = Object.keys(data).length-1
-  const recipes_txt = []
-  const recipe_menu = new MessageEmbed()
-  .setTitle("最初から作れるアイテム")
-  .setColor("RANDOM")
-  .setFooter("作りたいアイテムの番号を送信してください(0で処理を終了)")
-  for(let x=0;x<r_length;x++){
-    const target = recipe[`${x+1}`]
-    const length = Object.keys(target).length-1
-    const msgs = []
-    for(let y=0;y<length;y++){
-      const info = target[`item_${y+1}`]
-      msgs.push(`・${info.name} ${info.quantity}個`)
+  collector.on('end', async (collected, reason) => {
+    if(reason == "idle"){
+      msg.edit({ content:"```時間切れです...```" });
     }
-    recipes_txt.push(`[${x+1}:${target["item_name"]}]\n${msgs.join("\n")}`)
-  }
-  recipe_menu.setDescription(`\`\`\`css\n${recipes_txt.join("\n\n\n")}\`\`\``)
-  message.reply({ embeds:[menu,recipe_menu] })
+  })
 }
 
 http
@@ -1619,6 +1629,9 @@ client.on("messageCreate", async message => {
         embed.setDescription(`\`\`\`css\n[採掘者:${message.author.username}]\`\`\`\`\`\`diff\n${msg.join("\n")}\`\`\``)
       }
       message.reply({ embeds:[embed], allowedMentions: { parse: [] } })
+    }
+    if(command == "craft" || command == "c"){
+      await exchange(message.author.id,message)
     }
     if(command == "talent"){
       await talent(message.author.id,message)
