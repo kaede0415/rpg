@@ -2,6 +2,8 @@
   {
     "1": {
       "item_name": "万札",
+      "item_type": "item",
+      "item_id": "100001",
       "item_1": {
         "name": "100円硬貨",
         "type": "item",
@@ -11,6 +13,8 @@
     },
     "2": {
       "item_name": "錆びた石材",
+      "item_type": "sozai",
+      "item_id": "10",
       "item_1": {
         "name": "木材",
         "type": "sozai",

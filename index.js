@@ -1361,7 +1361,7 @@ async function exchange(player_id,message){
       .setFooter("作りたいアイテムの番号を送信してください(0で処理を終了)")
       for(let x=0;x<r_length;x++){
         const target = recipe[`${x+1}`]
-        const length = Object.keys(target).length-1
+        const length = Object.keys(target).length-3
         const msgs = []
         for(let y=0;y<length;y++){
           const info = target[`item_${y+1}`]
@@ -1381,7 +1381,7 @@ async function exchange(player_id,message){
         }else{
           collector2.stop()
           const data = recipe[`${m.content}`]
-          const i_length = Object.keys(data).length-1
+          const i_length = Object.keys(data).length-3
           const msgs = []
           for(let i=0;i<i_length;i++){
             const info = data[`item_${i+1}`]
@@ -1400,7 +1400,10 @@ async function exchange(player_id,message){
             .setColor("RANDOM")
             if(m.content.toLowerCase() == "ok"){
               collector3.stop()
-              msg.edit({ content: "DEMOなのでアイテムの変換は発生していません", embeds:[o_embed] })
+              for(let i=0;i<i_length;i++){
+                await obtain_item()
+              }
+              msg.edit({ embeds:[o_embed] })
             }else if(m.content == "0"){
               msg.edit({ content:"```処理を終了しました...```" });
               return collector3.stop();
