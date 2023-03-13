@@ -1331,6 +1331,13 @@ function gatya(option,time){
 }
 
 async function exchange(category,id,player_id,message){
+  const menu = new MessageEmbed()
+  .setTitle("レシピの目次")
+  .setDescription("```diff\n+ 1\n最初から作れるアイテム\n\n0:処理終了```")
+  .setThumbnail(client.user.displayAvatarURL())
+  .setFooter("ページ数を送信してください")
+  .setColor("RANDOM")
+  const recipes = 
   const recipe = require(`./craft/${category}.json`)[0]
   const data = recipe[`${id}`]
   const length = Object.keys(data).length-1
@@ -1340,7 +1347,8 @@ async function exchange(category,id,player_id,message){
     console.log(info)
     msgs.push(`${info.name}(${info.type}id->${info.id})：${info.quantity}個`)
   }
-  return message.reply(`**[${data["item_name"]}]**\n${msgs.join("\n")}`)
+  message.reply({ embeds:[menu] })
+  //return message.reply(`**[${data["item_name"]}]**\n${msgs.join("\n")}`)
 }
 
 http
