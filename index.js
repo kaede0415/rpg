@@ -1330,13 +1330,24 @@ function gatya(option,time){
   return newrewards
 }
 
-async function exchange(category,id,player_id,message){
+async function exchange(id,player_id,message){
+  let category;
   const menu = new MessageEmbed()
   .setTitle("レシピの目次")
   .setDescription("```diff\n+ 1\n最初から作れるアイテム\n\n0:処理終了```")
   .setThumbnail(client.user.displayAvatarURL())
   .setFooter("ページ数を送信してください")
   .setColor("RANDOM")
+  const msg = await message.reply({ embeds:[menu], allowedMentions: { parse: [] } })
+  const filter = m => m.author.id == message.author.id;
+  const collector = message.channel.createMessageCollector({ filter: filter, idle: 60000 });
+  collector.on('collect', async m => {
+    m.delete();
+    if(Number.isInteger(Number(m.content)) && 1 <= Number(m.content) && Number(m.content) <= 1){}
+    if(m.content == "1"){
+      category = "normal"
+    }
+  });
   const recipe = require(`./craft/${category}.json`)[0]
   const data = recipe[`${id}`]
   const r_length = Object.keys(recipe).length
@@ -1345,7 +1356,7 @@ async function exchange(category,id,player_id,message){
   const recipe_menu = new MessageEmbed()
   .setTitle("最初から作れるアイテム")
   .setColor("RANDOM")
-  console.log(r_length)
+  .setFooter("作りたいアイテムの番号を送信してください(0で処理を終了)")
   for(let x=0;x<r_length;x++){
     const target = recipe[`${x+1}`]
     const length = Object.keys(target).length-1
@@ -1356,8 +1367,8 @@ async function exchange(category,id,player_id,message){
     }
     recipes_txt.push(`[${x+1}:${target["item_name"]}]\n${msgs.join("\n")}`)
   }
-  recipe_menu.setDescription()
-  message.reply({ content: `\`\`\`css\n${recipes_txt.join("\n\n\n")}\`\`\``, embeds:[menu] })
+  recipe_menu.setDescription(`\`\`\`css\n${recipes_txt.join("\n\n\n")}\`\`\``)
+  message.reply({ embeds:[menu,recipe_menu] })
 }
 
 http
