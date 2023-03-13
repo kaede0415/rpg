@@ -1349,7 +1349,7 @@ async function exchange(player_id,message){
       collector.stop();
     }else if(m.content == "0"){
       msg.edit({ content:"```処理を終了しました...```" });
-      collector.stop();
+      return collector.stop();
     }
     if(category == undefined){
     }else{
@@ -1378,7 +1378,7 @@ async function exchange(player_id,message){
         if(Number.isInteger(Number(m.content)) && 1 <= Number(m.content) && Number(m.content) <= r_length && m.content != "0"){}
         if(m.content == "0"){
           msg.edit({ content:"```処理を終了しました...```" });
-          collector.stop();
+          return collector.stop();
         }
         const data = recipe[`${m}`]
         const i_length = Object.keys(data).length-1
