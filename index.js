@@ -1403,14 +1403,24 @@ async function exchange(player_id,message){
           const check_embed = new MessageEmbed()
           .setColor("RANDOM")
           if(mes.includes("-")){
-            check_embed.setDescription(`\`\`\`fix\n${data["item_name"]}\`\`\`\`\`\`diff\n${mes}\`\`\`\`\`\`素材が不足しています\`\`\``)
+            check_embed.setDescription(`\`\`\`fix\n${data["item_name"]}\`\`\`\`\`\`diff\n${mes}\`\`\`\`\`\`diff\n- 素材が不足しています\`\`\``)
             return msg.edit({ embeds:[check_embed] })
           }else{
-            check_embed.setDescription(`\`\`\`fix\n${data["item_name"]}\`\`\`\`\`\`diff\n${mes}\`\`\`\`\`\`作成しますか？\`\`\``)
-            check_embed.setFooter("ok or 0")
+            check_embed.setDescription(`\`\`\`fix\n${data["item_name"]}\`\`\`\`\`\`diff\n${mes}\`\`\`\`\`\`diff\n+ 作成したい数を数字で送信してください\`\`\``)
             msg.edit({ embeds:[check_embed] })
           }
           const collector3 = message.channel.createMessageCollector({ filter: filter, idle: 60000 });
+          collector3.on('collect', async m => {
+            m.delete()
+            if((Number.isInteger(Number(m.content)) || Number(m.content) < 1) && (m.content != "0")){
+            }else if(m.content == "0"){
+              msg.edit({ content:"```処理を終了しました...```" });
+              return collector3.stop();
+            }else{
+              
+            }
+          })
+          /*const collector3 = message.channel.createMessageCollector({ filter: filter, idle: 60000 });
           collector3.on('collect', async m => {
             m.delete()
             const o_embed = new MessageEmbed()
@@ -1442,7 +1452,7 @@ async function exchange(player_id,message){
             if(reason == "idle"){
               msg.edit({ content:"```時間切れです...```" });
             }
-          })
+          })*/
         }
       })
       collector2.on('end', async (collected, reason) => {
