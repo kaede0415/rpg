@@ -1455,48 +1455,54 @@ async function exchange(player_id,message){
               const n_mes = msgs.join("\n")
               const q_embed = new MessageEmbed()
               .setColor("RANDOM")
-              if(mes.includes("-")){
-                q_embed.setDescription(`\`\`\`fix\n${data["item_name"]}\`\`\`\`\`\`diff\n${n_mes}\`\`\`\`\`\`diff\n- 素材が不足しています\`\`\``)
+              if(n_mes.includes("- ")){
+                q_embed.setDescription(`\`\`\`fix\n${data["item_name"]}\`\`\`\`\`\`diff\n${n_mes}\n\n\n${quant}個作成\`\`\`\`\`\`diff\n- 素材が不足しています\`\`\``)
                 return msg.edit({ embeds:[q_embed] })
               }else{
                 q_embed.setDescription(`\`\`\`fix\n${data["item_name"]}\`\`\`\`\`\`diff\n${n_mes}\n\n\n${quant}個作成\`\`\``)
+                .setFooter("ok or 0")
                 msg.edit({ embeds:[q_embed] })
+                const collector4 = message.channel.createMessageCollector({ filter: filter, idle: 60000 });
+                collector4.on('collect', async m => {
+                  m.delete()
+                  const o_embed = new MessageEmbed()
+                  .setDescription(`\`\`\`fix\n「${data["item_name"]}」を${quant}個作りました\`\`\``)
+                  .setColor("RANDOM")
+                  if(m.content.toLowerCase() == "ok"){
+                    collector4.stop()
+                    for(let i=0;i<i_length;i++){
+                      const info = data[`item_${i+1}`]
+                      if(info.type == "item"){
+                        await consume_item(info.id,info.quantity*quant,message.author.id)
+                      }else if(info.type == "sozai"){
+                        await consume_sozai(info.id,info.quantity*quant,message.author.id)
+                      }
+                    }
+                    if(data["item_type"] == "item"){
+                      await obtain_item(data["item_id"],quant,message.author.id)
+                    }else if(data["item_type"] == "sozai"){
+                      await obtain_sozai(data["item_id"],quant,message.author.id)
+                    }
+                    msg.edit({ embeds:[o_embed] })
+                  }else if(m.content == "0"){
+                    msg.edit({ content:"```処理を終了しました...```" });
+                    return collector3.stop();
+                  }else{
+                  }
+                })
+                collector4.on('end', async (collected, reason) => {
+                  if(reason == "idle"){
+                    msg.edit({ content:"```時間切れです...```" });
+                  }
+                })
               }
-            }
-          })
-          /*const collector3 = message.channel.createMessageCollector({ filter: filter, idle: 60000 });
-          collector3.on('collect', async m => {
-            m.delete()
-            const o_embed = new MessageEmbed()
-            .setDescription(`\`\`\`fix\n「${data["item_name"]}」を1個作りました\`\`\``)
-            .setColor("RANDOM")
-            if(m.content.toLowerCase() == "ok"){
-              collector3.stop()
-              for(let i=0;i<i_length;i++){
-                const info = data[`item_${i+1}`]
-                if(info.type == "item"){
-                  await consume_item(info.id,info.quantity,message.author.id)
-                }else if(info.type == "sozai"){
-                  await consume_sozai(info.id,info.quantity,message.author.id)
-                }
-              }
-              if(data["item_type"] == "item"){
-                await obtain_item(data["item_id"],1,message.author.id)
-              }else if(data["item_type"] == "sozai"){
-                await obtain_sozai(data["item_id"],1,message.author.id)
-              }
-              msg.edit({ embeds:[o_embed] })
-            }else if(m.content == "0"){
-              msg.edit({ content:"```処理を終了しました...```" });
-              return collector3.stop();
-            }else{
             }
           })
           collector3.on('end', async (collected, reason) => {
             if(reason == "idle"){
               msg.edit({ content:"```時間切れです...```" });
             }
-          })*/
+          })
         }
       })
       collector2.on('end', async (collected, reason) => {
