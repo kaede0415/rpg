@@ -1422,7 +1422,7 @@ async function exchange(player_id,message){
           collector3.on('collect', async m => {
             m.delete()
             let quant
-            if((Number.isInteger(Number(m.content)) || Number(m.content) < 1) && m.content != "0" && m.content.toLowerCase() != "all"){
+            if((Number.isInteger(Number(m.content)) || Number(m.content) < 1) && m.content.toLowerCase().includes(["0","all"])){
             }else if(m.content == "0"){
               msg.edit({ content:"```処理を終了しました...```" });
               return collector3.stop();
@@ -1440,25 +1440,26 @@ async function exchange(player_id,message){
                 const info = data[`item_${i+1}`]
                 if(info.type == "item"){
                   if(info.quantity <= await get_item_quantity(message.author.id,info.id)){
-                    msgs.push(`+ ${info.name}: ${info.quantity}個 | 所有:${await get_item_quantity(message.author.id,info.id)} -> ${info.quantity}個`)
+                    msgs.push(`+ ${info.name}: ${info.quantity*quant}個 | 所有:${await get_item_quantity(message.author.id,info.id)} -> ${info.quantity}個`)
                   }else{
-                    msgs.push(`- ${info.name}: ${info.quantity}個 | 所有:${await get_item_quantity(message.author.id,info.id)} -> ${info.quantity}個`)
+                    msgs.push(`- ${info.name}: ${info.quantity*quant}個 | 所有:${await get_item_quantity(message.author.id,info.id)} -> ${info.quantity}個`)
                   }
                 }else if(info.type == "sozai"){
                   if(info.quantity <= await get_sozai_quantity(message.author.id,info.id)){
-                    msgs.push(`+ ${info.name}: ${info.quantity}個 | 所有:${await get_sozai_quantity(message.author.id,info.id)} -> ${info.quantity}個`)
+                    msgs.push(`+ ${info.name}: ${info.quantity*quant}個 | 所有:${await get_sozai_quantity(message.author.id,info.id)} -> ${info.quantity}個`)
                   }else{
-                    msgs.push(`- ${info.name}: ${info.quantity}個 | 所有:${await get_sozai_quantity(message.author.id,info.id)} -> ${info.quantity}個`)
+                    msgs.push(`- ${info.name}: ${info.quantity*quant}個 | 所有:${await get_sozai_quantity(message.author.id,info.id)} -> ${info.quantity}個`)
                   }
                 }
               }
+              const n_mes = msgs.join("\n")
               const q_embed = new MessageEmbed()
               .setColor("RANDOM")
               if(mes.includes("-")){
-                q_embed.setDescription(`\`\`\`fix\n${data["item_name"]}\`\`\`\`\`\`diff\n${mes}\`\`\`\`\`\`diff\n- 素材が不足しています\`\`\``)
+                q_embed.setDescription(`\`\`\`fix\n${data["item_name"]}\`\`\`\`\`\`diff\n${n_mes}\`\`\`\`\`\`diff\n- 素材が不足しています\`\`\``)
                 return msg.edit({ embeds:[q_embed] })
               }else{
-                q_embed.setDescription(`\`\`\`fix\n${data["item_name"]}\`\`\`\`\`\`diff\n${mes}\n\n\n${quant}個作成\`\`\``)
+                q_embed.setDescription(`\`\`\`fix\n${data["item_name"]}\`\`\`\`\`\`diff\n${n_mes}\n\n\n${quant}個作成\`\`\``)
                 msg.edit({ embeds:[q_embed] })
               }
             }
