@@ -1332,9 +1332,10 @@ function gatya(option,time){
 
 async function exchange(player_id,message){
   let category;
+  let title;
   const menu = new MessageEmbed()
   .setTitle("レシピの目次")
-  .setDescription("```diff\n+ 1\n最初から作れるアイテム\n\n0:処理終了```")
+  .setDescription("```diff\n+ 1\n最初から作れるアイテム\n+ 2\n少し需要があるアイテム(要作業台)\n\n0:処理終了```")
   .setThumbnail(client.user.displayAvatarURL())
   .setFooter("ページ数を送信してください")
   .setColor("RANDOM")
@@ -1345,6 +1346,11 @@ async function exchange(player_id,message){
     m.delete();
     if(m.content == "1"){
       category = "normal"
+      title = "最初から作れるアイテム"
+      collector.stop();
+    }else if(m.content == "2"){
+      category = "sagyoudai"
+      title = "少し需要があるアイテム"
       collector.stop();
     }else if(m.content == "0"){
       msg.edit({ content:"```処理を終了しました...```" });
@@ -1356,7 +1362,7 @@ async function exchange(player_id,message){
       const r_length = Object.keys(recipe).length
       const recipes_txt = []
       const recipe_menu = new MessageEmbed()
-      .setTitle("最初から作れるアイテム")
+      .setTitle(title)
       .setColor("RANDOM")
       .setFooter("作りたいアイテムの番号を送信してください(0で処理を終了)")
       for(let x=0;x<r_length;x++){
@@ -1369,6 +1375,7 @@ async function exchange(player_id,message){
         }
         recipes_txt.push(`[${x+1}:${target["item_name"]}]\n${msgs.join("\n")}`)
       }
+      if(category == "sagyoudai" && )
       recipe_menu.setDescription(`\`\`\`css\n${recipes_txt.join("\n\n\n")}\`\`\``)
       msg.edit({ embeds:[recipe_menu] })
       const collector2 = message.channel.createMessageCollector({ filter: filter, idle: 60000 });

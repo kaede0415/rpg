@@ -1,0 +1,15 @@
+[
+  {
+    "1": {
+      "item_name": "金床",
+      "item_type": "item",
+      "item_id": "101",
+      "item_1": {  
+        "name": "鉄",
+        "type": "sozai",
+        "id": "3",
+        "quantity": 500
+      }
+    }
+  }
+]

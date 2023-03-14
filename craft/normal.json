@@ -1,6 +1,17 @@
 [
   {
     "1": {
+      "item_name": "作業台",
+      "item_type": "item",
+      "item_id": "100",
+      "item_1": {  
+        "name": "木材",
+        "type": "sozai",
+        "id": "1",
+        "quantity": 500
+      }
+    },
+    "2": {
       "item_name": "万札",
       "item_type": "item",
       "item_id": "100001",
@@ -11,7 +22,7 @@
         "quantity": 100
       }
     },
-    "2": {
+    "3": {
       "item_name": "錆びた石材",
       "item_type": "sozai",
       "item_id": "10",
