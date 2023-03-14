@@ -1383,19 +1383,28 @@ async function exchange(player_id,message){
           const data = recipe[`${m.content}`]
           const i_length = Object.keys(data).length-3
           const msgs = []
+          let num
           for(let i=0;i<i_length;i++){
             const info = data[`item_${i+1}`]
             if(info.type == "item"){
               if(info.quantity <= await get_item_quantity(message.author.id,info.id)){
                 msgs.push(`+ ${info.name}: ${info.quantity}個 | 所有:${await get_item_quantity(message.author.id,info.id)} 必要:${info.quantity}個`)
+                if(!num || await get_item_quantity(message.author.id,info.id)/info.quantity < num){
+                  num = Math.floor(await get_item_quantity(message.author.id,info.id)/info.quantity)
+                }
               }else{
                 msgs.push(`- ${info.name}: ${info.quantity}個 | 所有:${await get_item_quantity(message.author.id,info.id)} 必要:${info.quantity}個`)
+                num = 0
               }
             }else if(info.type == "sozai"){
               if(info.quantity <= await get_sozai_quantity(message.author.id,info.id)){
                 msgs.push(`+ ${info.name}: ${info.quantity}個 | 所有:${await get_sozai_quantity(message.author.id,info.id)} 必要:${info.quantity}個`)
+                if(!num || await get_sozai_quantity(message.author.id,info.id)/info.quantity < num){
+                  num = Math.floor(await get_sozai_quantity(message.author.id,info.id)/info.quantity)
+                }
               }else{
                 msgs.push(`- ${info.name}: ${info.quantity}個 | 所有:${await get_sozai_quantity(message.author.id,info.id)} 必要:${info.quantity}個`)
+                num = 0
               }
             }
           }
@@ -1406,16 +1415,18 @@ async function exchange(player_id,message){
             check_embed.setDescription(`\`\`\`fix\n${data["item_name"]}\`\`\`\`\`\`diff\n${mes}\`\`\`\`\`\`diff\n- 素材が不足しています\`\`\``)
             return msg.edit({ embeds:[check_embed] })
           }else{
-            check_embed.setDescription(`\`\`\`fix\n${data["item_name"]}\`\`\`\`\`\`diff\n${mes}\`\`\`\`\`\`diff\n+ 作成したい数を数字で送信してください\`\`\``)
+            check_embed.setDescription(`\`\`\`fix\n${data["item_name"]}\`\`\`\`\`\`diff\n${mes}\n\n\n最大${num}個作成可能(allで一括作成)\`\`\`\`\`\`diff\n+ 作成したい数を数字で送信してください\`\`\``)
             msg.edit({ embeds:[check_embed] })
           }
           const collector3 = message.channel.createMessageCollector({ filter: filter, idle: 60000 });
           collector3.on('collect', async m => {
             m.delete()
-            if((Number.isInteger(Number(m.content)) || Number(m.content) < 1) && (m.content != "0")){
+            if((Number.isInteger(Number(m.content)) || Number(m.content) < 1) && (m.content != "0" && m.content.toLowerCase() != "all")){
             }else if(m.content == "0"){
               msg.edit({ content:"```処理を終了しました...```" });
               return collector3.stop();
+            }else if(m.content.toLowerCase() == "all"){
+              
             }else{
               
             }
