@@ -1375,8 +1375,17 @@ async function exchange(player_id,message){
         }
         recipes_txt.push(`[${x+1}:${target["item_name"]}]\n${msgs.join("\n")}`)
       }
-      if(category == "sagyoudai" && )
-      recipe_menu.setDescription(`\`\`\`css\n${recipes_txt.join("\n\n\n")}\`\`\``)
+      if(category == "normal"){
+        recipe_menu.setDescription(`\`\`\`css\n${recipes_txt.join("\n\n\n")}\`\`\``)
+      }else if(category == "sagyoudai"){
+        if(await get_item_quantity(message.author.id,"100") != 0){
+          recipe_menu.setDescription(`\`\`\`css\n${recipes_txt.join("\n\n\n")}\`\`\``)
+        }else{
+          recipe_menu.setDescription("```diff\n- 必要なものが揃っていないので開けません```")
+          .setFooter("強制終了しました")
+          return msg.edit({ embeds:[recipe_menu] })
+        }
+      }
       msg.edit({ embeds:[recipe_menu] })
       const collector2 = message.channel.createMessageCollector({ filter: filter, idle: 60000 });
       collector2.on('collect', async m => {
