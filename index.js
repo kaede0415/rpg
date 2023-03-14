@@ -1439,16 +1439,16 @@ async function exchange(player_id,message){
               for(let i=0;i<i_length;i++){
                 const info = data[`item_${i+1}`]
                 if(info.type == "item"){
-                  if(info.quantity <= await get_item_quantity(message.author.id,info.id)){
-                    msgs.push(`+ ${info.name}: ${info.quantity*quant}個 | 所有:${await get_item_quantity(message.author.id,info.id)} -> ${info.quantity}個`)
+                  if(await get_item_quantity(message.author.id,info.id)-info.quantity*quant >= 0){
+                    msgs.push(`+ ${info.name}: ${info.quantity*quant}個 | 所有:${await get_item_quantity(message.author.id,info.id)} -> ${await get_item_quantity(message.author.id,info.id)-info.quantity*quant}個`)
                   }else{
-                    msgs.push(`- ${info.name}: ${info.quantity*quant}個 | 所有:${await get_item_quantity(message.author.id,info.id)} -> ${info.quantity}個`)
+                    msgs.push(`- ${info.name}: ${info.quantity*quant}個 | 所有:${await get_item_quantity(message.author.id,info.id)} -> ${info.quantity*quant-await get_item_quantity(message.author.id,info.id)}個不足`)
                   }
                 }else if(info.type == "sozai"){
-                  if(info.quantity <= await get_sozai_quantity(message.author.id,info.id)){
-                    msgs.push(`+ ${info.name}: ${info.quantity*quant}個 | 所有:${await get_sozai_quantity(message.author.id,info.id)} -> ${info.quantity}個`)
+                  if(await get_sozai_quantity(message.author.id,info.id)-info.quantity*quant >= 0){
+                    msgs.push(`+ ${info.name}: ${info.quantity*quant}個 | 所有:${await get_sozai_quantity(message.author.id,info.id)} -> ${await get_sozai_quantity(message.author.id,info.id)-info.quantity*quant}個`)
                   }else{
-                    msgs.push(`- ${info.name}: ${info.quantity*quant}個 | 所有:${await get_sozai_quantity(message.author.id,info.id)} -> ${info.quantity}個`)
+                    msgs.push(`- ${info.name}: ${info.quantity*quant}個 | 所有:${await get_sozai_quantity(message.author.id,info.id)} -> ${info.quantity*quant-await get_sozai_quantity(message.author.id,info.id)}個不足`)
                   }
                 }
               }
