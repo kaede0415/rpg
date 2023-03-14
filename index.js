@@ -1421,14 +1421,44 @@ async function exchange(player_id,message){
           const collector3 = message.channel.createMessageCollector({ filter: filter, idle: 60000 });
           collector3.on('collect', async m => {
             m.delete()
+            let quant
             if((Number.isInteger(Number(m.content)) || Number(m.content) < 1) && (m.content != "0" && m.content.toLowerCase() != "all")){
             }else if(m.content == "0"){
               msg.edit({ content:"```処理を終了しました...```" });
               return collector3.stop();
             }else if(m.content.toLowerCase() == "all"){
-              
+              quant = num
             }else{
-              
+              quant = Number(m.content)
+            }
+            if(!quant){
+            }else{
+              const msgs = []
+              for(let i=0;i<i_length;i++){
+                const info = data[`item_${i+1}`]
+                if(info.type == "item"){
+                  if(info.quantity <= await get_item_quantity(message.author.id,info.id)){
+                    msgs.push(`+ ${info.name}: ${info.quantity}個 | 所有:${await get_item_quantity(message.author.id,info.id)} -> ${info.quantity}個`)
+                  }else{
+                    msgs.push(`- ${info.name}: ${info.quantity}個 | 所有:${await get_item_quantity(message.author.id,info.id)} -> ${info.quantity}個`)
+                  }
+                }else if(info.type == "sozai"){
+                  if(info.quantity <= await get_sozai_quantity(message.author.id,info.id)){
+                    msgs.push(`+ ${info.name}: ${info.quantity}個 | 所有:${await get_sozai_quantity(message.author.id,info.id)} -> ${info.quantity}個`)
+                  }else{
+                    msgs.push(`- ${info.name}: ${info.quantity}個 | 所有:${await get_sozai_quantity(message.author.id,info.id)} -> ${info.quantity}個`)
+                  }
+                }
+              }
+              const q_embed = new MessageEmbed()
+              .setColor("RANDOM")
+              if(mes.includes("-")){
+                q_embed.setDescription(`\`\`\`fix\n${data["item_name"]}\`\`\`\`\`\`diff\n${mes}\`\`\`\`\`\`diff\n- 素材が不足しています\`\`\``)
+                return msg.edit({ embeds:[q_embed] })
+              }else{
+                q_embed.setDescription(`\`\`\`fix\n${data["item_name"]}\`\`\`\`\`\`diff\n${mes}\n\n\n${quant}個作成\`\`\``)
+                msg.edit({ embeds:[q_embed] })
+              }
             }
           })
           /*const collector3 = message.channel.createMessageCollector({ filter: filter, idle: 60000 });
