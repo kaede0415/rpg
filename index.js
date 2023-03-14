@@ -1422,13 +1422,15 @@ async function exchange(player_id,message){
           collector3.on('collect', async m => {
             m.delete()
             let quant
-            if((Number.isInteger(Number(m.content)) || Number(m.content) < 1) && (m.content != "0" && m.content.toLowerCase() != "all")){
+            if((Number.isInteger(Number(m.content)) || Number(m.content) < 1) && m.content != "0" && m.content.toLowerCase() != "all"){
             }else if(m.content == "0"){
               msg.edit({ content:"```処理を終了しました...```" });
               return collector3.stop();
             }else if(m.content.toLowerCase() == "all"){
+              collector3.stop()
               quant = num
             }else{
+              collector3.stop()
               quant = Number(m.content)
             }
             if(!quant){
