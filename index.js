@@ -1332,7 +1332,17 @@ function gatya(option,time){
 }
 
 async function ranking(message){
-  
+  const embed = new MessageEmbed()
+  .setTitle("各種ランキング一覧:")
+  .setDescription("1⃣:プレイヤーレベルランキング\n2⃣:プレイヤー討伐数ランキング\n3⃣:プレイヤーログイン日数ランキング")
+  .setColor("RANDOM")
+  const msg = await message.reply({ embeds:[embed], allowedMentions: { parse: [] } })
+  const filter = m => m.author.id == message.author.id;
+  const collector = message.channel.createMessageCollector({ filter: filter, idle: 60000 });
+  collector.on('collect', async m => {
+    m.delete();
+    
+  })
 }
 
 async function exchange(player_id,message){
@@ -1827,6 +1837,9 @@ client.on("messageCreate", async message => {
     }
     if(command == "talent"){
       await talent(message.author.id,message)
+    }
+    if(command == "ranking" || command == "rank"){
+      await ranking(message)
     }
     if(command == "itemid")
       if(admin_list.includes(message.author.id)){
