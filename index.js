@@ -1331,6 +1331,10 @@ function gatya(option,time){
   return newrewards
 }
 
+async function ranking(message){
+  
+}
+
 async function exchange(player_id,message){
   let category;
   let title;
