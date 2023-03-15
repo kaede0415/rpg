@@ -1332,6 +1332,10 @@ function gatya(option,time){
 }
 
 async function ranking(message){
+  const keys = []
+  const values = []
+  const n_values = []
+  const content = []
   const embed = new MessageEmbed()
   .setTitle("各種ランキング一覧:")
   .setDescription("1⃣:プレイヤーレベルランキング\n2⃣:プレイヤー討伐数ランキング\n3⃣:プレイヤーログイン日数ランキング")
@@ -1341,7 +1345,10 @@ async function ranking(message){
   const collector = message.channel.createMessageCollector({ filter: filter, idle: 60000 });
   collector.on('collect', async m => {
     m.delete();
-    
+    if(!Number.isInteger(Number(m.content)) || 0 >= Number(m.content) || Number(m.content) >= 3){
+    }else if(m.content){
+      
+    }
   })
 }
 
