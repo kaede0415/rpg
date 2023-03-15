@@ -1346,9 +1346,64 @@ async function ranking(message){
   collector.on('collect', async m => {
     m.delete();
     if(!Number.isInteger(Number(m.content)) || 0 >= Number(m.content) || Number(m.content) >= 3){
-    }else if(m.content){
-      
+    }else if(m.content == "1"){
+      for await(const [key, value] of player_status.iterator()){
+        keys.push(key)
+        values.push(value[0])
+        n_values.push(value[0])
+      };
+      const newvalues = n_values.sort(function(a,b){
+        return Number(b) - Number(a);
+      });
+      const max = values.length
+      for(var i = 0;  i < max; i++){
+        const num = values.indexOf(n_values[i])
+        content.push(`${i+1}位 \`${client.users.cache.get(keys[num]).tag}\` **Lv.${n_values[i].toLocaleString()}**`)
+        keys.splice(num,1);
+        values.splice(num,1);
+      }
+      collector.stop();
+    }else if(m.content == "2"){
+      for await(const [key, value] of player_status.iterator()){
+        keys.push(key)
+        values.push(value[3])
+        n_values.push(value[3])
+      };
+      const newvalues = n_values.sort(function(a,b){
+        return Number(b) - Number(a);
+      });
+      const max = values.length
+      for(var i = 0;  i < max; i++){
+        const num = values.indexOf(n_values[i])
+        content.push(`${i+1}位 \`${client.users.cache.get(keys[num]).tag}\` **Lv.${n_values[i].toLocaleString()}**`)
+        keys.splice(num,1);
+        values.splice(num,1);
+      }
+    }else if(m.content == "3"){
+      for await(const [key, value] of player_items.iterator()){
+        keys.push(key)
+        values.push(value)
+        n_values.push(value)
+      };
+      const newvalues = n_values.sort(function(a,b){
+        return Number(b) - Number(a);
+      });
+      const max = values.length
+      for(var i = 0;  i < max; i++){
+        const num = values.indexOf(n_values[i])
+        content.push(`${i+1}位 \`${client.users.cache.get(keys[num]).tag}\` **Lv.${n_values[i].toLocaleString()}**`)
+        keys.splice(num,1);
+        values.splice(num,1);
+      }
+    }else{
+      msg.edit({ content:"```処理を終了しました。```" })
+      collector.stop();
     }
+    const embed = new MessageEmbed()
+    .setTitle("DEMOランキング")
+    .setDescription(`>>> ${content.join("\n")}`)
+    .setColor("RANDOM")
+    msg.edit({ embeds:[embed] })
   })
 }
 
