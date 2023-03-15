@@ -1365,9 +1365,11 @@ async function ranking(message){
       collector.stop();
     }else if(m.content == "2"){
       for await(const [key, value] of player_status.iterator()){
-        keys.push(key)
-        values.push(value[3])
-        n_values.push(value[3])
+        if(value[3] != 0){
+          keys.push(key)
+          values.push(value[3])
+          n_values.push(value[3])
+        }
       };
       const newvalues = n_values.sort(function(a,b){
         return Number(b) - Number(a);
@@ -1375,15 +1377,17 @@ async function ranking(message){
       const max = values.length
       for(var i = 0;  i < max; i++){
         const num = values.indexOf(n_values[i])
-        content.push(`${i+1}位 \`${client.users.cache.get(keys[num]).tag}\` **Lv.${n_values[i].toLocaleString()}**`)
+        content.push(`${i+1}位 \`${client.users.cache.get(keys[num]).tag}\` **${n_values[i].toLocaleString()}体**`)
         keys.splice(num,1);
         values.splice(num,1);
       }
     }else if(m.content == "3"){
       for await(const [key, value] of player_items.iterator()){
-        keys.push(key)
-        values.push(value)
-        n_values.push(value)
+        if(await get_item_quantity(key,0) != 0){
+          keys.push(key)
+          values.push(await get_item_quantity(key,0))
+          n_values.push(await get_item_quantity(key,0))
+        }
       };
       const newvalues = n_values.sort(function(a,b){
         return Number(b) - Number(a);
@@ -1391,7 +1395,7 @@ async function ranking(message){
       const max = values.length
       for(var i = 0;  i < max; i++){
         const num = values.indexOf(n_values[i])
-        content.push(`${i+1}位 \`${client.users.cache.get(keys[num]).tag}\` **Lv.${n_values[i].toLocaleString()}**`)
+        content.push(`${i+1}位 \`${client.users.cache.get(keys[num]).tag}\` **${n_values[i].toLocaleString()}日**`)
         keys.splice(num,1);
         values.splice(num,1);
       }
@@ -1399,11 +1403,19 @@ async function ranking(message){
       msg.edit({ content:"```処理を終了しました。```" })
       collector.stop();
     }
-    const embed = new MessageEmbed()
-    .setTitle("DEMOランキング")
-    .setDescription(`>>> ${content.join("\n")}`)
-    .setColor("RANDOM")
-    msg.edit({ embeds:[embed] })
+    if(content.length != 0){
+      const embed = new MessageEmbed()
+      .setTitle("ランキング")
+      .setDescription(`>>> ${content.join("\n")}`)
+      .setColor("RANDOM")
+      msg.edit({ embeds:[embed] })
+      collector.stop();
+    }
+  })
+  collector.on('end', async (collected, reason) => {
+    if(reason == "idle"){
+      msg.edit({ content:"```時間切れです...```" });
+    }
   })
 }
 
