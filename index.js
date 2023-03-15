@@ -1345,7 +1345,7 @@ async function ranking(message){
   const collector = message.channel.createMessageCollector({ filter: filter, idle: 60000 });
   collector.on('collect', async m => {
     m.delete();
-    if(!Number.isInteger(Number(m.content)) || 0 >= Number(m.content) || Number(m.content) >= 3){
+    if(!Number.isInteger(Number(m.content)) || 0 > Number(m.content) || Number(m.content) > 3){
     }else if(m.content == "1"){
       for await(const [key, value] of player_status.iterator()){
         keys.push(key)
