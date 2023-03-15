@@ -46,6 +46,7 @@ let time;
 process.env.TZ = 'Asia/Tokyo'
 //const dbFiles = fs.readdirSync('./').filter(file => file.endsWith('.sqlite'));
 
+
 async function bulk_change(option,instructions){
   if(option == "player_status"){
     for await(const [key, value] of player_status.iterator()){
