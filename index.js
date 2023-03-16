@@ -1037,9 +1037,13 @@ async function talent(player_id,message){
   const status = await player_status.get(player_id)
   const talents = status[5]
   const embed = new MessageEmbed()
-  .setDescription(`\`\`\`md\n[${player_name}](合計Lv.${await get_talent_level("all",message.author.id)}/Lv.50)\`\`\`\`\`\`css\n[1.体力] ${talents[0]}\n[2.攻撃力] ${talents[1]}\n[3.防御力] ${talents[2]}\n[4.盗み力] ${talents[3]}\n[5.経験値] ${talents[4]}\`\`\``)
+  .setDescription(`\`\`\`md\n[${player_name}](合計Lv.${await get_talent_level("all",player_id)}/Lv.50)\`\`\`\`\`\`css\n[1.体力] ${talents[0]}\n[2.攻撃力] ${talents[1]}\n[3.防御力] ${talents[2]}\n[4.盗み力] ${talents[3]}\n[5.経験値] ${talents[4]}\`\`\``)
   .setFooter("上げたいタレントの数字を送信してください")
   .setColor("RANDOM")
+  if(await get_talent_level("all",player_id) >= 50){
+    embed.setFooter("上限に達しました")
+    return message.reply({ embeds:[embed], allowedMentions: { parse: [] } })
+  }
   const msg = await message.reply({ embeds:[embed], allowedMentions: { parse: [] } })
   const filter = m => m.author.id == message.author.id;
   const collector = message.channel.createMessageCollector({ filter: filter, idle: 60000, max: 1 });
@@ -1072,6 +1076,9 @@ async function talent(player_id,message){
       }
       if(Number(m.content) <= 0){
         return msg.edit({ content: "```値は1以上の整数にしてください```" })
+      }
+      if(await get_talent_level("all",player_id)+Number(m.content) > 50){
+        return msg.edit({ content: "```上限を超えているため処理を停止しました...```" })
       }
       const nowlevel = await get_talent_level(talent_name,player_id)
       const value = Number(m.content)
