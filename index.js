@@ -1037,7 +1037,6 @@ async function talent(player_id,message){
   const status = await player_status.get(player_id)
   const talents = status[5]
   const embed = new MessageEmbed()
-  .setTitle(`${player_name}のタレント`)
   .setDescription(`\`\`\`css\n[1.体力] ${talents[0]}\n[2.攻撃力] ${talents[1]}\n[3.防御力] ${talents[2]}\n[4.盗み力] ${talents[3]}\n[5.経験値] ${talents[4]}\`\`\``)
   .setFooter("上げたいタレントの数字を送信してください")
   .setColor("RANDOM")
