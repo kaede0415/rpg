@@ -577,6 +577,8 @@ async function kill(count,player_id,channel_id,message){
   let atk_msg = `+ ${player_name}「生有るものは死へと収束する...。」\n+ ${monster_name}に死を与えた！\n! ${count}体の敵が吹っ飛んだ！`
   if(count < 0){
     atk_msg = `+ ${player_name}「トキヨモドレ...！」\n+ ${monster_name}に生命を与えた！\n! ${Math.abs(count)}体の敵が蘇った！`
+  }else if(count == 0){
+    atk_msg = `+ ${player_name}「...?」\n+ ${player_name}は何かを忘れてしまった！\n! 敵は立ち尽くしている！`
   }
   const embed = new MessageEmbed()
   .setTitle("戦闘結果:")
