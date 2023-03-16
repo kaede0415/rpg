@@ -225,8 +225,8 @@ async function _attack(player_id,channel_id,message){
   const monster_img = m_status[4]
   const player_name = client.users.cache.get(player_id).username
   const random = Math.random()
-  const atk_talent = 
-  const player_attack = get_player_attack(player_level,random)
+  const atk_talent = await get_talent_level("攻撃力",player_id)
+  const player_attack = get_player_attack(player_level*(1+0.01*atk_talent),random)
   monster_hp -= player_attack
   const attack_message = get_attack_message(player_name,player_attack,monster_name,monster_level,monster_hp,random)
   if(monster_hp <= 0){
