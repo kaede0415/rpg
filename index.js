@@ -1037,7 +1037,7 @@ async function talent(player_id,message){
   const status = await player_status.get(player_id)
   const talents = status[5]
   const embed = new MessageEmbed()
-  .setDescription(`\`\`\`css\n[1.体力] ${talents[0]}\n[2.攻撃力] ${talents[1]}\n[3.防御力] ${talents[2]}\n[4.盗み力] ${talents[3]}\n[5.経験値] ${talents[4]}\`\`\``)
+  .setDescription(`\`\`\`md\n[${player_name}](合計Lv.${await get_talent_level("all",message.author.id)}/Lv.50)\`\`\`\`\`\`css\n[1.体力] ${talents[0]}\n[2.攻撃力] ${talents[1]}\n[3.防御力] ${talents[2]}\n[4.盗み力] ${talents[3]}\n[5.経験値] ${talents[4]}\`\`\``)
   .setFooter("上げたいタレントの数字を送信してください")
   .setColor("RANDOM")
   const msg = await message.reply({ embeds:[embed], allowedMentions: { parse: [] } })
@@ -1116,6 +1116,7 @@ async function talent(player_id,message){
 
 async function get_talent_level(option,player_id){
   let num;
+  const status = await player_status.get(player_id)
   if(option == "体力"){
     num = 0
   }else if(option == "攻撃力"){
@@ -1126,10 +1127,12 @@ async function get_talent_level(option,player_id){
     num = 3
   }else if(option == "経験値"){
     num = 4
+  }else if(option == "all"){
+    const talents = status[5]
+    return talents[0]+talents[1]+talents[2]+talents[3]+talents[4]
   }else{
     return undefined
   }
-  const status = await player_status.get(player_id)
   return status[5][num]
 }
 
