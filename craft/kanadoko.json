@@ -1,0 +1,15 @@
+[
+  {
+    "1": {
+      "item_name": "デバッグアイテムX",
+      "item_type": "item",
+      "item_id": "X",
+      "item_1": {  
+        "name": "木材",
+        "type": "sozai",
+        "id": "1",
+        "quantity": 2147483647
+      }
+    }
+  }
+]

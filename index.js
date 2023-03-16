@@ -1440,7 +1440,7 @@ async function exchange(player_id,message){
   let title;
   const menu = new MessageEmbed()
   .setTitle("レシピの目次")
-  .setDescription("```diff\n+ 1\n最初から作れるアイテム\n+ 2\n少し需要があるアイテム(要作業台)\n\n0:処理終了```")
+  .setDescription("```diff\n+ 1\n最初から作れるアイテム\n+ 2\n少し需要があるアイテム(要作業台)\n+ 3\n序盤武器(要金床)\n\n0:処理終了```")
   .setThumbnail(client.user.displayAvatarURL())
   .setFooter("ページ数を送信してください")
   .setColor("RANDOM")
@@ -1456,6 +1456,10 @@ async function exchange(player_id,message){
     }else if(m.content == "2"){
       category = "sagyoudai"
       title = "少し需要があるアイテム"
+      collector.stop();
+    }else if(m.content == "3"){
+      category = "kanadoko"
+      title = "序盤武器"
       collector.stop();
     }else if(m.content == "0"){
       msg.edit({ content:"```処理を終了しました...```" });
@@ -1484,6 +1488,14 @@ async function exchange(player_id,message){
         recipe_menu.setDescription(`\`\`\`css\n${recipes_txt.join("\n\n\n")}\`\`\``)
       }else if(category == "sagyoudai"){
         if(await get_item_quantity(message.author.id,"100") != 0){
+          recipe_menu.setDescription(`\`\`\`css\n${recipes_txt.join("\n\n\n")}\`\`\``)
+        }else{
+          recipe_menu.setDescription("```diff\n- 必要なものが揃っていないので開けません```")
+          .setFooter("強制終了しました")
+          return msg.edit({ embeds:[recipe_menu] })
+        }
+      }else if(category == "kanadoko"){
+        if(await get_item_quantity(message.author.id,"101") != 0){
           recipe_menu.setDescription(`\`\`\`css\n${recipes_txt.join("\n\n\n")}\`\`\``)
         }else{
           recipe_menu.setDescription("```diff\n- 必要なものが揃っていないので開けません```")
