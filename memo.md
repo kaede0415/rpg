@@ -8,7 +8,12 @@
 | lists | [Login_list] | [Ban_list] | - | - | - | - | - |
 
 # 関数一覧
-| 関数名 | 必要引数 | 用途 | 関数名 | 必要引数 | 用途 |
-|:-----:|:------:|:----:|:-----:|:------:|:---:|
-| create_data | option,id | dbとidを指定して定型データを作成 | delete_data | option,id | dbとidを指定してデータを削除 |
-| bulk_change | option,instructions | dbに指定した処理を行う(未完成) | splice_status | player_id,start,deleteCount,item1 | 特定のプレイヤーのステータスをstart,deleteCount,item1を指定して置き換え |
+| 関数名 | 必要引数 | 主な用途 |
+|:-----:|:------:|:-------:|
+| create_data | option,id | dbとidを指定して定型データを作成 |
+|delete_data | option,id | dbとidを指定してデータを削除 |
+| bulk_change | option,instructions | dbに指定した処理を行う(未完成) |
+|splice_status | player_id,start,deleteCount,item1 | 特定のプレイヤーのステータスをstart,deleteCount,item1を指定して置き換え |
+| generate_detection | player_id,message | マクロ検知を生成 |
+| ban | player_id | プレイヤーを指定してban |
+| unban | player_id | プレイヤーを指定してunban |
