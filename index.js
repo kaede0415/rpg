@@ -229,7 +229,7 @@ async function _attack(player_id,channel_id,message){
   monster_hp -= player_attack
   const attack_message = get_attack_message(player_name,player_attack,monster_name,monster_level,monster_hp,random)
   if(monster_hp <= 0){
-    const win_message = await win_process(channel_id,monster_level)
+    const win_message = await win_process(player_id,channel_id,monster_level)
     const embed = new MessageEmbed()
     .setTitle("戦闘結果:")
     .setDescription(`**${monster_name}を倒した！**\n>>> ${win_message[0]}`)
@@ -402,7 +402,7 @@ async function fireball(player_id,channel_id,message){
   monster_hp -= damage
   const atk_msg = `+ ファイアボール！${monster_name}に${damage.toLocaleString()}のダメージを与えた！`
   if(monster_hp <= 0){
-    const win_message = await win_process(channel_id,monster_level)
+    const win_message = await win_process(player_id,channel_id,monster_level)
     const embed = new MessageEmbed()
     .setTitle("戦闘結果:")
     .setDescription(`**${monster_name}を倒した！**\n>>> ${win_message[0]}`)
@@ -481,7 +481,7 @@ async function ki(player_id,channel_id,message){
   const damage = monster_hp
   monster_hp -= damage
   const atk_msg = `+ 破...！${monster_name}に即死を与えた！`
-  const win_message = await win_process(channel_id,monster_level)
+  const win_message = await win_process(player_id,channel_id,monster_level)
   const embed = new MessageEmbed()
   .setTitle("戦闘結果:")
   .setDescription(`**${monster_name}を倒した！**\n>>> ${win_message[0]}`)
@@ -530,7 +530,7 @@ async function bigbang(player_id,channel_id,message){
   monster_hp -= damage
   let atk_msg = `+ ビッグバン！${monster_name}に${damage.toLocaleString()}を与えた！\n! 先の50体の敵が吹っ飛んだ！`
   if(monster_hp <= 0){
-    const win_message = await win_process(channel_id,monster_level)
+    const win_message = await win_process(player_id,channel_id,monster_level)
     const embed = new MessageEmbed()
     .setTitle("戦闘結果:")
     .setDescription(`**${monster_name}を倒した！**\n>>> ${win_message[0]}`)
@@ -784,7 +784,7 @@ async function experiment(player_id,exp){
   }
 }
 
-async function win_process(channel_id,exp){
+async function win_process(player_id,channel_id,exp){
   const ch_status = await channel_status.get(channel_id)
   const exp_members = []
   const levelup_members = []
@@ -797,8 +797,9 @@ async function win_process(channel_id,exp){
     await player_status.set(members[i],status)
     let expcalc = exp
     const rank = await get_monster_rank(channel_id)
+    const exp_talent = await get_talent_level("経験値",player_id)
     if(rank == "【強敵】"){
-      expcalc = expcalc*2
+      expcalc = expcalc*(2+exp_talent*0.02)
       if(Math.random() <= 0.06){
         item_members.push(`<@${members[i]}>はエリクサーを**1個**手に入れた！`)
         await obtain_item("1",1,members[i])
@@ -816,7 +817,7 @@ async function win_process(channel_id,exp){
         await obtain_item("100000",1,members[i])
       }
     }else if(rank == "【超強敵】"){
-      expcalc = expcalc*5
+      expcalc = expcalc*(5+exp_talent*0.02)
       item_members.push(`<@${members[i]}>はエリクサーを**1個**手に入れた！`)
       await obtain_item("1",1,members[i])
       item_members.push(`<@${members[i]}>はファイアボールの書を**1個**手に入れた！`)
@@ -848,9 +849,9 @@ async function win_process(channel_id,exp){
         item_members.push(`<@${members[i]}>は100円硬貨を**1個**手に入れた！`)
         await obtain_item("100000",1,members[i])
       }
-      expcalc = expcalc*10
+      expcalc = expcalc*(10+exp_talent*0.02)
     }else if(rank == "【激レア】"){
-      expcalc = expcalc*100
+      expcalc = expcalc*(100+exp_talent*0.02)
       if(Math.random() <= 0.25){
         item_members.push(`<@${members[i]}>はエリクサーを**1個**手に入れた！`)
         await obtain_item("1",1,members[i])
@@ -868,7 +869,7 @@ async function win_process(channel_id,exp){
         await obtain_item("100000",1,members[i])
       }
     }else if(rank == "【超激レア】"){
-      expcalc = expcalc*1000
+      expcalc = expcalc*(1000+exp_talent*0.02)
       item_members.push(`<@${members[i]}>はエリクサーを**1個**手に入れた！`)
       await obtain_item("1",1,members[i])
       item_members.push(`<@${members[i]}>はファイアボールの書を**1個**手に入れた！`)
@@ -882,7 +883,7 @@ async function win_process(channel_id,exp){
         await obtain_item("5",1,members[i])
       }
     }else if(rank == "【幻】"){
-      expcalc = expcalc*10000
+      expcalc = expcalc*(10000+exp_talent*0.02)
       item_members.push(`<@${members[i]}>はエリクサーを**1個**手に入れた！`)
       await obtain_item("1",1,members[i])
       item_members.push(`<@${members[i]}>はファイアボールの書を**1個**手に入れた！`)
@@ -918,6 +919,7 @@ async function win_process(channel_id,exp){
         item_members.push(`<@${members[i]}>は100円硬貨を**1個**手に入れた！`)
         await obtain_item("100000",1,members[i])
       }
+      expcalc = expcalc*(1+exp_talent*0.02)
     }
     exp_members.push(`<@${members[i]}>は**${expcalc.toLocaleString()}EXP**を獲得した。`)
     const msg = await experiment(members[i],expcalc)
