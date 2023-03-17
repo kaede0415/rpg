@@ -1,14 +1,44 @@
 [
   {
-    "name": "Re'start-Reboot",
+    "name": "スライム",
     "rank": "【通常】",
-    "img": "https://cdn.glitch.global/60276a28-a0bd-4708-b86a-3a6d1ccc9fae/Re'start-Reboot.png?v=1675815551996",
+    "img": "https://nanamiyuki.com/wp-content/uploads/2022/11/NY_CJ_monster_013_1.png",
     "id": 1
   },
   {
-    "name": "taniguchi",
+    "name": "メタリックロー",
     "rank": "【通常】",
-    "img": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Jir%C5%8D_Taniguchi_-_Lucca_Comics_and_Games_2011_-_2.jpg/1200px-Jir%C5%8D_Taniguchi_-_Lucca_Comics_and_Games_2011_-_2.jpg",
+    "img": "https://nanamiyuki.com/wp-content/uploads/2022/11/NY_CJ_monster_016_1.png",
+    "id": 2
+  },
+  {
+    "name": "ゾンビ犬",
+    "rank": "【通常】",
+    "img": "https://nanamiyuki.com/wp-content/uploads/2022/11/NY_CJ_monster_002_1.png",
+    "id": 3
+  },
+  {
+    "name": "メタリックロー",
+    "rank": "【通常】",
+    "img": "https://nanamiyuki.com/wp-content/uploads/2022/11/NY_CJ_monster_016_1.png",
+    "id": 2
+  },
+  {
+    "name": "メタリックロー",
+    "rank": "【通常】",
+    "img": "https://nanamiyuki.com/wp-content/uploads/2022/11/NY_CJ_monster_016_1.png",
+    "id": 2
+  },
+  {
+    "name": "メタリックロー",
+    "rank": "【通常】",
+    "img": "https://nanamiyuki.com/wp-content/uploads/2022/11/NY_CJ_monster_016_1.png",
+    "id": 2
+  },
+  {
+    "name": "メタリックロー",
+    "rank": "【通常】",
+    "img": "https://nanamiyuki.com/wp-content/uploads/2022/11/NY_CJ_monster_016_1.png",
     "id": 2
   }
 ]
