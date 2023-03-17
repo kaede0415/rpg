@@ -1,8 +1,26 @@
 [
   {
-    "name": "TAO",
+    "name": "森の長",
     "rank": "【レア】",
-    "img": "https://cdn.glitch.global/60276a28-a0bd-4708-b86a-3a6d1ccc9fae/TAO.png?v=1675923584144",
+    "img": "https://nanamiyuki.com/wp-content/uploads/2022/11/NY_CJ_monster_001_2.png",
+    "id": 1
+  },
+  {
+    "name": "メタルバーニング",
+    "rank": "【レア】",
+    "img": "https://nanamiyuki.com/wp-content/uploads/2022/11/NY_CJ_monster_007_3.png",
+    "id": 2
+  },
+  {
+    "name": "森の長",
+    "rank": "【レア】",
+    "img": "https://nanamiyuki.com/wp-content/uploads/2022/11/NY_CJ_monster_001_2.png",
+    "id": 1
+  },
+  {
+    "name": "森の長",
+    "rank": "【レア】",
+    "img": "https://nanamiyuki.com/wp-content/uploads/2022/11/NY_CJ_monster_001_2.png",
     "id": 1
   }
 ]

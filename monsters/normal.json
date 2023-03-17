@@ -18,27 +18,57 @@
     "id": 3
   },
   {
-    "name": "メタリックロー",
+    "name": "マリオネット",
     "rank": "【通常】",
-    "img": "https://nanamiyuki.com/wp-content/uploads/2022/11/NY_CJ_monster_016_1.png",
-    "id": 2
+    "img": "https://nanamiyuki.com/wp-content/uploads/2022/11/NY_CJ_monster_008_1.png",
+    "id": 4
   },
   {
-    "name": "メタリックロー",
+    "name": "マミー",
     "rank": "【通常】",
-    "img": "https://nanamiyuki.com/wp-content/uploads/2022/11/NY_CJ_monster_016_1.png",
-    "id": 2
+    "img": "https://nanamiyuki.com/wp-content/uploads/2020/08/%E3%83%9F%E3%82%A4%E3%83%A9.png",
+    "id": 5
   },
   {
-    "name": "メタリックロー",
+    "name": "ウッドウォーカー",
     "rank": "【通常】",
-    "img": "https://nanamiyuki.com/wp-content/uploads/2022/11/NY_CJ_monster_016_1.png",
-    "id": 2
+    "img": "https://nanamiyuki.com/wp-content/uploads/2022/11/NY_CJ_monster_001_1.png",
+    "id": 6
   },
   {
-    "name": "メタリックロー",
+    "name": "フライングアイ",
     "rank": "【通常】",
-    "img": "https://nanamiyuki.com/wp-content/uploads/2022/11/NY_CJ_monster_016_1.png",
-    "id": 2
+    "img": "https://nanamiyuki.com/wp-content/uploads/2022/11/NY_CJ_monster_009_1.png",
+    "id": 7
+  },
+  {
+    "name": "バーニングキラー",
+    "rank": "【通常】",
+    "img": "https://nanamiyuki.com/wp-content/uploads/2022/11/NY_CJ_monster_007_1.png",
+    "id": 8
+  },
+  {
+    "name": "フライングアイ",
+    "rank": "【通常】",
+    "img": "https://nanamiyuki.com/wp-content/uploads/2022/11/NY_CJ_monster_009_1.png",
+    "id": 7
+  },
+  {
+    "name": "フライングアイ",
+    "rank": "【通常】",
+    "img": "https://nanamiyuki.com/wp-content/uploads/2022/11/NY_CJ_monster_009_1.png",
+    "id": 7
+  },
+  {
+    "name": "フライングアイ",
+    "rank": "【通常】",
+    "img": "https://nanamiyuki.com/wp-content/uploads/2022/11/NY_CJ_monster_009_1.png",
+    "id": 7
+  },
+  {
+    "name": "フライングアイ",
+    "rank": "【通常】",
+    "img": "https://nanamiyuki.com/wp-content/uploads/2022/11/NY_CJ_monster_009_1.png",
+    "id": 7
   }
 ]
