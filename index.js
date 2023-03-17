@@ -832,18 +832,16 @@ async function win_process(player_id,channel_id,exp){
         await obtain_item("100000",1,members[i])
       }
     }else if(rank == "【極】"){
-      expcalc = expcalc*(5+exp_talent*0.02)
+      expcalc = expcalc*(10+exp_talent*0.02)
       item_members.push(`<@${members[i]}>はエリクサーを**1個**手に入れた！`)
       await obtain_item("1",1,members[i])
       item_members.push(`<@${members[i]}>はファイアボールの書を**1個**手に入れた！`)
       await obtain_item("2",1,members[i])
       item_members.push(`<@${members[i]}>は祈りの書を**1個**手に入れた！`)
       await obtain_item("3",1,members[i])
-      if(Math.random() <= 0.01){
-        item_members.push(`<@${members[i]}>は気を**1個**手に入れた！`)
-        await obtain_item("4",1,members[i])
-      }
-      if(Math.random() <= 0.03){
+      item_members.push(`<@${members[i]}>は気を**1個**手に入れた！`)
+      await obtain_item("4",1,members[i])
+      if(Math.random() <= 0.3){
         item_members.push(`<@${members[i]}>は100円硬貨を**1個**手に入れた！`)
         await obtain_item("100000",1,members[i])
       }
