@@ -36,9 +36,21 @@
     "id": 6
   },
   {
-    "name": "デュラハン",
+    "name": "したっぱB",
     "rank": "【強敵】",
-    "img": "https://nanamiyuki.com/wp-content/uploads/2022/11/NY_CJ_monster_006_1.png",
-    "id": 3
+    "img": "https://nanamiyuki.com/wp-content/uploads/2022/11/NY_CJ_monster_018_2.png",
+    "id": 7
+  },
+  {
+    "name": "虐殺人形",
+    "rank": "【強敵】",
+    "img": "https://nanamiyuki.com/wp-content/uploads/2022/11/NY_CJ_monster_011_1.png",
+    "id": 8
+  },
+  {
+    "name": "ミュータントマミー",
+    "rank": "【強敵】",
+    "img": "https://nanamiyuki.com/wp-content/uploads/2022/11/NY_CJ_monster_015_1.png",
+    "id": 9
   }
 ]
