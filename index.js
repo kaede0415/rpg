@@ -1292,32 +1292,16 @@ function generate_monster(rank){
   }
 }
 
-function summon_monster(rank){
+function summon_monster(rank,id){
   try{
-    if(rank == "random"){
-      const random = Math.random()
-      if(random <= 0.01){
-        rank = "rare"
-      }else if(0.01 < random && random <= 0.012){
-        rank = "super_rare"
-      }else if(0.012 < random && random <= 0.013){
-        rank = "super_ultra_rare"
-      }else if(0.013 < random && random <= 0.023){
-        rank = "zyakuteki"
-      }else if(0.013 < random && random <= 0.0131){
-        rank = "maboroshi"
-      }else{
-        rank = "normal"
+    const monsters = require(`./monsters/${rank}.json`)
+    const hoge = JSON.parse(JSON.stringify(monsters))
+    const valueList = Object.values(hoge)
+    for(let value in valueList){
+      if(valueList[value].id == id){
+        const monster = valueList[value]
+        return `${valueList[value].name}`
       }
-      const monsters = require(`./monsters/${rank}.json`)
-      const number = Math.floor( Math.random() * Number( monsters.length.toString()) )
-      const monster = monsters[number]
-      return [monster.name,monster.rank,monster.img]
-    }else{
-      const monsters = require(`./monsters/${rank}.json`)
-      const number = Math.floor( Math.random() * Number( monsters.length.toString()) )
-      const monster = monsters[number]
-      return [monster.name,monster.rank,monster.img]
     }
   }catch(err){
     return undefined
