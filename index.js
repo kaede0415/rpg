@@ -669,6 +669,16 @@ function get_item_name(item_id){
   }
   return undefined
 }
+function get_sozai_name(sozai_id){
+  const hoge = JSON.parse(JSON.stringify(sozai_json))
+  const keyList = Object.keys(hoge)
+  for(let key in keyList){
+    if(keyList[key] == sozai_id){
+      return `${hoge[keyList[key]]}`
+    }
+  }
+  return undefined
+}
 
 async function obtain_item(item_id,quantity,player_id){
   if(get_item_name(item_id) == undefined) console.log("error")
@@ -712,17 +722,6 @@ async function consume_item(item_id,quantity,player_id){
     return false
   }
   await player_items.set(player_id,itemList)
-}
-
-function get_sozai_name(sozai_id){
-  const hoge = JSON.parse(JSON.stringify(sozai_json))
-  const keyList = Object.keys(hoge)
-  for(let key in keyList){
-    if(keyList[key] == sozai_id){
-      return `${hoge[keyList[key]]}`
-    }
-  }
-  return undefined
 }
 
 async function obtain_sozai(sozai_id,quantity,player_id){
