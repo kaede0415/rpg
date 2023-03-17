@@ -5,10 +5,10 @@
       "item_type": "item",
       "item_id": "X",
       "item_1": {  
-        "name": "木材",
-        "type": "sozai",
-        "id": "1",
-        "quantity": 9999999999999
+        "name": "デバッグアイテムX",
+        "type": "item",
+        "id": "X",
+        "quantity": 1
       }
     }
   }
