@@ -1300,7 +1300,7 @@ function summon_monster(rank,id){
     for(let value in valueList){
       if(valueList[value].id == id){
         const monster = valueList[value]
-        return `${valueList[value].name}`
+        return [monster.name,monster.rank,monster.img]
       }
     }
   }catch(err){
@@ -2048,6 +2048,23 @@ client.on("messageCreate", async message => {
       .setColor("RANDOM")
       message.channel.send({ embeds:[embed] })
     }
+    if(command == "summon")
+      if(admin_list.includes(message.author.id)){
+        const rank = message.content.split(" ")[1]
+        const id = Number(message.content.split(" ")[2])
+        const level = Number(message.content.split(" ")[3])
+        const hp = level*10+50
+        const info = generate_monster(rank)
+        if(info == undefined){
+          return message.reply({ content: "undefined", allowedMentions: { parse: [] } })
+        }
+        const embed = new MessageEmbed()
+        .setTitle(`ランク:${info[1]}\n${info[0]}が待ち構えている...！\nLv.${level.toLocaleString()} HP:${hp.toLocaleString()}`)
+        .setImage(info[2])
+        .setColor("RANDOM")
+        message.channel.send({ embeds:[embed] })
+        await monster_status.set(message.channel.id,[level,hp].concat(info))
+      }
     if(command == "ban")
       if(admin_list.includes(message.author.id)){
         let player;
