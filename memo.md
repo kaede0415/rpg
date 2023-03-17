@@ -38,7 +38,7 @@
 | mine | player_id,channel_id | 採掘コマンド用 |
 | ranking | message | ランキングコマンド用 |
 | exchange | player_id,message | クラフトコマンド用 |
-| gatya | option,time | ガチャのレア度と回数を指定して |
+| gatya | option,time | ガチャのレア度と回数を指定してガチャを回す |
 | get_monster_rank | channel_id | 特定のチャンネルに出ているモンスターのランクを取得 |
 | generate_monster | rank | ランクを指定してモンスターの情報を登録 |
 |  |  |  |
