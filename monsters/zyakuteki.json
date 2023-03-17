@@ -4,5 +4,17 @@
     "rank": "【弱敵】",
     "img": "https://nanamiyuki.com/wp-content/uploads/2021/10/%E3%82%B5%E3%82%BD%E3%83%AA%E5%9E%8B%E3%83%A2%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%BC1.png",
     "id": 1
+  },
+  {
+    "name": "人魂",
+    "rank": "【弱敵】",
+    "img": "https://nanamiyuki.com/wp-content/uploads/2020/08/%E3%82%AC%E3%82%A4%E3%82%B3%E3%83%84.png",
+    "id": 2
+  },
+  {
+    "name": "提灯お化け",
+    "rank": "【弱敵】",
+    "img": "https://nanamiyuki.com/wp-content/uploads/2022/06/%E6%8F%90%E7%81%AF%E3%81%8A%E3%81%B0%E3%81%914.png",
+    "id": 3
   }
 ]

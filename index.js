@@ -831,6 +831,22 @@ async function win_process(player_id,channel_id,exp){
         item_members.push(`<@${members[i]}>は100円硬貨を**1個**手に入れた！`)
         await obtain_item("100000",1,members[i])
       }
+    }else if(rank == "【極】"){
+      expcalc = expcalc*(5+exp_talent*0.02)
+      item_members.push(`<@${members[i]}>はエリクサーを**1個**手に入れた！`)
+      await obtain_item("1",1,members[i])
+      item_members.push(`<@${members[i]}>はファイアボールの書を**1個**手に入れた！`)
+      await obtain_item("2",1,members[i])
+      item_members.push(`<@${members[i]}>は祈りの書を**1個**手に入れた！`)
+      await obtain_item("3",1,members[i])
+      if(Math.random() <= 0.01){
+        item_members.push(`<@${members[i]}>は気を**1個**手に入れた！`)
+        await obtain_item("4",1,members[i])
+      }
+      if(Math.random() <= 0.03){
+        item_members.push(`<@${members[i]}>は100円硬貨を**1個**手に入れた！`)
+        await obtain_item("100000",1,members[i])
+      }
     }else if(rank == "【レア】"){
       if(Math.random() <= 0.1){
         item_members.push(`<@${members[i]}>はエリクサーを**1個**手に入れた！`)
@@ -999,7 +1015,9 @@ async function reset_battle(channel_id,level){
     await channel_status.set(channel_id,ch_status)
     const monster_info = [boss_level,boss_level*10+50]
     let info;
-    if(boss_level % 50 == 0){
+    if(boss_level % 500 == 0){
+      info = generate_monster("kiwami")
+    }else if(boss_level % 50 == 0){
       info = generate_monster("super_kyouteki")
     }else if(boss_level % 5 == 0){
       info = generate_monster("kyouteki")
