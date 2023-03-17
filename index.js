@@ -124,8 +124,7 @@ async function generate_detection(player_id,message){
     probability = probability + (deru * 0.001)
   }
   if(Math.random() < probability){
-    status.splice(7,1,true)
-    await player_status.set(player_id,status)
+    await splice_status(player_id,7,1,true)
     const first = ["マクロ","まくろ","ﾏｸﾛ","ま＜ろ","マク口","Macro","macro","MACRO","マク❏","マク❒","マク□","makuro","Makuro","MAKURO"]
     const second = ["Kenti","kenti","KENTI","検知","木僉矢口"," Detection"," detection"," DETECTION","ケンチ","けんち","ｹﾝﾁ"]
     const title = `${first[Math.floor(Math.random()*first.length)]}${second[Math.floor(Math.random()*second.length)]}`
@@ -154,18 +153,14 @@ async function generate_detection(player_id,message){
       if(interaction.customId == `${random}`){
         interaction.message.edit({ embeds: [o_embed], components: [] })
         interaction.reply({ content: "認証しました。", ephemeral: true })
-        status = await player_status.get(player_id)
-        status.splice(7,1,false)
-        await player_status.set(player_id,status)
+        await splice_status(player_id,7,1,false)
         clearTimeout(timer);
       }
     });
     const timer = setTimeout(async () => {
       msg.edit({ embeds: [x_embed], components: [] })
       await ban(player_id)
-      status = await player_status.get(player_id)
-      status.splice(7,1,false)
-      await player_status.set(player_id,status)
+      await splice_status(player_id,7,1,false)
     },1000*60);
     return;
   }
