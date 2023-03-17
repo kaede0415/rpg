@@ -1292,6 +1292,38 @@ function generate_monster(rank){
   }
 }
 
+function summon_monster(rank){
+  try{
+    if(rank == "random"){
+      const random = Math.random()
+      if(random <= 0.01){
+        rank = "rare"
+      }else if(0.01 < random && random <= 0.012){
+        rank = "super_rare"
+      }else if(0.012 < random && random <= 0.013){
+        rank = "super_ultra_rare"
+      }else if(0.013 < random && random <= 0.023){
+        rank = "zyakuteki"
+      }else if(0.013 < random && random <= 0.0131){
+        rank = "maboroshi"
+      }else{
+        rank = "normal"
+      }
+      const monsters = require(`./monsters/${rank}.json`)
+      const number = Math.floor( Math.random() * Number( monsters.length.toString()) )
+      const monster = monsters[number]
+      return [monster.name,monster.rank,monster.img]
+    }else{
+      const monsters = require(`./monsters/${rank}.json`)
+      const number = Math.floor( Math.random() * Number( monsters.length.toString()) )
+      const monster = monsters[number]
+      return [monster.name,monster.rank,monster.img]
+    }
+  }catch(err){
+    return undefined
+  }
+}
+
 function gatya(option,time){
   const rewards = []
   const rewards_name = []

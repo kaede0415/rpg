@@ -2,11 +2,13 @@
   {
     "name": "Re'start-Reboot",
     "rank": "【通常】",
-    "img": "https://cdn.glitch.global/60276a28-a0bd-4708-b86a-3a6d1ccc9fae/Re'start-Reboot.png?v=1675815551996"
+    "img": "https://cdn.glitch.global/60276a28-a0bd-4708-b86a-3a6d1ccc9fae/Re'start-Reboot.png?v=1675815551996",
+    "id": 1
   },
   {
     "name": "taniguchi",
     "rank": "【通常】",
-    "img": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Jir%C5%8D_Taniguchi_-_Lucca_Comics_and_Games_2011_-_2.jpg/1200px-Jir%C5%8D_Taniguchi_-_Lucca_Comics_and_Games_2011_-_2.jpg"
+    "img": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Jir%C5%8D_Taniguchi_-_Lucca_Comics_and_Games_2011_-_2.jpg/1200px-Jir%C5%8D_Taniguchi_-_Lucca_Comics_and_Games_2011_-_2.jpg",
+    "id": 2
   }
 ]
