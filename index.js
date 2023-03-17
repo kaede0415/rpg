@@ -2054,7 +2054,7 @@ client.on("messageCreate", async message => {
         const id = Number(message.content.split(" ")[2])
         const level = Number(message.content.split(" ")[3])
         const hp = level*10+50
-        const info = generate_monster(rank)
+        const info = summon_monster(rank,id,level)
         if(info == undefined){
           return message.reply({ content: "undefined", allowedMentions: { parse: [] } })
         }
