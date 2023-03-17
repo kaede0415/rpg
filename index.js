@@ -34,7 +34,7 @@ const newbutton = (buttondata) => {
   };
 };
 const prefix = "_"
-const cmd_list = ["help","status","st","attack","atk","item","i","in","reset","re","rs","inquiry","inq","talent","training","t","mine","gatya","itemid","consumeitem","sozaiid","consumesozai","exp","eval","db","bulkdb"]
+const cmd_list = ["help","status","st","attack","atk","item","i","in","reset","re","rs","inquiry","inq","talent","ranking","rank","training","t","mine","gatya","craft","c","summon","ban","unban","banlist","kill","itemid","consumeitem","sozaiid","consumesozai","exp","eval","db","bulkdb"]
 const command_json = require("./jsons/command.json")
 const item_json = require("./jsons/item.json")
 const sozai_json = require("./jsons/sozai.json")
@@ -1776,7 +1776,7 @@ client.on("messageCreate", async message => {
         .addField(`= ${prefix}attack | ${prefix}atk =`,">>> 敵に攻撃",true)
         .addField(`= ${prefix}item ([item名]) | ${prefix}i ([item名]) =`,">>> アイテムリスト/アイテムを使用",true)
         .addField(`= ${prefix}training | ${prefix}t =`,">>> 四字熟語トレーニング",true)
-        //.addField(`= ${prefix}ranking | ${prefix}rank =`,">>> 各種ランキング",true)
+        .addField(`= ${prefix}ranking | ${prefix}rank =`,">>> 各種ランキング",true)
         .addField(`= ${prefix}in =`,">>> 戦闘に参加",true)
         .addField(`= ${prefix}reset | ${prefix}re =`,">>> 戦闘をリセット",true)
         .addField(`= ${prefix}inquiry | ${prefix}inq =`,">>> 戦闘状況の確認",true)
@@ -1797,7 +1797,7 @@ client.on("messageCreate", async message => {
         new MessageEmbed()
         .setTitle("HELP:")
         .setDescription("管理者のみ使用可能なコマンド")
-        //.addField(`= ${prefix}summon [lv] [name] [rank] [img] =`,">>> モンスターを召喚",true)
+        .addField(`= ${prefix}summon [rank] [id] [level] =`,">>> モンスターを召喚",true)
         .addField(`= ${prefix}kill [count] =`,">>> 指定した数字の敵を殺害",true)
         .addField(`= ${prefix}ban [id/@mention] =`,">>> id指定または全員をBAN",true)
         .addField(`= ${prefix}unban [id/@mention] =`,">>> id指定または全員をUNBAN",true)
@@ -1868,7 +1868,7 @@ client.on("messageCreate", async message => {
     if(command == "inquiry" || command == "inq"){
       await inquiry(message.channel.id,message)
     }
-    if(command == "gatya"){
+    if(command == "gatya" || command == "gacha"){
       let time = message.content.slice(prefix.length+6).trim()
       if(!time){
         return message.reply({ content: "回数を入力してください" })
@@ -1901,7 +1901,7 @@ client.on("messageCreate", async message => {
       .setDescription(msgs.join("\n"))
       message.channel.send({ embeds:[embed] })
     }
-    if(command == "xgatya"){
+    if(command == "xgatya" || command == "xgacha"){
       let time = message.content.slice(prefix.length+7).trim()
       if(!time){
         return message.reply({ content: "回数を入力してください" })
