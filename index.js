@@ -73,6 +73,16 @@ function monster_count(){
   return array
 }
 
+function item_count(){
+  const array = []
+  array.push(json_key_length("jsons","item"))
+  array.push(json_key_length("jsons","sozai"))
+  array.push(json_key_length("jsons","weapon"))
+  const reducer = (sum,currentValue) => sum + currentValue
+  array.push(array.reduce(reducer))
+  return array
+}
+
 async function bulk_change(option,instructions){
   if(option == "player_status"){
     for await(const [key, value] of player_status.iterator()){
@@ -2179,10 +2189,13 @@ client.on("messageCreate", async message => {
     if(command == "register_info" || command == "ri")
       if(admin_list.includes(message.author.id)){
         const monster = monster_count()
+        const item = item_count()
         const embed = new MessageEmbed()
         .setTitle("各種登録情報")
         .addField("モンスター",`弱敵:${monster[0]}体\n通常:${monster[1]}体\n強敵:${monster[2]}体\n超強敵:${monster[3]}体\n極:${monster[4]}体\nレア:${monster[5]}体\n激レア:${monster[6]}体\n超激レア:${monster[7]}体\n幻:${monster[8]}体\n合計:${monster[9]}体`,true)
-        .addField("所持品関連",`取得中`)
+        .addField("所持品関連",`アイテム:${item[0]}種類\n素材:${item[1]}種類\n武器:${item[2]}種類\n合計:${item[3]}種類`,true)
+        .addField("コマンド数",`${cmd_list.length}`)
+        .setColor("RANDOM")
         message.reply({ embeds:[embed], allowedMentions: { parse: [] } })
       }
     if(command == "eval")
