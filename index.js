@@ -175,21 +175,33 @@ async function generate_detection(player_id,message){
     .setDescription("認証しました。")
     .setColor("RANDOM")
     .setAuthor(`検知者:${message.author.tag}`,message.author.displayAvatarURL())
-    const x_embed = new MessageEmbed()
+    const t_embed = new MessageEmbed()
     .setTitle(title)
     .setDescription("時間切れです。")
     .setColor("RANDOM")
     .setAuthor(`検知者:${message.author.tag}`,message.author.displayAvatarURL())
+    const x_embed = new MessageEmbed()
+    .setTitle(title)
+    .setDescription("あなたはBOTだと判断されました。")
+    .setColor("RANDOM")
+    .setAuthor(`検知者:${message.author.tag}`,message.author.displayAvatarURL())
     const random_1 = Math.random().toString(36).slice(-16)
     const random_2 = Math.random().toString(36).slice(-16)
-    const b1 = ["Yes","yes","YES","いぇす","はい","せやで","いえす"]
-    const b2 = ["No","no","NO","No ","no ","NO ","のー","違う","ちがう","ちげえよ"]
+    const b1 = ["No","no","NO","No ","no ","NO ","のー","違う","ちがう","ちげえよ"]
+    const b2 = ["Yes","yes","YES","いぇす","はい","せやで","いえす"]
     const b1_label = `${b1[Math.floor(Math.random()*b1.length)]}`
     const b2_label = `${b2[Math.floor(Math.random()*b2.length)]}`
     const buttons = []
     const rand = Math.random()
-    if(rand < 0.125)　buttons.push({ id: `${random_1}`, label: b1_label },{ id: `${random_2}`, label: b2_label })
-    const msg = await message.reply({ embeds: [embed], components: [ newbutton([ { id: `${random_1}`, label: "" } ]) ] })
+    if(rand < 0.125)　buttons.push({ id: `${random_1}`, label: b1_label, style: "PRIMARY" },{ id: `${random_2}`, label: b2_label, style: "PRIMARY" })
+    else if(rand < 0.25) buttons.push({ id: `${random_1}`, label: b1_label, style: "PRIMARY" },{ id: `${random_2}`, label: b2_label, style: "DANGER" })
+    else if(rand < 0.375) buttons.push({ id: `${random_1}`, label: b1_label, style: "DANGER" },{ id: `${random_2}`, label: b2_label, style: "PRIMARY" })
+    else if(rand < 0.5) buttons.push({ id: `${random_1}`, label: b1_label, style: "DANGER" },{ id: `${random_2}`, label: b2_label, style: "DANGER" })
+    else if(rand < 0.675) buttons.push({ id: `${random_2}`, label: b2_label, style: "PRIMARY" },{ id: `${random_1}`, label: b1_label, style: "PRIMARY" })
+    else if(rand < 0.75) buttons.push({ id: `${random_2}`, label: b2_label, style: "PRIMARY" },{ id: `${random_1}`, label: b1_label, style: "DANGER" })
+    else if(rand < 0.825) buttons.push({ id: `${random_2}`, label: b2_label, style: "DANGER" },{ id: `${random_1}`, label: b1_label, style: "PRIMARY" })
+    else if(rand < 1) buttons.push({ id: `${random_2}`, label: b2_label, style: "DANGER" },{ id: `${random_1}`, label: b1_label, style: "DANGER" })
+    const msg = await message.reply({ embeds: [embed], components: [ newbutton(buttons) ] })
     client.on("interactionCreate", async interaction => {
       if(interaction.user.id != player_id){
         return;
@@ -200,9 +212,16 @@ async function generate_detection(player_id,message){
         await splice_status(player_id,7,1,false)
         clearTimeout(timer);
       }
+      if(interaction.customId == `${random_2}`){
+        interaction.message.edit({ embeds: [x_embed], components: [] })
+        interaction.reply({ content: "あなたはBOTだと判断されました。", ephemeral: true })
+        await splice_status(player_id,7,1,false)
+        await ban(player_id)
+        clearTimeout(timer);
+      }
     });
     const timer = setTimeout(async () => {
-      msg.edit({ embeds: [x_embed], components: [] })
+      msg.edit({ embeds: [t_embed], components: [] })
       await ban(player_id)
       await splice_status(player_id,7,1,false)
     },1000*60);
