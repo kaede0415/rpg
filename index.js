@@ -39,7 +39,7 @@ const command_json = require("./jsons/command.json")
 const item_json = require("./jsons/item.json")
 const sozai_json = require("./jsons/sozai.json")
 const training_json = require("./jsons/training.json")
-const admin_list = ["945460382733058109","759001587422462015"];
+const admin_list = ["945460382733058109","759001587422462015","879573587063898192"];
 const mine_cooldown = []
 let timeout;
 let time;
