@@ -524,7 +524,7 @@ async function bigbang(player_id,channel_id,message){
   const monster_name = m_status[2]
   const damage = Math.floor(player_attack*100000000*Math.random())
   monster_hp -= damage
-  let atk_msg = `+ ビッグバン！${monster_name}に${damage.toLocaleString()}を与えた！\n! 先の50体の敵が吹っ飛んだ！`
+  let atk_msg = `+ ビッグバン！${monster_name}に${damage.toLocaleString()}ダメージを与えた！\n! 先の50体の敵が吹っ飛んだ！`
   if(monster_hp <= 0){
     const win_message = await win_process(player_id,channel_id,monster_level)
     const embed = new MessageEmbed()
