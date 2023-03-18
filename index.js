@@ -48,7 +48,7 @@ process.env.TZ = 'Asia/Tokyo'
 
 function json_key_length(folder,file){
   let json_name
-  if(folder != "none"){
+  if(folder == "none"){
     json_name = `./${file}.json`
   }else{
     json_name = `./${folder}/${file}.json`
@@ -2159,6 +2159,12 @@ client.on("messageCreate", async message => {
           count = Number(count)
         }
         await kill(count,message.author.id,message.channel.id,message)
+      }
+    if(command == "register_info" || command == "ri")
+      if(admin_list.includes(message.author.id)){
+        const embed = new MessageEmbed()
+        .setTitle("各種登録情報")
+        .addField("モンスター",`通常\n> ${json_key_length}`)
       }
     if(command == "eval")
       if(admin_list.includes(message.author.id)){
