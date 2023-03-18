@@ -46,6 +46,16 @@ let time;
 process.env.TZ = 'Asia/Tokyo'
 //const dbFiles = fs.readdirSync('./').filter(file => file.endsWith('.sqlite'));
 
+function json_key_length(folder,file){
+  let json_name
+  if(folder != "none"){
+    json_name = `./${file}.json`
+  }else{
+    json_name = `./${folder}/${file}.json`
+  }
+  const json = require(json_name)
+  return Object.keys(json).length
+}
 
 async function bulk_change(option,instructions){
   if(option == "player_status"){
