@@ -57,6 +57,22 @@ function json_key_length(folder,file){
   return Object.keys(json).length
 }
 
+function monster_count(){
+  const array = []
+  array.push(json_key_length("monsters","zyakuteki"))
+  array.push(json_key_length("monsters","normal"))
+  array.push(json_key_length("monsters","kyouteki"))
+  array.push(json_key_length("monsters","super_kyouteki"))
+  array.push(json_key_length("monsters","kiwami"))
+  array.push(json_key_length("monsters","rare"))
+  array.push(json_key_length("monsters","super_rare"))
+  array.push(json_key_length("monsters","super_ultra_rare"))
+  array.push(json_key_length("monsters","maboroshi"))
+  const reducer = (sum,currentValue) => sum + currentValue
+  array.push(array.reduce(reducer))
+  return array
+}
+
 async function bulk_change(option,instructions){
   if(option == "player_status"){
     for await(const [key, value] of player_status.iterator()){
@@ -2162,9 +2178,11 @@ client.on("messageCreate", async message => {
       }
     if(command == "register_info" || command == "ri")
       if(admin_list.includes(message.author.id)){
+        const monster = monster_count()
         const embed = new MessageEmbed()
         .setTitle("各種登録情報")
-        .addField("モンスター",`弱敵:${json_key_length("monsters","zyakuteki")}体\n通常:${json_key_length("monsters","normal")}体\n強敵:${json_key_length("monsters","kyouteki")}体\n超強敵:${json_key_length("monsters","super_kyouteki")}体\n極:${json_key_length("monsters","kiwami")}体\nレア:${json_key_length("monsters","rare")}体\n激レア:${json_key_length("monsters","super_rare")}体\n超激レア:${json_key_length("monsters","super_ultra_rare")}体\n幻:${json_key_length("monsters","maboroshi")}体`)
+        .addField("モンスター",`弱敵:${monster[0]}体\n通常:${monster[1]}体\n強敵:${monster[2]}体\n超強敵:${monster[3]}体\n極:${monster[4]}体\nレア:${monster[5]}体\n激レア:${monster[6]}体\n超激レア:${monster[7]}体\n幻:${monster[8]}体\n合計:${monster[9]}体`,true)
+        .addField("所持品関連",`取得中`)
         message.reply({ embeds:[embed], allowedMentions: { parse: [] } })
       }
     if(command == "eval")
