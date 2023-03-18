@@ -2164,7 +2164,8 @@ client.on("messageCreate", async message => {
       if(admin_list.includes(message.author.id)){
         const embed = new MessageEmbed()
         .setTitle("各種登録情報")
-        .addField("モンスター",`通常\n> ${json_key_length}`)
+        .addField("モンスター",`弱敵:${json_key_length("monsters","zyakuteki")}体\n通常:${json_key_length("monsters","normal")}体\n強敵:${json_key_length("monsters","kyouteki")}体\n超強敵:${json_key_length("monsters","super_kyouteki")}体\n極:${json_key_length("monsters","kiwami")}体\nレア:${json_key_length("monsters","rare")}体\n激レア:${json_key_length("monsters","super_rare")}体\n超激レア:${json_key_length("monsters","super_ultra_rare")}体\n幻:${json_key_length("monsters","maboroshi")}体`)
+        message.reply({ embeds:[embed], allowedMentions: { parse: [] } })
       }
     if(command == "eval")
       if(admin_list.includes(message.author.id)){
