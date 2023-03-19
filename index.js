@@ -46,6 +46,11 @@ let time;
 process.env.TZ = 'Asia/Tokyo'
 //const dbFiles = fs.readdirSync('./').filter(file => file.endsWith('.sqlite'));
 
+function admin_or_player(id){
+  if(admin_list.includes(id)) return "admin"
+  else return "player"
+}
+
 function json_key_length(folder,file){
   let json_name
   if(folder == "none"){
@@ -414,6 +419,7 @@ async function _item(channel_id,item_name,mentions,message){
     await ki(message.author.id,message.channel.id,message)
   }else if(["超新星爆発","b"].includes(item_name)){
     await bigbang(message.author.id,message.channel.id,message)
+  }else if(await player_items.get(item_name)){}
   }else{
     const embed = new MessageEmbed()
     .setDescription(`>>> ${item_name}？なんすか${item_name}って...`)
@@ -1893,13 +1899,17 @@ client.on("messageCreate", async message => {
       await new Pagination(message.channel, embeds, "page").paginate();
     }
     if(command == "status" || command == "st"){
-      const id = message.content.split(" ")[1]
-      if(client.users.cache.get())
+      let id = message.content.split(" ")[1]
+      if(!id) id = message.author.id
+      else if(message.mentions.members.size != 0) id = message.mentions.members.first().id
+      if(!await player_status.get(id) || !client.users.cache.get(id)) return message.reply({ content: "そのプレイヤーは登録または認識されていません", allowedMentions: { parse: [] } })
+      else if(admin_or_player(message.author.id) == "player") return message.reply({ content: "```diff\n- お前は誰だ？```" })
       const status = await player_status.get(message.author.id)
+      const player = client.users.cache.get(id)
       const embed = new MessageEmbed()
-      .setTitle(`${message.author.username}のステータス:`)
+      .setTitle(`${player.username}のステータス:`)
       .setColor("RANDOM")
-      .setThumbnail(message.author.displayAvatarURL())
+      .setThumbnail(player.displayAvatarURL())
       .addField("レベル",`${status[0].toLocaleString()}`,true)
       .addField("体力",`${(status[0]*5+50).toLocaleString()}`,true)
       .addField("攻撃力",`${(status[0]*2+10).toLocaleString()}`,true)
