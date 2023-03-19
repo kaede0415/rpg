@@ -1893,6 +1893,8 @@ client.on("messageCreate", async message => {
       await new Pagination(message.channel, embeds, "page").paginate();
     }
     if(command == "status" || command == "st"){
+      const id = message.content.split(" ")[1]
+      if(client.users.cache.get())
       const status = await player_status.get(message.author.id)
       const embed = new MessageEmbed()
       .setTitle(`${message.author.username}のステータス:`)
