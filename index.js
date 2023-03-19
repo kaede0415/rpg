@@ -1374,6 +1374,10 @@ async function get_monster_rank(channel_id){
   return m_info[3]
 }
 
+function get_monster_id(monster_rank,monster_name){
+  
+}
+
 function generate_monster(rank){
   try{
     if(rank == "random"){
