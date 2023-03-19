@@ -1375,25 +1375,37 @@ async function get_monster_rank(channel_id){
 }
 
 function get_monster_id(monster_rank,monster_name){
+  const array = []
+  let rank
   if(["【通常】"].includes(monster_rank)){
-    
+    rank = "normal"
   }else if(["【弱敵】"].includes(monster_rank)){
-    
+    rank = "zyakuteki"
   }else if(["【強敵】"].includes(monster_rank)){
-    
+    rank = "kyouteki"
   }else if(["【超強敵】"].includes(monster_rank)){
-    
-  }else if(["【通常】"].includes(monster_rank)){
-    
-  }else if(["【通常】"].includes(monster_rank)){
-    
-  }else if(["【通常】"].includes(monster_rank)){
-    
-  }else if(["【通常】"].includes(monster_rank)){
-    
-  }else if(["【通常】"].includes(monster_rank)){
-    
+    rank = "super_kyouteki"
+  }else if(["【極】"].includes(monster_rank)){
+    rank = "kiwami"
+  }else if(["【レア】"].includes(monster_rank)){
+    rank = "rare"
+  }else if(["【激レア】"].includes(monster_rank)){
+    rank = "super_rare"
+  }else if(["【超激レア】"].includes(monster_rank)){
+    rank = "super_ultra_rare"
+  }else if(["【幻】"].includes(monster_rank)){
+    rank = "maboroshi"
   }
+  array.push(rank)
+  const json = require(`./monsters/${rank}.json`)
+  const hoge = JSON.parse(JSON.stringify(json))
+  const valueList = Object.keys(hoge)
+  for(let value in valueList){
+    if(hoge[valueList[value]].name == monster_name){
+      return `${hoge[keyList[key]}`
+    }
+  }
+  return undefined
 }
 
 function generate_monster(rank){
