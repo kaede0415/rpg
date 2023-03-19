@@ -335,9 +335,16 @@ async function _attack(player_id,channel_id,message){
 }
 
 async function _item(channel_id,item_name,mentions,message){
-  if(item_name == undefined){
-    const p_items = await player_items.get(message.author.id)
-    const p_sozais = await player_sozais.get(message.author.id)
+  let id = message.author.id
+  let p_items = await player_items.get(message.author.id)
+  let p_sozais = await player_sozais.get(message.author.id)
+  if(!item_name || await player_items.get(item_name)){
+    if(await player_items.get(item_name)){
+      p_items = await player_items.get(item_name)
+      p_sozais = await player_sozais.get(item_name)
+      id = item_name
+    }
+    const player = client.users.cache.get(id)
     const comparefunction = function(a,b){
       return a[0] - b[0]
     }
@@ -349,7 +356,7 @@ async function _item(channel_id,item_name,mentions,message){
     }
     let i_content = [];
     const i_embed = new MessageEmbed()
-    .setTitle(`${message.author.username}のアイテムリスト:`)
+    .setTitle(`${player.username}のアイテムリスト:`)
     .setFooter("ページ:1/2")
     .setColor("RANDOM")
     if(!p_items.length){
@@ -364,7 +371,7 @@ async function _item(channel_id,item_name,mentions,message){
     i_embed.setDescription(`>>> ${i_content.join("\n")}`)
     let s_content = [];
     const s_embed = new MessageEmbed()
-    .setTitle(`${message.author.username}の素材リスト:`)
+    .setTitle(`${player.username}の素材リスト:`)
     .setFooter("ページ:2/2")
     .setColor("RANDOM")
     if(!p_sozais.length){
@@ -419,7 +426,6 @@ async function _item(channel_id,item_name,mentions,message){
     await ki(message.author.id,message.channel.id,message)
   }else if(["超新星爆発","b"].includes(item_name)){
     await bigbang(message.author.id,message.channel.id,message)
-  }else if(await player_items.get(item_name)){}
   }else{
     const embed = new MessageEmbed()
     .setDescription(`>>> ${item_name}？なんすか${item_name}って...`)
