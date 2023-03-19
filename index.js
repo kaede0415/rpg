@@ -1052,7 +1052,7 @@ async function into_battle(player_id,channel_id){
     await monster_status.set(channel_id,[1,60].concat(info))
   }
   if(!ch_status){
-    await channel_status.set(channel_id,[1,false,[]])
+    await create_data("channel",channel_id)
   }
   ch_status = await channel_status.get(channel_id)
   if(status[4] == false){
