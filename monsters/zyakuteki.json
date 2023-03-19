@@ -34,5 +34,17 @@
     "rank": "【弱敵】",
     "img": "https://nanamiyuki.com/wp-content/uploads/2022/06/%E3%81%8B%E3%82%89%E3%81%8B%E3%81%95%E3%81%8A%E5%8C%96%E3%81%911.png",
     "id": 6
+  },
+  {
+    "name": "見習い幽霊",
+    "rank": "【弱敵】",
+    "img": "https://nanamiyuki.com/wp-content/uploads/2021/11/%E3%83%A2%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%BC_%E3%82%B4%E3%83%BC%E3%82%B9%E3%83%88%E5%9E%8B_%E3%82%B4%E3%83%BC%E3%82%B9%E3%83%88.png",
+    "id": 7
+  },
+  {
+    "name": "アクアフェアリー",
+    "rank": "【弱敵】",
+    "img": "https://nanamiyuki.com/wp-content/uploads/2021/11/%E3%83%A2%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%BC_%E6%B6%B2%E4%BD%93%E5%9E%8B_%E3%83%9E%E3%82%B8%E3%83%83%E3%82%AF%E3%82%A2%E3%82%AF%E3%82%A2.png",
+    "id": 7
   }
 ]

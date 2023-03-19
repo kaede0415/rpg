@@ -76,5 +76,35 @@
     "rank": "【通常】",
     "img": "https://nanamiyuki.com/wp-content/uploads/2022/11/NA_CJ_mob_012_1.png",
     "id": 13
+  },
+  {
+    "name": "ウィザー",
+    "rank": "【通常】",
+    "img": "https://nanamiyuki.com/wp-content/uploads/2021/11/%E3%83%A2%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%BC_%E9%AD%94%E5%A5%B3%E5%9E%8B_%E9%AD%94%E5%A5%B3.png",
+    "id": 14
+  },
+  {
+    "name": "金槌熊",
+    "rank": "【通常】",
+    "img": "https://nanamiyuki.com/wp-content/uploads/2021/11/%E3%83%A2%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%BC_%E6%AD%A6%E8%A3%85%E7%8D%A3%E5%9E%8B_%E7%82%AD%E9%89%B1%E3%82%A2%E3%83%8A%E3%82%B0%E3%83%9E.png",
+    "id": 15
+  },
+  {
+    "name": "ウィザー",
+    "rank": "【通常】",
+    "img": "https://nanamiyuki.com/wp-content/uploads/2021/11/%E3%83%A2%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%BC_%E9%AD%94%E5%A5%B3%E5%9E%8B_%E9%AD%94%E5%A5%B3.png",
+    "id": 14
+  },
+  {
+    "name": "一匹狼",
+    "rank": "【通常】",
+    "img": "https://nanamiyuki.com/wp-content/uploads/2021/10/%E3%83%A2%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%BC_%E7%8B%BC%E5%9E%8B_%E3%82%AA%E3%82%AA%E3%82%AB%E3%83%9F.png",
+    "id": 15
+  },
+  {
+    "name": "ドンキ◯コング",
+    "rank": "【通常】",
+    "img": "https://nanamiyuki.com/wp-content/uploads/2022/07/%E3%83%A2%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%BC_%E5%A4%A7%E7%8C%BF%E5%9E%8B_%E3%83%93%E3%83%BC%E3%82%B9%E3%83%88%E3%83%9E%E3%83%B3.png",
+    "id": 14
   }
 ]
