@@ -16,5 +16,23 @@
     "rank": "【弱敵】",
     "img": "https://nanamiyuki.com/wp-content/uploads/2022/06/%E6%8F%90%E7%81%AF%E3%81%8A%E3%81%B0%E3%81%914.png",
     "id": 3
+  },
+  {
+    "name": "したっぱロボA",
+    "rank": "【弱敵】",
+    "img": "https://nanamiyuki.com/wp-content/uploads/2022/07/%E3%83%AF%E3%83%BC%E3%82%AB%E3%83%BC1.png",
+    "id": 4
+  },
+  {
+    "name": "したっぱロボB",
+    "rank": "【弱敵】",
+    "img": "https://nanamiyuki.com/wp-content/uploads/2022/07/%E3%83%AF%E3%83%BC%E3%82%AB%E3%83%BC2.pngg",
+    "id": 5
+  },
+  {
+    "name": "からかさお化け",
+    "rank": "【弱敵】",
+    "img": "https://nanamiyuki.com/wp-content/uploads/2022/06/%E3%81%8B%E3%82%89%E3%81%8B%E3%81%95%E3%81%8A%E5%8C%96%E3%81%911.png",
+    "id": 6
   }
 ]
