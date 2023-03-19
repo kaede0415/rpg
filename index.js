@@ -1959,7 +1959,7 @@ client.on("messageCreate", async message => {
         //.addField(`= ${prefix}inbox ([gift名]) =`,">>> 受信箱/ギフト受け取り",true)
         //.addField(`= ${prefix}word =`,">>> 特別コードの入力",true)
         .addField(`= ${prefix}mine =`,">>> 採掘(特に意味はない)",true)
-        .addField(`= ${prefix}gatya [回数] =`,">>> 採掘(特に意味はない)",true)
+        .addField(`= ${prefix}gatya [回数] =`,">>> ガチャる",true)
         .setAuthor(`コマンド実行者:${message.author.tag}`, message.author.displayAvatarURL())
         .setColor("RANDOM"),
         new MessageEmbed()
