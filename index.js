@@ -531,8 +531,15 @@ async function fireball(player_id,channel_id,message){
     const m_img = m_info[4]
     const embed2 = new MessageEmbed()
     .setTitle(`ランク:${m_rank}\n${m_name}が待ち構えている...！\nLv.${m_level.toLocaleString()} HP:${m_hp.toLocaleString()}`)
-    .setImage(m_img)
     .setColor("RANDOM")
+    const mode = await get_channel_mode(channel_id)
+    if(mode == "normal"){
+      embed2.setImage(m_img)
+    }else if(mode == "debug"){
+      const id = get_monster_id(m_rank,m_name)
+      embed2.setImage(m_img)
+      .setFooter(`ファイル名:${id[0]} | モンスターid:${id[1]}`)
+    }
     message.reply({ content:`\`\`\`diff\n${atk_msg}\`\`\``, embeds:[embed,embed2], allowedMentions: { parse: [] } })
   }else{
     m_status.splice(1,1,monster_hp)
@@ -616,8 +623,15 @@ async function ki(player_id,channel_id,message){
   const m_img = m_info[4]
   const embed2 = new MessageEmbed()
   .setTitle(`ランク:${m_rank}\n${m_name}が待ち構えている...！\nLv.${m_level.toLocaleString()} HP:${m_hp.toLocaleString()}`)
-  .setImage(m_img)
   .setColor("RANDOM")
+  const mode = await get_channel_mode(channel_id)
+  if(mode == "normal"){
+    embed2.setImage(m_img)
+  }else if(mode == "debug"){
+    const id = get_monster_id(m_rank,m_name)
+    embed2.setImage(m_img)
+    .setFooter(`ファイル名:${id[0]} | モンスターid:${id[1]}`)
+  }
   message.reply({ content:`\`\`\`diff\n${atk_msg}\`\`\``, embeds:[embed,embed2], allowedMentions: { parse: [] } })
 }
 
@@ -665,8 +679,15 @@ async function bigbang(player_id,channel_id,message){
     const m_img = m_info[4]
     const embed2 = new MessageEmbed()
     .setTitle(`ランク:${m_rank}\n${m_name}が待ち構えている...！\nLv.${m_level.toLocaleString()} HP:${m_hp.toLocaleString()}`)
-    .setImage(m_img)
     .setColor("RANDOM")
+    const mode = await get_channel_mode(channel_id)
+    if(mode == "normal"){
+      embed2.setImage(m_img)
+    }else if(mode == "debug"){
+      const id = get_monster_id(m_rank,m_name)
+      embed2.setImage(m_img)
+      .setFooter(`ファイル名:${id[0]} | モンスターid:${id[1]}`)
+    }
     message.reply({ content:`\`\`\`diff\n${atk_msg}\`\`\``, embeds:[embed,embed2], allowedMentions: { parse: [] } })
   }else{
     m_status.splice(1,1,monster_hp)
