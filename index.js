@@ -339,15 +339,15 @@ async function _item(channel_id,item_name,mentions,message){
   if(!item_name || await player_items.get(item_name) || message.mentions.members.size != 0){
     if(message.mentions.members.size != 0){
       id = message.mentions.members.first().id
+      const error_msg = admin_or_player(message.author.id)
+      if(error_msg != "admin") return message.reply({ content: error_msg, allowedMentions: { parse: [] } })
       if(!await player_items.get(id)){
         return message.reply({ content: "そのプレイヤーのデータは見つかりませんでした", allowedMentions: { parse: [] } })
       }
     }else if(await player_items.get(item_name)){
       id = item_name
-    }
-    const error_msg = admin_or_player(message.author.id)
-    if(error_msg != "admin"){
-      return message.reply({ content: error_msg, allowedMentions: { parse: [] } })
+      const error_msg = admin_or_player(message.author.id)
+      if(error_msg != "admin") return message.reply({ content: error_msg, allowedMentions: { parse: [] } })
     }
     const p_items = await player_items.get(id)
     const p_sozais = await player_sozais.get(id)
@@ -540,6 +540,12 @@ async function pray(player_id,channel_id,mentions,message){
 }
 
 async function ki(player_id,channel_id,message){
+  if(await get_monster_rank(channel_id) == "【極】"){
+    const embed = new MessageEmbed()
+    .setDescription(">>> この敵に気は通用しない...!")
+    .setColor("RANDOM")
+    return message.reply({ embeds:[embed], allowedMentions: { parse: [] } })
+  }
   if(await consume_item("4",1,player_id) == false){
     const embed = new MessageEmbed()
     .setDescription(`>>> <@${player_id}>は気を持っていない！`)
@@ -640,8 +646,6 @@ async function bigbang(player_id,channel_id,message){
 }
 
 async function kill(count,player_id,channel_id,message){
-  const error_msg = admin_or_player(message.author.id)
-  if(error_msg != "admin") return message.reply({ content: error_msg, allowedMentions: { parse: [] } })
   const intobattle = await into_battle(player_id,channel_id)
   let player_hp = intobattle[0]
   const error_message = intobattle[1]
@@ -1080,13 +1084,15 @@ async function reset_battle(channel_id,level){
     const monster_info = [ch_status[0],ch_status[0]*10+50]
     let info;
     const nowrank = await get_monster_rank(channel_id)
-    if(nowrank != "【強敵】" && nowrank != "【超強敵】"){
+    if(nowrank != "【強敵】" && nowrank != "【超強敵】" && nowrank != "【極】"){
       info = generate_monster("normal")
     }else{
       if(nowrank == "【強敵】"){
         info = generate_monster("kyouteki")
       }else if(nowrank == "【超強敵】"){
         info = generate_monster("super_kyouteki")
+      }else if(nowrank == "【極】"){
+        info = generate_monster("kiwami")
       }
     }
     await monster_status.set(channel_id,monster_info.concat(info))
@@ -2183,113 +2189,111 @@ client.on("messageCreate", async message => {
       }else if(message.mentions.members.size >= 2){
         player = undefined
       }else{
-         player = message.content.split(" ")[1]
-        }
-        if(player == undefined){
-          return message.reply({ content: "メンションは1人にしてください", allowedMentions: { parse: [] } })
-        }
-        if(await ban(player) == false){
-          return message.reply({ content: "不正", allowedMentions: { parse: [] } })
-        }
-        const embed = new MessageEmbed()
-        .setDescription(`${client.users.cache.get(player).tag}をBANしました`)
-        .setColor("RANDOM")
-        message.reply({ embeds:[embed], allowedMentions: { parse: [] } })
+        player = message.content.split(" ")[1]
       }
-    if(command == "unban")
-      if(admin_list.includes(message.author.id)){
-        let player;
-        if(message.mentions.members.size == 1){
-          player = message.mentions.members.first().id
-        }else if(message.mentions.members.size >= 2){
-          player = undefined
-        }else{
-          player = message.content.split(" ")[1]
-        }
-        if(player == undefined){
-          return message.reply({ content: "メンションは1人にしてください", allowedMentions: { parse: [] } })
-        }
-        if(await unban(player) == false){
-          return message.reply({ content: "不正", allowedMentions: { parse: [] } })
-        }
-        const embed = new MessageEmbed()
-        .setDescription(`${client.users.cache.get(player).tag}をUNBANしました`)
-        .setColor("RANDOM")
-        message.reply({ embeds:[embed], allowedMentions: { parse: [] } })
+      if(player == undefined){
+        return message.reply({ content: "メンションは1人にしてください", allowedMentions: { parse: [] } })
       }
-    if(command == "banlist")
-      if(admin_list.includes(message.author.id)){
-        const list = await lists.get(client.user.id)
-        const banlist = list[1]
-        const desc = banlist.map(x => client.users.cache.get(x).tag+`/${x}`).join("\n")
-        const embed = new MessageEmbed()
-        .setTitle("BAN者一覧")
-        .setColor("RANDOM")
-        if(!banlist.length){
-          embed
-            .setDescription("なし")
-        }else{
-          embed
-            .setDescription(desc)
-        }
-        message.reply({ embeds:[embed], allowedMentions: { parse: [] } })
+      if(await ban(player) == false){
+        return message.reply({ content: "不正", allowedMentions: { parse: [] } })
       }
-    if(command == "kill")
-      if(admin_list.includes(message.author.id)){
-        let count = message.content.slice(prefix.length+5).trim()
-        if(count == "" || !Number.isInteger(Number(count))){
-          count = 1
-        }else{
-          count = Number(count)
-        }
-        await kill(count,message.author.id,message.channel.id,message)
-      }
-    if(command == "register_info" || command == "ri")
-      if(admin_list.includes(message.author.id)){
-        const monster = monster_count()
-        const item = item_count()
-        const embed = new MessageEmbed()
-        .setTitle("各種登録情報")
-        .addField("モンスター",`弱敵:${monster[0]}体\n通常:${monster[1]}体\n強敵:${monster[2]}体\n超強敵:${monster[3]}体\n極:${monster[4]}体\nレア:${monster[5]}体\n激レア:${monster[6]}体\n超激レア:${monster[7]}体\n幻:${monster[8]}体\n合計:${monster[9]}体`,true)
-        .addField("所持品関連",`アイテム:${item[0]}種類\n素材:${item[1]}種類\n武器:${item[2]}種類\n合計:${item[3]}種類`,true)
-        .addField("コマンド数",`${cmd_list.length}`)
-        .setColor("RANDOM")
-        message.reply({ embeds:[embed], allowedMentions: { parse: [] } })
-      }
-    if(command == "eval")
-      if(admin_list.includes(message.author.id)){
-        var result = message.content.slice(prefix.length+5).trim();
-          let evaled = eval(result);
-          message.channel.send(evaled)
-          message.react("✅")
+      const embed = new MessageEmbed()
+      .setDescription(`${client.users.cache.get(player).tag}をBANしました`)
+      .setColor("RANDOM")
+      message.reply({ embeds:[embed], allowedMentions: { parse: [] } })
+    }
+    if(command == "unban"){
+      const error_msg = admin_or_player(message.author.id)
+      if(error_msg != "admin") return message.reply({ content: error_msg, allowedMentions: { parse: [] } })
+      let player;
+      if(message.mentions.members.size == 1){
+        player = message.mentions.members.first().id
+      }else if(message.mentions.members.size >= 2){
+        player = undefined
       }else{
-        message.reply({ content: "実行権限がありません。", allowedMentions: { parse: [] } })
-        message.react("❎")
+        player = message.content.split(" ")[1]
       }
-    if(command == "db")
-      if(admin_list.includes(message.author.id)){
-        var result = message.content.slice(prefix.length+3).trim();
-          let evaled = eval("(async () => {" + result + "})()");
-          if(typeof evaled != "string"){
-            evaled = util.inspect(evaled);
-          }
-          message.channel.send("Done.")
-          message.react("✅")
+      if(player == undefined){
+        return message.reply({ content: "メンションは1人にしてください", allowedMentions: { parse: [] } })
+      }
+      if(await unban(player) == false){
+        return message.reply({ content: "不正", allowedMentions: { parse: [] } })
+      }
+      const embed = new MessageEmbed()
+      .setDescription(`${client.users.cache.get(player).tag}をUNBANしました`)
+      .setColor("RANDOM")
+      message.reply({ embeds:[embed], allowedMentions: { parse: [] } })
+    }
+    if(command == "banlist"){
+      const error_msg = admin_or_player(message.author.id)
+      if(error_msg != "admin") return message.reply({ content: error_msg, allowedMentions: { parse: [] } })
+      const list = await lists.get(client.user.id)
+      const banlist = list[1]
+      const desc = banlist.map(x => client.users.cache.get(x).tag+`/${x}`).join("\n")
+      const embed = new MessageEmbed()
+      .setTitle("BAN者一覧")
+      .setColor("RANDOM")
+      if(!banlist.length){
+        embed
+          .setDescription("なし")
       }else{
-        message.reply({ content: "実行権限がありません。", allowedMentions: { parse: [] } })
-        message.react("❎")
+        embed
+          .setDescription(desc)
       }
-    if(command == "bulkdb")
-      if(admin_list.includes(message.author.id)){
-        const option = message.content.split(" ")[1]
-        const instructions = message.content.split(" ").slice(2).join(' ')
-        await bulk_change(option,instructions)
-        message.channel.send("Done.")
-        message.react("✅")
+      message.reply({ embeds:[embed], allowedMentions: { parse: [] } })
+    }
+    if(command == "kill"){
+      const error_msg = admin_or_player(message.author.id)
+      if(error_msg != "admin") return message.reply({ content: error_msg, allowedMentions: { parse: [] } })
+      let count = message.content.slice(prefix.length+5).trim()
+      if(count == "" || !Number.isInteger(Number(count))){
+        count = 1
       }else{
-        message.reply({ content: "実行権限がありません。", allowedMentions: { parse: [] } })
-        message.react("❎")
+        count = Number(count)
       }
+      await kill(count,message.author.id,message.channel.id,message)
+    }
+    if(command == "register_info" || command == "ri"){
+      const error_msg = admin_or_player(message.author.id)
+      if(error_msg != "admin") return message.reply({ content: error_msg, allowedMentions: { parse: [] } })
+      const monster = monster_count()
+      const item = item_count()
+      const embed = new MessageEmbed()
+      .setTitle("各種登録情報")
+      .addField("モンスター",`弱敵:${monster[0]}体\n通常:${monster[1]}体\n強敵:${monster[2]}体\n超強敵:${monster[3]}体\n極:${monster[4]}体\nレア:${monster[5]}体\n激レア:${monster[6]}体\n超激レア:${monster[7]}体\n幻:${monster[8]}体\n合計:${monster[9]}体`,true)
+      .addField("所持品関連",`アイテム:${item[0]}種類\n素材:${item[1]}種類\n武器:${item[2]}種類\n合計:${item[3]}種類`,true)
+      .addField("コマンド数",`${cmd_list.length}`)
+      .setColor("RANDOM")
+      message.reply({ embeds:[embed], allowedMentions: { parse: [] } })
+    }
+    if(command == "eval"){
+      const error_msg = admin_or_player(message.author.id)
+      if(error_msg != "admin") return message.reply({ content: error_msg, allowedMentions: { parse: [] } })
+      var result = message.content.slice(prefix.length+5).trim();
+      let evaled = eval(result);
+      message.channel.send(evaled)
+      message.react("✅")
+    }
+    if(command == "db"){
+      const error_msg = admin_or_player(message.author.id)
+      if(error_msg != "admin") return message.reply({ content: error_msg, allowedMentions: { parse: [] } })
+      var result = message.content.slice(prefix.length+3).trim();
+      let evaled = eval("(async () => {" + result + "})()");
+      if(typeof evaled != "string"){
+        evaled = util.inspect(evaled);
+      }
+      message.channel.send("Done.")
+      message.react("✅")
+    }
+    if(command == "bulkdb"){
+      const error_msg = admin_or_player(message.author.id)
+      if(error_msg != "admin") return message.reply({ content: error_msg, allowedMentions: { parse: [] } })
+      const option = message.content.split(" ")[1]
+      const instructions = message.content.split(" ").slice(2).join(' ')
+      await bulk_change(option,instructions)
+      message.channel.send("Done.")
+      message.react("✅")
+    }
   }catch(err){
     message.react("❓")
     const embed = new MessageEmbed()
