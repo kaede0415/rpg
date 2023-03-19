@@ -12,27 +12,27 @@
     "id": 2
   },
   {
-    "name": "白虎",
+    "name": "メテオ=ドラゴン",
     "rank": "【超激レア】",
-    "img": "https://nanamiyuki.com/wp-content/uploads/2021/11/%E3%83%A2%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%BC_%E7%99%BD%E8%99%8E%E5%9E%8B_%E7%99%BD%E8%99%8E.png",
+    "img": "https://nanamiyuki.com/wp-content/uploads/2022/09/war-dragon_1e.png",
     "id": 3
+  },
+  {
+    "name": "青龍",
+    "rank": "【超激レア】",
+    "img": "https://nanamiyuki.com/wp-content/uploads/2021/02/%E9%9D%92%E9%BE%8D-1463x1536.jpg",
+    "id": 4
   },
   {
     "name": "玄武",
     "rank": "【超激レア】",
-    "img": "https://nanamiyuki.com/wp-content/uploads/2021/11/%E3%83%A2%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%BC_%E7%8E%84%E6%AD%A6%E5%9E%8B_%E7%8E%84%E6%AD%A6.png",
-    "id": 4
-  },
-  {
-    "name": "朱雀",
-    "rank": "【超激レア】",
+    "img": "https://nanamiyuki.com/wp-content/uploads/2021/02/%E7%8E%84%E6%AD%A6.jpg",
     "id": 5
-    "img": "https://nanamiyuki.com/wp-content/uploads/2022/09/war-dragon_1e.png",
   },
   {
-    "name": "メテオ=ドラゴン",
+    "name": "白虎",
     "rank": "【超激レア】",
-    "img": "https://nanamiyuki.com/wp-content/uploads/2022/09/war-dragon_1e.png",
+    "img": "https://nanamiyuki.com/wp-content/uploads/2021/02/%E7%99%BD%E8%99%8E.jpg",
     "id": 6
   },
   {
