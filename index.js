@@ -336,14 +336,18 @@ async function _attack(player_id,channel_id,message){
 
 async function _item(channel_id,item_name,mentions,message){
   let id = message.author.id
-  let p_items = await player_items.get(message.author.id)
-  let p_sozais = await player_sozais.get(message.author.id)
-  if(!item_name || await player_items.get(item_name)){
-    if(await player_items.get(item_name)){
-      p_items = await player_items.get(item_name)
-      p_sozais = await player_sozais.get(item_name)
+  if(!item_name || await player_items.get(item_name) || message.mentions.members.size != 0){
+    if(message.mentions.members.size != 0){
+      id = message.mentions.members.first().id
+      if(!await player_items.get(id)){
+        return message.reply({ content: "そのプレイヤーのデータは見つかりませんでした", allowedMentions: { parse: [] } })
+      }
+    }else if(await player_items.get(item_name)){
       id = item_name
     }
+    if(admin_or_player != "admin")
+    const p_items = await player_items.get(id)
+    const p_sozais = await player_sozais.get(id)
     const player = client.users.cache.get(id)
     const comparefunction = function(a,b){
       return a[0] - b[0]
@@ -428,7 +432,7 @@ async function _item(channel_id,item_name,mentions,message){
     await bigbang(message.author.id,message.channel.id,message)
   }else{
     const embed = new MessageEmbed()
-    .setDescription(`>>> ${item_name}？なんすか${item_name}って...`)
+    .setDescription(`>>> ${item_name}のデータは見つかりませんでした`)
     .setColor("RANDOM")
     message.reply({ embeds:[embed], allowedMentions: { parse: [] } })
   }
