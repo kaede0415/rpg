@@ -320,8 +320,13 @@ async function _attack(player_id,channel_id,message){
     const embed2 = new MessageEmbed()
     .setTitle(`ランク:${m_rank}\n${m_name}が待ち構えている...！\nLv.${m_level.toLocaleString()} HP:${m_hp.toLocaleString()}`)
     .setColor("RANDOM")
-    if(["normal","debug"].includes(await get_channel_mode(channel_id))){
+    const mode = await get_channel_mode(channel_id)
+    if(mode == "normal"){
       embed2.setImage(m_img)
+    }else if(mode == "debug"){
+      const id = get_monster_id(m_rank,m_name)
+      embed2.setImage(m_img)
+      .setFooter(`ファイル名:${id[0]} | モンスターid:${id[1]}`)
     }
     message.reply({ content:`\`\`\`diff\n${attack_message}\`\`\``, embeds:[embed,embed2], allowedMentions: { parse: [] } })
   }else{
@@ -1402,7 +1407,8 @@ function get_monster_id(monster_rank,monster_name){
   const valueList = Object.keys(hoge)
   for(let value in valueList){
     if(hoge[valueList[value]].name == monster_name){
-      return `${hoge[keyList[key]}`
+      array.push(`${hoge[valueList[value]].id}`)
+      return array
     }
   }
   return undefined
