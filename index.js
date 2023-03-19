@@ -1375,7 +1375,25 @@ async function get_monster_rank(channel_id){
 }
 
 function get_monster_id(monster_rank,monster_name){
-  
+  if(["【通常】"].includes(monster_rank)){
+    
+  }else if(["【弱敵】"].includes(monster_rank)){
+    
+  }else if(["【強敵】"].includes(monster_rank)){
+    
+  }else if(["【超強敵】"].includes(monster_rank)){
+    
+  }else if(["【通常】"].includes(monster_rank)){
+    
+  }else if(["【通常】"].includes(monster_rank)){
+    
+  }else if(["【通常】"].includes(monster_rank)){
+    
+  }else if(["【通常】"].includes(monster_rank)){
+    
+  }else if(["【通常】"].includes(monster_rank)){
+    
+  }
 }
 
 function generate_monster(rank){
