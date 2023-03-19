@@ -139,13 +139,27 @@ async function splice_status(option,id,start,item){
   let value;
   if(option == "player_status"){
     value = await player_status.get(id)
+    value.splice(start,1,item)
+    await player_status.set(id,value)
   }else if(option == "player_items"){
     value = await player_items.get(id)
+    value.splice(start,1,item)
+    await player_items.set(id,value)
   }else if(option == "player_sozais"){
-    value = 
+    value = await player_sozais.get(id)
+    value.splice(start,1,item)
+    await player_sozais.set(id,value)
+  }else if(option == "monster_status"){
+    value = await monster_status.get(id)
+    value.splice(start,1,item)
+    await monster_status.set(id,value)
+  }else if(option == "channel_status"){
+    value = await channel_status.get(id)
+    value.splice(start,1,item)
+    await channel_status.set(id,value)
+  }else{
+    return false
   }
-  status.splice(start,deleteCount,item1)
-  await player_status.set(player_id,status)
 }
 
 async function create_data(option,id){
@@ -1977,7 +1991,7 @@ client.on("messageCreate", async message => {
       else if(message.mentions.members.size != 0) id = message.mentions.members.first().id
       const error_msg = admin_or_player(message.author.id)
       if(!await player_status.get(id) || !client.users.cache.get(id)) return message.reply({ content: "そのプレイヤーは登録または認識されていません", allowedMentions: { parse: [] } })
-      else if(error_msg != "admin") return message.reply({ content: error_msg, allowedMentions: { parse: [] } })
+      else if(id != message.author.id && error_msg != "admin") return message.reply({ content: error_msg, allowedMentions: { parse: [] } })
       const status = await player_status.get(message.author.id)
       const player = client.users.cache.get(id)
       const embed = new MessageEmbed()
