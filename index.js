@@ -994,14 +994,14 @@ async function win_process(player_id,channel_id,exp){
       item_members.push(`<@${members[i]}>は100円硬貨を**1個**手に入れた！`)
       await obtain_item("100000",1,members[i])
       item_members.push(`<@${members[i]}>は気を**1個**手に入れた！`)
-      if(Math.random() <= 0.5 && i==0){
-        const number = Math.floor( Math.random() * members.length )
-        item_members.push(`${members[number]}は幻の証を**1個**手に入れた！`)
-        await obtain_item("-100002",1,members[number])
-      }
       if(Math.random() <= 0.5){
         item_members.push(`<@${members[i]}>は超新星爆発を**1個**手に入れた！`)
         await obtain_item("5",1,members[i])
+      }
+      if(Math.random() <= 0.5 && i==0){
+        const number = Math.floor( Math.random() * members.length )
+        item_members.push(`<@${members[number]}>は幻の証を**1個**手に入れた！`)
+        await obtain_item("-100002",1,members[number])
       }
     }else{
       if(Math.random() <= 0.05){
