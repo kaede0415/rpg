@@ -4,7 +4,7 @@
 |  player_status  |  Level  | HP(leftover) | EXP | Subjugations | Now_in_battle | [talent_array] | ban_status |
 | player_items(sozais) | [id,quantity] | [id,quantity] | [id,quantity] | [id,quantity] | [id,quantity] | [id,quantity] | ... |
 | enemy_status | Level | HP(leftover) | Name | Rank | Image | - | - |
-| channel_status | Level | On_battle | [Battler_list] | - | - | - | - |
+| channel_status | Level | On_battle | [Battler_list] | mode | - | - | - |
 | lists | [Login_list] | [Ban_list] | - | - | - | - | - |
 
 # 関数一覧

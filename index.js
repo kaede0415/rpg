@@ -148,7 +148,7 @@ async function create_data(option,id){
     const array = [1,60].concat(info)
     await monster_status.set(id,array)
   }else if(option == "channel"){
-    await channel_status.set(id,[1,false,[]])
+    await channel_status.set(id,[1,false,[],"normal"])
   }else{
     return false
   }
