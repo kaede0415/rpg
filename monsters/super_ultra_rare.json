@@ -12,15 +12,15 @@
     "id": 2
   },
   {
-    "name": "メテオ=ドラゴン",
-    "rank": "【超激レア】",
-    "img": "https://nanamiyuki.com/wp-content/uploads/2022/09/war-dragon_1e.png",
-    "id": 3
-  },
-  {
     "name": "青龍",
     "rank": "【超激レア】",
     "img": "https://nanamiyuki.com/wp-content/uploads/2021/02/%E9%9D%92%E9%BE%8D-1463x1536.jpg",
+    "id": 3
+  },
+  {
+    "name": "朱雀",
+    "rank": "【超激レア】",
+    "img": "https://nanamiyuki.com/wp-content/uploads/2021/02/%E6%9C%B1%E9%9B%80.jpg",
     "id": 4
   },
   {
