@@ -90,21 +90,21 @@
     "id": 15
   },
   {
-    "name": "ウィザー",
-    "rank": "【通常】",
-    "img": "https://nanamiyuki.com/wp-content/uploads/2021/11/%E3%83%A2%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%BC_%E9%AD%94%E5%A5%B3%E5%9E%8B_%E9%AD%94%E5%A5%B3.png",
-    "id": 14
-  },
-  {
     "name": "一匹狼",
     "rank": "【通常】",
     "img": "https://nanamiyuki.com/wp-content/uploads/2021/10/%E3%83%A2%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%BC_%E7%8B%BC%E5%9E%8B_%E3%82%AA%E3%82%AA%E3%82%AB%E3%83%9F.png",
-    "id": 15
+    "id": 16
   },
   {
     "name": "ドンキ◯コング",
     "rank": "【通常】",
     "img": "https://nanamiyuki.com/wp-content/uploads/2022/07/%E3%83%A2%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%BC_%E5%A4%A7%E7%8C%BF%E5%9E%8B_%E3%83%93%E3%83%BC%E3%82%B9%E3%83%88%E3%83%9E%E3%83%B3.png",
-    "id": 14
+    "id": 17
+  },
+  {
+    "name": "悪魔の子",
+    "rank": "【通常】",
+    "img": "https://nanamiyuki.com/wp-content/uploads/2021/10/%E3%83%A2%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%BC_%E5%B0%8F%E5%8B%95%E7%89%A9%E5%9E%8B_%E3%82%AD%E3%83%9E%E3%82%A4%E3%83%A9%E3%83%99%E3%83%93%E3%83%BC.png",
+    "id": 18
   }
 ]

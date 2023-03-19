@@ -24,15 +24,21 @@
     "id": 4
   },
   {
-    "name": "メテオ=ドラゴン",
+    "name": "朱雀",
     "rank": "【超激レア】",
+    "id": 5
     "img": "https://nanamiyuki.com/wp-content/uploads/2022/09/war-dragon_1e.png",
-    "id": 2
   },
   {
     "name": "メテオ=ドラゴン",
     "rank": "【超激レア】",
     "img": "https://nanamiyuki.com/wp-content/uploads/2022/09/war-dragon_1e.png",
-    "id": 2
+    "id": 6
+  },
+  {
+    "name": "ﾊﾞぐビ-すト",
+    "rank": "【超激レア】",
+    "img": "https://nanamiyuki.com/wp-content/uploads/2021/05/%E3%83%90%E3%82%B0%E3%83%93%E3%83%BC%E3%82%B9%E3%83%882.png",
+    "id": 7
   }
 ]

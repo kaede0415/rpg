@@ -45,6 +45,18 @@
     "name": "アクアフェアリー",
     "rank": "【弱敵】",
     "img": "https://nanamiyuki.com/wp-content/uploads/2021/11/%E3%83%A2%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%BC_%E6%B6%B2%E4%BD%93%E5%9E%8B_%E3%83%9E%E3%82%B8%E3%83%83%E3%82%AF%E3%82%A2%E3%82%AF%E3%82%A2.png",
-    "id": 7
+    "id": 8
+  },
+  {
+    "name": "ホワイトテイル",
+    "rank": "【弱敵】",
+    "img": "https://nanamiyuki.com/wp-content/uploads/2021/10/%E3%83%A2%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%BC_%E5%B0%8F%E5%8B%95%E7%89%A9%E5%9E%8B_%E3%83%86%E3%82%A4%E3%83%AB%E3%83%A9%E3%83%93%E3%83%83%E3%83%88.png",
+    "id": 9
+  },
+  {
+    "name": "モチフニャ",
+    "rank": "【弱敵】",
+    "img": "https://nanamiyuki.com/wp-content/uploads/2021/11/%E3%83%A2%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%BC_%E8%BB%9F%E4%BD%93%E5%9E%8B_%E3%83%A2%E3%83%81%E3%83%95%E3%83%8B%E3%83%A3.png",
+    "id": 10
   }
 ]
