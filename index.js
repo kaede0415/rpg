@@ -1857,7 +1857,7 @@ client.on("messageCreate", async message => {
     await generate_detection(message.author.id,message)
   }
   try{
-    if(command == "help"){
+    if(["help"].includes(command)){
       const args = message.content.split(" ")[1]
       if(args){
         if(cmd_list.includes(args.toLowerCase())){
@@ -1927,7 +1927,7 @@ client.on("messageCreate", async message => {
       ]
       await new Pagination(message.channel, embeds, "page").paginate();
     }
-    if(command == "status" || command == "st"){
+    if(["status","st"].includes(command)){
       let id = message.content.split(" ")[1]
       if(!id) id = message.author.id
       else if(message.mentions.members.size != 0) id = message.mentions.members.first().id
@@ -1953,14 +1953,14 @@ client.on("messageCreate", async message => {
       }
       message.reply({ embeds:[embed], allowedMentions: { parse: [] } })
     }
-    if(command == "attack" || command == "atk"){
+    if(["attack","atk"].includes(command)){
       await _attack(message.author.id,message.channel.id,message)
     }
-    if(command == "item" || command == "i"){
+    if(["item","i"].includes(command)){
       const item_name = message.content.split(" ")[1]
       await _item(message.channel.id,item_name,message.mentions.members.first(),message)
     }
-    if(command == "in"){
+    if(["in"].includes(command)){
       const intobattle = await into_battle(message.author.id,message.channel.id)
       const error_message = intobattle[1]
       if(error_message != ""){
@@ -1971,10 +1971,10 @@ client.on("messageCreate", async message => {
       .setColor("RANDOM")
       message.reply({ embeds:[embed], allowedMentions: { parse: [] } })
     }
-    if(command == "training" || command == "t"){
+    if(["training","t"].includes(command)){
       await training(message.author.id,message)
     }
-    if(command == "reset" || command == "re" || command == "rs"){
+    if(["reset","re","rs"].includes(command)){
       const reset = await reset_battle(message.channel.id,0)
       if(reset == "このchで戦闘は行われていませんよ...？"){
         return message.reply({ content: "このchで戦闘は行われていませんよ...？", allowedMentions: { parse: [] } })
@@ -1986,10 +1986,10 @@ client.on("messageCreate", async message => {
       .setColor("RANDOM")
       message.channel.send({ embeds:[embed], allowedMentions: { parse: [] } })
     }
-    if(command == "inquiry" || command == "inq"){
+    if(["inquiry","inq"].includes(command)){
       await inquiry(message.channel.id,message)
     }
-    if(command == "gatya" || command == "gacha"){
+    if(["gatya","gacha"].includes(command)){
       let time = message.content.slice(prefix.length+6).trim()
       if(!time){
         return message.reply({ content: "回数を入力してください" })
@@ -2022,7 +2022,7 @@ client.on("messageCreate", async message => {
       .setDescription(msgs.join("\n"))
       message.channel.send({ embeds:[embed] })
     }
-    if(command == "xgatya" || command == "xgacha"){
+    if(["xgatya","xgacha"].includes(command)){
       let time = message.content.slice(prefix.length+7).trim()
       if(!time){
         return message.reply({ content: "回数を入力してください" })
@@ -2055,7 +2055,7 @@ client.on("messageCreate", async message => {
       .setDescription(msgs.join("\n"))
       message.channel.send({ embeds:[embed] })
     }
-    if(command == "mine"){
+    if(["mine"].includes(command)){
       const msg = await mine(message.author.id,message.channel.id)
       const embed = new MessageEmbed()
       .setColor("RANDOM")
@@ -2066,16 +2066,16 @@ client.on("messageCreate", async message => {
       }
       message.reply({ embeds:[embed], allowedMentions: { parse: [] } })
     }
-    if(command == "craft" || command == "c"){
+    if(["craft","c"].includes(command)){
       await exchange(message.author.id,message)
     }
-    if(command == "talent"){
+    if(["talent"].includes(command)){
       await talent(message.author.id,message)
     }
-    if(command == "ranking" || command == "rank"){
+    if(["ranking","rank"].includes(command)){
       await ranking(message)
     }
-    if(command == "itemid"){
+    if(["itemid"].includes(command)){
       const error_msg = admin_or_player(message.author.id)
       if(error_msg != "admin") return message.reply({ content: error_msg, allowedMentions: { parse: [] } })
       const itemId = message.content.split(" ")[1]
@@ -2094,7 +2094,7 @@ client.on("messageCreate", async message => {
       await obtain_item(itemId,quantity,player)
       message.reply({ content: `\`${client.users.cache.get(player).username}\`は\`ID:${itemId}:${get_item_name(itemId)}\`を\`${quantity.toLocaleString()}\`個手に入れた！`, allowedMentions: { parse: [] } })
     }
-    if(command == "consumeitem"){
+    if(["consumeitem"].includes(command)){
       const error_msg = admin_or_player(message.author.id)
       if(error_msg != "admin") return message.reply({ content: error_msg, allowedMentions: { parse: [] } })
       const itemId = message.content.split(" ")[1]
@@ -2113,7 +2113,7 @@ client.on("messageCreate", async message => {
       await consume_item(itemId,quantity,player)
       message.reply({ content: "unco", allowedMentions: { parse: [] } })
     }
-    if(command == "sozaiid"){
+    if(["sozaiid"].includes(command)){
       const error_msg = admin_or_player(message.author.id)
       if(error_msg != "admin") return message.reply({ content: error_msg, allowedMentions: { parse: [] } })
       const sozaiId = message.content.split(" ")[1]
@@ -2132,7 +2132,7 @@ client.on("messageCreate", async message => {
       await obtain_sozai(sozaiId,quantity,player)
       message.reply({ content: `\`${client.users.cache.get(player).username}\`は\`ID:${sozaiId}:${get_sozai_name(sozaiId)}\`を\`${quantity.toLocaleString()}\`個手に入れた！`, allowedMentions: { parse: [] } })
     }
-    if(command == "consumesozai"){
+    if(["consumesozai"].includes(command)){
       const error_msg = admin_or_player(message.author.id)
       if(error_msg != "admin") return message.reply({ content: error_msg, allowedMentions: { parse: [] } })
       const sozaiId = message.content.split(" ")[1]
@@ -2151,7 +2151,7 @@ client.on("messageCreate", async message => {
       await consume_sozai(sozaiId,quantity,player)
       message.reply({ content: "unco", allowedMentions: { parse: [] } })
     }
-    if(command == "exp"){
+    if(["exp"].includes(command)){
       const error_msg = admin_or_player(message.author.id)
       if(error_msg != "admin") return message.reply({ content: error_msg, allowedMentions: { parse: [] } })
       const player_id = message.content.split(" ")[1]
@@ -2161,7 +2161,7 @@ client.on("messageCreate", async message => {
       .setDescription(`<@${player_id}>に${exp.toLocaleString()}EXPを付与しました\n${levelup_msg}`)
       message.reply({ embeds:[embed], allowedMentions: { parse: [] } })
     }
-    if(command == "monstergen"){
+    if(["monstergen"].includes(command)){
       let rank = message.content.slice(prefix.length+11)
       const info = generate_monster(rank)
       const embed = new MessageEmbed()
@@ -2170,7 +2170,7 @@ client.on("messageCreate", async message => {
       .setColor("RANDOM")
       message.channel.send({ embeds:[embed] })
     }
-    if(command == "summon"){
+    if(["summon"].includes(command)){
       const error_msg = admin_or_player(message.author.id)
       if(error_msg != "admin") return message.reply({ content: error_msg, allowedMentions: { parse: [] } })
       const rank = message.content.split(" ")[1]
@@ -2188,7 +2188,7 @@ client.on("messageCreate", async message => {
       message.channel.send({ embeds:[embed] })
       await monster_status.set(message.channel.id,[level,hp].concat(info))
     }
-    if(command == "ban"){
+    if(["ban"].includes(command)){
       const error_msg = admin_or_player(message.author.id)
       if(error_msg != "admin") return message.reply({ content: error_msg, allowedMentions: { parse: [] } })
       let player;
@@ -2210,7 +2210,7 @@ client.on("messageCreate", async message => {
       .setColor("RANDOM")
       message.reply({ embeds:[embed], allowedMentions: { parse: [] } })
     }
-    if(command == "unban"){
+    if(["unban"].includes(command)){
       const error_msg = admin_or_player(message.author.id)
       if(error_msg != "admin") return message.reply({ content: error_msg, allowedMentions: { parse: [] } })
       let player;
@@ -2232,7 +2232,7 @@ client.on("messageCreate", async message => {
       .setColor("RANDOM")
       message.reply({ embeds:[embed], allowedMentions: { parse: [] } })
     }
-    if(command == "banlist"){
+    if(["banlist"].includes(command)){
       const error_msg = admin_or_player(message.author.id)
       if(error_msg != "admin") return message.reply({ content: error_msg, allowedMentions: { parse: [] } })
       const list = await lists.get(client.user.id)
@@ -2250,7 +2250,7 @@ client.on("messageCreate", async message => {
       }
       message.reply({ embeds:[embed], allowedMentions: { parse: [] } })
     }
-    if(command == "kill"){
+    if(["kill"].includes(command)){
       const error_msg = admin_or_player(message.author.id)
       if(error_msg != "admin") return message.reply({ content: error_msg, allowedMentions: { parse: [] } })
       let count = message.content.slice(prefix.length+5).trim()
@@ -2261,7 +2261,7 @@ client.on("messageCreate", async message => {
       }
       await kill(count,message.author.id,message.channel.id,message)
     }
-    if(command == "register_info" || command == "ri"){
+    if(["register_info","ri"].includes(command)){
       const error_msg = admin_or_player(message.author.id)
       if(error_msg != "admin") return message.reply({ content: error_msg, allowedMentions: { parse: [] } })
       const monster = monster_count()
@@ -2274,7 +2274,7 @@ client.on("messageCreate", async message => {
       .setColor("RANDOM")
       message.reply({ embeds:[embed], allowedMentions: { parse: [] } })
     }
-    if(command == "eval"){
+    if(["eval"].includes(command)){
       const error_msg = admin_or_player(message.author.id)
       if(error_msg != "admin") return message.reply({ content: error_msg, allowedMentions: { parse: [] } })
       var result = message.content.slice(prefix.length+5).trim();
@@ -2282,7 +2282,7 @@ client.on("messageCreate", async message => {
       message.channel.send(evaled)
       message.react("✅")
     }
-    if(command == "db"){
+    if(["db"].includes(command)){
       const error_msg = admin_or_player(message.author.id)
       if(error_msg != "admin") return message.reply({ content: error_msg, allowedMentions: { parse: [] } })
       var result = message.content.slice(prefix.length+3).trim();
@@ -2293,7 +2293,7 @@ client.on("messageCreate", async message => {
       message.channel.send("Done.")
       message.react("✅")
     }
-    if(command == "bulkdb"){
+    if(["bulkdb"].includes(command)){
       const error_msg = admin_or_player(message.author.id)
       if(error_msg != "admin") return message.reply({ content: error_msg, allowedMentions: { parse: [] } })
       const option = message.content.split(" ")[1]
