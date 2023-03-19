@@ -62,6 +62,12 @@ function json_key_length(folder,file){
   return Object.keys(json).length
 }
 
+async function get_channel_mode(channel_id){
+  const status = await channel_status.get(channel_id)
+  if(!status) return false
+  return status[3]
+}
+
 function monster_count(){
   const array = []
   array.push(json_key_length("monsters","zyakuteki"))
@@ -313,8 +319,10 @@ async function _attack(player_id,channel_id,message){
     const m_img = m_info[4]
     const embed2 = new MessageEmbed()
     .setTitle(`ランク:${m_rank}\n${m_name}が待ち構えている...！\nLv.${m_level.toLocaleString()} HP:${m_hp.toLocaleString()}`)
-    .setImage(m_img)
     .setColor("RANDOM")
+    if(["normal","debug"].includes(await get_channel_mode(channel_id))){
+      embed2.setImage(m_img)
+    }
     message.reply({ content:`\`\`\`diff\n${attack_message}\`\`\``, embeds:[embed,embed2], allowedMentions: { parse: [] } })
   }else{
     m_status.splice(1,1,monster_hp)
