@@ -1202,7 +1202,18 @@ async function change_mode(channel_id,option){
   const status = await channel_status.get(channel_id)
   if(option == "normal"){
     await splice_status("channel_status",3,"normal")
+  }else if(option == "hihyozi"){
+    await splice_status("channel_status",3,"hihyozi")
+  }else if(option == "debug"){
+    await splice_status("channel_status",3,"debug")
+  }else{
+    return false
   }
+}
+
+async function get_mode(channel_id){
+  const status = await channel_status.get(channel_id)
+  return status[3]
 }
 
 async function talent(player_id,message){
@@ -2147,6 +2158,50 @@ client.on("messageCreate", async message => {
       .setTitle(`ガチャ結果${time}枚`)
       .setDescription(msgs.join("\n"))
       message.channel.send({ embeds:[embed] })
+    }
+    if(["changemode","cm"].includes(command)){
+      const role = admin_or_player(message.author.id)
+      const mode = await get_mode(message.channel.id)
+      if(role == "admin"){
+        const embed1 = new MessageEmbed()
+        .setTitle("変えたいモードを選択してください")
+        .setDescription("1⃣:通常\n2⃣:非表示\n3⃣:デバッグ")
+        .setColor("RANDOM")
+        const msg = await message.reply({ embeds:[embed1], allowedMentions: { parse: [] } })
+        const filter = m => m.author.id == message.author.id;
+        const collector = message.channel.createMessageCollector({ filter: filter, idle: 60000 });
+        collector.on('collect', async m => {
+          m.delete();
+          if(!Number.isInteger(Number(m.content)) || 1 > Number(m.content) || Number(m.content) > 3){
+          }
+      if(m.content == "1"){
+        msg.edit({ embeds:[i_embed] });
+      }else if(m.content == "2"){
+        msg.edit({ embeds:[s_embed] });
+      }else if(m.content == "0"){
+        msg.edit({ content:"```処理を終了しました...```" });
+        collector.stop();
+      }
+    });
+    collector.on('end', async (collected, reason) => {
+      if(reason == "idle"){
+        msg.edit({ content:"```時間切れです...```" });
+      }
+    })
+      }else{
+        let comment
+        if(mode == "normal"){
+          await change_mode(message.channel.id,"hihyozi")
+          comment = `<#${message.channel.id}>の敵画像表示を非表示に変更しました`
+        }else if(mode == "hihyozi"){
+          await change_mode(message.channel.id,"normal")
+          comment = `<#${message.channel.id}>の敵画像表示を表示に変更しました`
+        }
+        const embed = new MessageEmbed()
+        .setDescription(comment)
+        .setColor("RANDOM")
+        message.reply({ embeds:[embed], allowedMentions: { parse: [] } })
+      }
     }
     if(["mine"].includes(command)){
       const msg = await mine(message.author.id,message.channel.id)
