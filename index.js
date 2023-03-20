@@ -2164,7 +2164,7 @@ client.on("messageCreate", async message => {
       const mode = await get_mode(message.channel.id)
       if(role == "admin"){
         const embed1 = new MessageEmbed()
-        .setTitle("変えたいモードを選択してください")
+        .setTitle(`変えたいモードを選択してください(現在のモード:${mode})`)
         .setDescription("1⃣:通常\n2⃣:非表示\n3⃣:デバッグ")
         .setColor("RANDOM")
         const embed2 = new MessageEmbed()
@@ -2174,7 +2174,7 @@ client.on("messageCreate", async message => {
         const collector = message.channel.createMessageCollector({ filter: filter, idle: 60000 });
         collector.on('collect', async m => {
           m.delete();
-          if(!Number.isInteger(Number(m.content)) || 1 > Number(m.content) || Number(m.content) > 3){
+          if(!Number.isInteger(Number(m.content)) || 0 > Number(m.content) || Number(m.content) > 3){
           }else if(m.content == "1"){
             embed2.setDescription("チャンネルのモードを通常に変更しました")
             msg.edit({ embeds:[embed2], allowedMentions: { parse: [] } })
@@ -2346,8 +2346,15 @@ client.on("messageCreate", async message => {
       }
       const embed = new MessageEmbed()
       .setTitle(`ランク:${info[1]}\n${info[0]}が待ち構えている...！\nLv.${level.toLocaleString()} HP:${hp.toLocaleString()}`)
-      .setImage(info[2])
       .setColor("RANDOM")
+      const mode = await get_channel_mode(message.channel.id)
+      if(mode == "normal"){
+        embed.setImage(info[2])
+      }else if(mode == "debug"){
+        const id = get_monster_id(info[1],info[0])
+        embed.setImage(info[2])
+        .setFooter(`ファイル名:${id[0]} | モンスターid:${id[1]}`)
+      }
       message.channel.send({ embeds:[embed] })
       await monster_status.set(message.channel.id,[level,hp].concat(info))
     }
