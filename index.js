@@ -2208,6 +2208,9 @@ client.on("messageCreate", async message => {
         }else if(mode == "hihyozi"){
           await change_mode(message.channel.id,"normal")
           comment = `<#${message.channel.id}>の敵画像表示を表示に変更しました`
+        }else if(mode == "debug"){
+          await change_mode(message.channel.id,"normal")
+          comment = `<#${message.channel.id}>の敵画像表示を表示に変更しました`
         }
         const embed = new MessageEmbed()
         .setDescription(comment)
