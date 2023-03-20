@@ -189,7 +189,7 @@ async function generate_detection(player_id,message){
     probability = probability + (deru * 0.001)
   }
   if(Math.random() < probability){
-    await splice_status(player_id,7,1,true)
+    await splice_status("player_status",player_id,6,true)
     const first = ["マクロ","まくろ","ﾏｸﾛ","ま＜ろ","マク口","Macro","macro","MACRO","マク❏","マク❒","マク□","makuro","Makuro","MAKURO"]
     const second = ["Kenti","kenti","KENTI","検知","木僉矢口"," Detection"," detection"," DETECTION","ケンチ","けんち","ｹﾝﾁ"]
     const title = `${first[Math.floor(Math.random()*first.length)]}${second[Math.floor(Math.random()*second.length)]}`
@@ -238,13 +238,13 @@ async function generate_detection(player_id,message){
       if(interaction.customId == `${random_1}`){
         interaction.message.edit({ embeds: [o_embed], components: [] })
         interaction.reply({ content: "認証しました。", ephemeral: true })
-        await splice_status(player_id,7,1,false)
+        await splice_status("player_status",player_id,6,false)
         clearTimeout(timer);
       }
       if(interaction.customId == `${random_2}`){
         interaction.message.edit({ embeds: [x_embed], components: [] })
         interaction.reply({ content: "あなたはBOTだと判断されました。", ephemeral: true })
-        await splice_status(player_id,7,1,false)
+        await splice_status("player_status",player_id,6,false)
         await ban(player_id)
         clearTimeout(timer);
       }
@@ -252,7 +252,7 @@ async function generate_detection(player_id,message){
     const timer = setTimeout(async () => {
       msg.edit({ embeds: [t_embed], components: [] })
       await ban(player_id)
-      await splice_status(player_id,7,1,false)
+      await splice_status("player_status",player_id,6,false)
     },1000*60);
     return;
   }
@@ -1935,7 +1935,7 @@ client.on("messageCreate", async message => {
     }
     if(ban_list.includes(message.author.id) && !admin_list.includes(message.author.id)){
       return message.reply({ content: "BANされてますよ...?", allowedMentions: { parse: [] } })
-    }else if(p_status[7] == true){
+    }else if(p_status[6] == true){
       return message.reply({ content: "質問に答えてください。", allowedMentions: { parse: [] } })
     }
     if(!login_list.includes(message.author.id)){
