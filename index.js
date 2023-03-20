@@ -1904,7 +1904,11 @@ client.on('ready', async () => {
   .setDescription(">>> ```diff\n+ Hello World!　　　　　``````diff\n+ 導入サーバー数:" + client.guilds.cache.size + "\n+ ユーザー数:" + client.users.cache.size + "```" + moment().format("YYYY-MM-DD HH:mm:ss"))
   .setThumbnail(client.user.displayAvatarURL())
   .setColor("RANDOM")
-  client.channels.cache.get("1072311355606048839").send({ embeds:[embed] })
+  client.channels.cache.forEach(ch => {
+    if(ch.name == "きふぉう"){
+      ch.send({ embeds:[embed] })
+    }
+  })
 });
 
 cron.schedule('0 0 0 * * *', async () => {
