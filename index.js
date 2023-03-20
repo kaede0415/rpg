@@ -1201,11 +1201,11 @@ async function inquiry(channel_id,message){
 async function change_mode(channel_id,option){
   const status = await channel_status.get(channel_id)
   if(option == "normal"){
-    await splice_status("channel_status",3,"normal")
+    await splice_status("channel_status",channel_id,3,"normal")
   }else if(option == "hihyozi"){
-    await splice_status("channel_status",3,"hihyozi")
+    await splice_status("channel_status",channel_id,3,"hihyozi")
   }else if(option == "debug"){
-    await splice_status("channel_status",3,"debug")
+    await splice_status("channel_status",channel_id,3,"debug")
   }else{
     return false
   }
@@ -2167,27 +2167,39 @@ client.on("messageCreate", async message => {
         .setTitle("変えたいモードを選択してください")
         .setDescription("1⃣:通常\n2⃣:非表示\n3⃣:デバッグ")
         .setColor("RANDOM")
+        const embed2 = new MessageEmbed()
+        .setColor("RANDOM")
         const msg = await message.reply({ embeds:[embed1], allowedMentions: { parse: [] } })
         const filter = m => m.author.id == message.author.id;
         const collector = message.channel.createMessageCollector({ filter: filter, idle: 60000 });
         collector.on('collect', async m => {
           m.delete();
           if(!Number.isInteger(Number(m.content)) || 1 > Number(m.content) || Number(m.content) > 3){
+          }else if(m.content == "1"){
+            embed2.setDescription("チャンネルのモードを通常に変更しました")
+            msg.edit({ embeds:[embed2], allowedMentions: { parse: [] } })
+            collector.stop();
+            await change_mode(message.channel.id,"normal")
+          }else if(m.content == "2"){
+            embed2.setDescription("チャンネルのモードを非表示に変更しました")
+            msg.edit({ embeds:[embed2], allowedMentions: { parse: [] } })
+            collector.stop();
+            await change_mode(message.channel.id,"hihyozi")
+          }else if(m.content == "3"){
+            embed2.setDescription("チャンネルのモードをデバッグに変更しました")
+            msg.edit({ embeds:[embed2], allowedMentions: { parse: [] } })
+            collector.stop();
+            await change_mode(message.channel.id,"debug")
+          }else if(m.content == "0"){
+            msg.edit({ content:"```処理を終了しました...```" });
+            collector.stop();
           }
-      if(m.content == "1"){
-        msg.edit({ embeds:[i_embed] });
-      }else if(m.content == "2"){
-        msg.edit({ embeds:[s_embed] });
-      }else if(m.content == "0"){
-        msg.edit({ content:"```処理を終了しました...```" });
-        collector.stop();
-      }
-    });
-    collector.on('end', async (collected, reason) => {
-      if(reason == "idle"){
-        msg.edit({ content:"```時間切れです...```" });
-      }
-    })
+        });
+        collector.on('end', async (collected, reason) => {
+          if(reason == "idle"){
+            msg.edit({ content:"```時間切れです...```" });
+          }
+        })
       }else{
         let comment
         if(mode == "normal"){
