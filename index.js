@@ -2042,7 +2042,7 @@ client.on("messageCreate", async message => {
       const error_msg = admin_or_player(message.author.id)
       if(!await player_status.get(id) || !client.users.cache.get(id)) return message.reply({ content: "そのプレイヤーは登録または認識されていません", allowedMentions: { parse: [] } })
       else if(id != message.author.id && error_msg != "admin") return message.reply({ content: error_msg, allowedMentions: { parse: [] } })
-      const status = await player_status.get(message.author.id)
+      const status = await player_status.get(id)
       const player = client.users.cache.get(id)
       const embed = new MessageEmbed()
       .setTitle(`${player.username}のステータス:`)
