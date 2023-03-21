@@ -903,10 +903,10 @@ function get_material_name(id){
 
 function get_weapon_name(id){
   const hoge = JSON.parse(JSON.stringify(weapon_json))
-  const keyList = Object.keys(hoge)
-  for(let key in keyList){
-    if(keyList[key] == id){
-      return `${hoge[keyList[key]]}`
+  const valueList = Object.values(hoge)
+  for(let i=0;i<valueList.length;i++){
+    if(valueList[i].id == id){
+      return `${valueList[i].name}`
     }
   }
   return undefined
