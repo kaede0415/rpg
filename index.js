@@ -871,10 +871,10 @@ function get_proof_name(id){
 }
 
 async function obtain_item(item_id,quantity,player_id){
-  if(get_item_name(item_id) == undefined) console.log("error")
+  if(get_item_name(item_id) == undefined) return console.log("error")
   const itemList = await player_items.get(player_id)
   const itemIds = [];
-  itemList.forEach(x => {
+  itemList[0].forEach(x => {
     itemIds.push(x[0])
     if(x[0] == item_id){
       const hoge = x[1]
@@ -884,16 +884,16 @@ async function obtain_item(item_id,quantity,player_id){
     }
   })
   if(!itemIds.includes(item_id)){
-    itemList.push([item_id,Number(quantity)])
+    itemList[0].push([item_id,Number(quantity)])
   }
   await player_items.set(player_id,itemList)
 }
 
 async function consume_item(item_id,quantity,player_id){
-  if(get_item_name(item_id) == undefined) console.log("error")
+  if(get_item_name(item_id) == undefined) return console.log("error")
   const itemList = await player_items.get(player_id)
   const itemIds = [];
-  itemList.forEach(x => {
+  itemList[0].forEach(x => {
     itemIds.push(x[0])
     if(x[0] == item_id){
       const hoge = x[1]
@@ -901,7 +901,7 @@ async function consume_item(item_id,quantity,player_id){
         return false
       }else if(hoge == Number(quantity)){
         const num = itemIds.indexOf(x[0])
-        const func = itemList.splice(num,1)
+        const func = itemList[0].splice(num,1)
         return
       }
       x.pop()
@@ -914,48 +914,180 @@ async function consume_item(item_id,quantity,player_id){
   await player_items.set(player_id,itemList)
 }
 
-async function obtain_sozai(sozai_id,quantity,player_id){
-  if(get_material_name(sozai_id) == undefined) console.log("error")
-  const sozaiList = await player_sozais.get(player_id)
-  const sozaiIds = [];
-  sozaiList.forEach(x => {
-    sozaiIds.push(x[0])
-    if(x[0] == sozai_id){
+async function obtain_material(item_id,quantity,player_id){
+  if(get_material_name(item_id) == undefined) return console.log("error")
+  const itemList = await player_items.get(player_id)
+  const itemIds = [];
+  itemList[1].forEach(x => {
+    itemIds.push(x[0])
+    if(x[0] == item_id){
       const hoge = x[1]
       x.pop()
       x.push(hoge+Number(quantity))
       return;
     }
   })
-  if(!sozaiIds.includes(sozai_id)){
-    sozaiList.push([sozai_id,Number(quantity)])
+  if(!itemIds.includes(item_id)){
+    itemList[1].push([item_id,Number(quantity)])
   }
-  await player_sozais.set(player_id,sozaiList)
+  await player_items.set(player_id,itemList)
 }
 
-async function consume_sozai(sozai_id,quantity,player_id){
-  if(get_material_name(sozai_id) == undefined) console.log("error")
-  const sozaiList = await player_sozais.get(player_id)
-  const sozaiIds = [];
-  sozaiList.forEach(x => {
-    sozaiIds.push(x[0])
-    if(x[0] == sozai_id){
+async function consume_material(item_id,quantity,player_id){
+  if(get_material_name(item_id) == undefined) return console.log("error")
+  const itemList = await player_items.get(player_id)
+  const itemIds = [];
+  itemList[1].forEach(x => {
+    itemIds.push(x[0])
+    if(x[0] == item_id){
       const hoge = x[1]
       if(hoge < Number(quantity)){
         return false
       }else if(hoge == Number(quantity)){
-        const num = sozaiIds.indexOf(x[0])
-        const func = sozaiList.splice(num,1)
+        const num = itemIds.indexOf(x[0])
+        const func = itemList[1].splice(num,1)
         return
       }
       x.pop()
       x.push(hoge-Number(quantity))
     }
   })
-  if(!sozaiIds.includes(sozai_id)){
+  if(!itemIds.includes(item_id)){
     return false
   }
-  await player_sozais.set(player_id,sozaiList)
+  await player_items.set(player_id,itemList)
+}
+
+async function obtain_weapon(item_id,quantity,player_id){
+  if(get_weapon_name(item_id) == undefined) return console.log("error")
+  const itemList = await player_items.get(player_id)
+  const itemIds = [];
+  itemList[2].forEach(x => {
+    itemIds.push(x[0])
+    if(x[0] == item_id){
+      const hoge = x[1]
+      x.pop()
+      x.push(hoge+Number(quantity))
+      return;
+    }
+  })
+  if(!itemIds.includes(item_id)){
+    itemList[2].push([item_id,Number(quantity)])
+  }
+  await player_items.set(player_id,itemList)
+}
+
+async function consume_weapon(item_id,quantity,player_id){
+  if(get_weapon_name(item_id) == undefined) return console.log("error")
+  const itemList = await player_items.get(player_id)
+  const itemIds = [];
+  itemList[2].forEach(x => {
+    itemIds.push(x[0])
+    if(x[0] == item_id){
+      const hoge = x[1]
+      if(hoge < Number(quantity)){
+        return false
+      }else if(hoge == Number(quantity)){
+        const num = itemIds.indexOf(x[0])
+        const func = itemList[2].splice(num,1)
+        return
+      }
+      x.pop()
+      x.push(hoge-Number(quantity))
+    }
+  })
+  if(!itemIds.includes(item_id)){
+    return false
+  }
+  await player_items.set(player_id,itemList)
+}
+
+async function obtain_tool(item_id,quantity,player_id){
+  if(get_tool_name(item_id) == undefined) return console.log("error")
+  const itemList = await player_items.get(player_id)
+  const itemIds = [];
+  itemList[3].forEach(x => {
+    itemIds.push(x[0])
+    if(x[0] == item_id){
+      const hoge = x[1]
+      x.pop()
+      x.push(hoge+Number(quantity))
+      return;
+    }
+  })
+  if(!itemIds.includes(item_id)){
+    itemList[3].push([item_id,Number(quantity)])
+  }
+  await player_items.set(player_id,itemList)
+}
+
+async function consume_tool(item_id,quantity,player_id){
+  if(get_tool_name(item_id) == undefined) return console.log("error")
+  const itemList = await player_items.get(player_id)
+  const itemIds = [];
+  itemList[3].forEach(x => {
+    itemIds.push(x[0])
+    if(x[0] == item_id){
+      const hoge = x[1]
+      if(hoge < Number(quantity)){
+        return false
+      }else if(hoge == Number(quantity)){
+        const num = itemIds.indexOf(x[0])
+        const func = itemList[3].splice(num,1)
+        return
+      }
+      x.pop()
+      x.push(hoge-Number(quantity))
+    }
+  })
+  if(!itemIds.includes(item_id)){
+    return false
+  }
+  await player_items.set(player_id,itemList)
+}
+
+async function obtain_proof(item_id,quantity,player_id){
+  if(get_proof_name(item_id) == undefined) return console.log("error")
+  const itemList = await player_items.get(player_id)
+  const itemIds = [];
+  itemList[4].forEach(x => {
+    itemIds.push(x[0])
+    if(x[0] == item_id){
+      const hoge = x[1]
+      x.pop()
+      x.push(hoge+Number(quantity))
+      return;
+    }
+  })
+  if(!itemIds.includes(item_id)){
+    itemList[4].push([item_id,Number(quantity)])
+  }
+  await player_items.set(player_id,itemList)
+}
+
+async function consume_proof(item_id,quantity,player_id){
+  if(get_proof_name(item_id) == undefined) return console.log("error")
+  const itemList = await player_items.get(player_id)
+  const itemIds = [];
+  itemList[4].forEach(x => {
+    itemIds.push(x[0])
+    if(x[0] == item_id){
+      const hoge = x[1]
+      if(hoge < Number(quantity)){
+        return false
+      }else if(hoge == Number(quantity)){
+        const num = itemIds.indexOf(x[0])
+        const func = itemList[4].splice(num,1)
+        return
+      }
+      x.pop()
+      x.push(hoge-Number(quantity))
+    }
+  })
+  if(!itemIds.includes(item_id)){
+    return false
+  }
+  await player_items.set(player_id,itemList)
 }
 
 async function experiment(player_id,exp){
@@ -1461,22 +1593,22 @@ async function mine(player_id,channel_id){
   const w_quantity = Math.floor( Math.random() * 30 ) + 15
   const s_quantity = Math.floor( Math.random() * 10 ) + 1
   comment.push(`+ 木材: ${w_quantity}個`)
-  await obtain_sozai("1",w_quantity,player_id)
+  await obtain_material("1",w_quantity,player_id)
   if(Math.random() < 0.5){
     comment.push(`+ 丸石: ${s_quantity}個`)
-    await obtain_sozai("2",s_quantity,player_id)
+    await obtain_material("2",s_quantity,player_id)
   }
   if(Math.random() < 0.25){
     comment.push(`+ 鉄: ${s_quantity}個`)
-    await obtain_sozai("3",s_quantity,player_id)
+    await obtain_material("3",s_quantity,player_id)
   }
   if(Math.random() < 0.5){
     comment.push(`+ 石炭: ${s_quantity}個`)
-    await obtain_sozai("5",s_quantity,player_id)
+    await obtain_material("5",s_quantity,player_id)
   }
   if(Math.random() < 0.1){
     comment.push(`+ ダイヤモンド: ${s_quantity}個`)
-    await obtain_sozai("4",s_quantity,player_id)
+    await obtain_material("4",s_quantity,player_id)
   }
   return comment
 }
@@ -1880,13 +2012,13 @@ async function exchange(player_id,message){
                       if(info.type == "item"){
                         await consume_item(info.id,info.quantity*quant,message.author.id)
                       }else if(info.type == "sozai"){
-                        await consume_sozai(info.id,info.quantity*quant,message.author.id)
+                        await consume_material(info.id,info.quantity*quant,message.author.id)
                       }
                     }
                     if(data["item_type"] == "item"){
                       await obtain_item(data["item_id"],quant,message.author.id)
                     }else if(data["item_type"] == "sozai"){
-                      await obtain_sozai(data["item_id"],quant,message.author.id)
+                      await obtain_material(data["item_id"],quant,message.author.id)
                     }
                     msg.edit({ embeds:[o_embed] })
                   }else if(m.content == "0"){
@@ -2164,7 +2296,7 @@ client.on("messageCreate", async message => {
         if(result[i][2] == "item"){
           await obtain_item(result[i][3],result[i][4],message.author.id)
         }else if(result[i][2] == "sozai"){
-          await obtain_sozai(result[i][3],result[i][4],message.author.id)
+          await obtain_material(result[i][3],result[i][4],message.author.id)
         }
         msgs.push(`\`\`\`${result[i][0]}${result[i][1]}\`\`\`->${result[i][4]}個`)
       }
@@ -2197,7 +2329,7 @@ client.on("messageCreate", async message => {
         if(result[i][2] == "item"){
           await obtain_item(result[i][3],result[i][4],message.author.id)
         }else if(result[i][2] == "sozai"){
-          await obtain_sozai(result[i][3],result[i][4],message.author.id)
+          await obtain_material(result[i][3],result[i][4],message.author.id)
         }
         msgs.push(`\`\`\`${result[i][0]}${result[i][1]}\`\`\`->${result[i][4]}個`)
       }
@@ -2339,7 +2471,7 @@ client.on("messageCreate", async message => {
       if(await player_status.get(player) == undefined){
         return message.reply({ content: "Undefined_Player", allowedMentions: { parse: [] } })
       }
-      await obtain_sozai(sozaiId,quantity,player)
+      await obtain_material(sozaiId,quantity,player)
       message.reply({ content: `\`${client.users.cache.get(player).username}\`は\`ID:${sozaiId}:${get_material_name(sozaiId)}\`を\`${quantity.toLocaleString()}\`個手に入れた！`, allowedMentions: { parse: [] } })
     }
     if(["consumesozai"].includes(command)){
@@ -2358,7 +2490,7 @@ client.on("messageCreate", async message => {
       if(await player_status.get(player) == undefined){
         return message.reply({ content: "Undefined_Player", allowedMentions: { parse: [] } })
       }
-      await consume_sozai(sozaiId,quantity,player)
+      await consume_material(sozaiId,quantity,player)
       message.reply({ content: "unco", allowedMentions: { parse: [] } })
     }
     if(["exp"].includes(command)){
