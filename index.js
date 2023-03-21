@@ -36,10 +36,10 @@ const prefix = "_"
 const cmd_list = ["help","status","st","attack","atk","item","i","in","reset","re","rs","inquiry","inq","talent","ranking","rank","training","t","mine","gatya","craft","c","summon","ban","unban","banlist","kill","itemid","consumeitem","sozaiid","consumesozai","exp","eval","db","bulkdb"]
 const command_json = require("./jsons/command.json")
 const item_json = require("./itemss/item.json")
-const sozai_json = require("./items/sozai.json")
+const material_json = require("./items/material.json")
 const weapon_json = require("./items/weapon.json")
 const tool_json = require("./items/tool.json")
-const akashi_json = require("./items/akashi.json")
+const proof_json = require("./items/proof.json")
 const training_json = require("./jsons/training.json")
 const admin_list = ["945460382733058109","759001587422462015","879573587063898192"];
 const mine_cooldown = []
@@ -89,54 +89,13 @@ function monster_count(){
 function item_count(){
   const array = []
   array.push(json_key_length("items","item"))
-  array.push(json_key_length("items","sozai"))
+  array.push(json_key_length("items","material"))
   array.push(json_key_length("items","weapon"))
   array.push(json_key_length("items","tool"))
-  array.push(json_key_length("items","akashi"))
+  array.push(json_key_length("items","proof"))
   const reducer = (sum,currentValue) => sum + currentValue
   array.push(array.reduce(reducer))
   return array
-}
-
-async function bulk_change(option,instructions){
-  if(option == "player_status"){
-    for await(const [key, value] of player_status.iterator()){
-      let evaled = eval("(async () => {" + instructions + "})()");
-      if(typeof evaled != "string"){
-        evaled = util.inspect(evaled);
-      }
-    };
-  }else if(option == "player_items"){
-    for await(const [key, value] of player_items.iterator()){
-      let evaled = eval("(async () => {" + instructions + "})()");
-      if(typeof evaled != "string"){
-        evaled = util.inspect(evaled);
-      }
-    };
-  }else if(option == "player_sozais"){
-    for await(const [key, value] of player_sozais.iterator()){
-      let evaled = eval("(async () => {" + instructions + "})()");
-      if(typeof evaled != "string"){
-        evaled = util.inspect(evaled);
-      }
-    };
-  }else if(option == "monster_status"){
-    for await(const [key, value] of monster_status.iterator()){
-      let evaled = eval("(async () => {" + instructions + "})()");
-      if(typeof evaled != "string"){
-        evaled = util.inspect(evaled);
-      }
-    };
-  }else if(option == "channel_status"){
-    for await(const [key, value] of channel_status.iterator()){
-      let evaled = eval("(async () => {" + instructions + "})()");
-      if(typeof evaled != "string"){
-        evaled = util.inspect(evaled);
-      }
-    };
-  }else{
-    return false
-  }
 }
 
 async function splice_status(option,id,start,item){
@@ -147,12 +106,24 @@ async function splice_status(option,id,start,item){
     await player_status.set(id,value)
   }else if(option == "player_items"){
     value = await player_items.get(id)
-    value.splice(start,1,item)
+    value[0].splice(start,1,item)
     await player_items.set(id,value)
-  }else if(option == "player_sozais"){
-    value = await player_sozais.get(id)
-    value.splice(start,1,item)
-    await player_sozais.set(id,value)
+  }else if(option == "player_materials"){
+    value = await player_items.get(id)
+    value[1].splice(start,1,item)
+    await player_items.set(id,value)
+  }else if(option == "player_weapons"){
+    value = await player_items.get(id)
+    value[2].splice(start,1,item)
+    await player_items.set(id,value)
+  }else if(option == "player_tools"){
+    value = await player_items.get(id)
+    value[3].splice(start,1,item)
+    await player_items.set(id,value)
+  }else if(option == "player_proofs"){
+    value = await player_items.get(id)
+    value[4].splice(start,1,item)
+    await player_items.set(id,value)
   }else if(option == "monster_status"){
     value = await monster_status.get(id)
     value.splice(start,1,item)
@@ -265,7 +236,6 @@ async function delete_data(option,id){
   if(option == "player"){
     await player_status.delete(id)
     await player_items.delete(id)
-    await player_sozais.delete(id)
   }else if(option == "monster"){
     await monster_status.delete(id)
   }else if(option == "channel"){
@@ -420,7 +390,7 @@ async function _item(channel_id,item_name,mentions,message){
     }
     const s_time = p_sozais.length
     for(let i=0;i<s_time;i++){
-      const sozai_name = get_sozai_name(p_sozais[i][0])
+      const sozai_name = get_material_name(p_sozais[i][0])
       const sozai_value = p_sozais[i][1]
       s_content.push(`**${sozai_name}：**\`${sozai_value.toLocaleString()}個\``)
     }
@@ -788,7 +758,7 @@ function monster_attack_process(player_name,player_level,player_hp,monster_name,
 async function get_item_quantity(player_id,item_id){
   let quantity;
   const itemList = await player_items.get(player_id)
-  itemList.forEach(x => {
+  itemList[0].forEach(x => {
     if(x[0] == item_id){
       quantity = x[1]
     }
@@ -797,11 +767,11 @@ async function get_item_quantity(player_id,item_id){
   else return 0
 }
 
-async function get_sozai_quantity(player_id,sozai_id){
+async function get_material_quantity(player_id,item_id){
   let quantity;
-  const sozaiList = await player_sozais.get(player_id)
-  sozaiList.forEach(x => {
-    if(x[0] == sozai_id){
+  const itemList = await player_items.get(player_id)
+  itemList[1].forEach(x => {
+    if(x[0] == item_id){
       quantity = x[1]
     }
   })
@@ -809,21 +779,91 @@ async function get_sozai_quantity(player_id,sozai_id){
   else return 0
 }
 
-function get_item_name(item_id){
+async function get_weapon_quantity(player_id,item_id){
+  let quantity;
+  const itemList = await player_items.get(player_id)
+  itemList[2].forEach(x => {
+    if(x[0] == item_id){
+      quantity = x[1]
+    }
+  })
+  if(quantity) return quantity
+  else return 0
+}
+
+async function get_tool_quantity(player_id,item_id){
+  let quantity;
+  const itemList = await player_items.get(player_id)
+  itemList[3].forEach(x => {
+    if(x[0] == item_id){
+      quantity = x[1]
+    }
+  })
+  if(quantity) return quantity
+  else return 0
+}
+
+async function get_proof_quantity(player_id,item_id){
+  let quantity;
+  const itemList = await player_items.get(player_id)
+  itemList[4].forEach(x => {
+    if(x[0] == item_id){
+      quantity = x[1]
+    }
+  })
+  if(quantity) return quantity
+  else return 0
+}
+
+function get_item_name(id){
   const hoge = JSON.parse(JSON.stringify(item_json))
   const keyList = Object.keys(hoge)
   for(let key in keyList){
-    if(keyList[key] == item_id){
+    if(keyList[key] == id){
       return `${hoge[keyList[key]]}`
     }
   }
   return undefined
 }
-function get_sozai_name(sozai_id){
-  const hoge = JSON.parse(JSON.stringify(sozai_json))
+
+function get_material_name(id){
+  const hoge = JSON.parse(JSON.stringify(material_json))
   const keyList = Object.keys(hoge)
   for(let key in keyList){
-    if(keyList[key] == sozai_id){
+    if(keyList[key] == id){
+      return `${hoge[keyList[key]]}`
+    }
+  }
+  return undefined
+}
+
+function get_weapon_name(id){
+  const hoge = JSON.parse(JSON.stringify(weapon_json))
+  const keyList = Object.keys(hoge)
+  for(let key in keyList){
+    if(keyList[key] == id){
+      return `${hoge[keyList[key]]}`
+    }
+  }
+  return undefined
+}
+
+function get_tool_name(id){
+  const hoge = JSON.parse(JSON.stringify(tool_json))
+  const keyList = Object.keys(hoge)
+  for(let key in keyList){
+    if(keyList[key] == id){
+      return `${hoge[keyList[key]]}`
+    }
+  }
+  return undefined
+}
+
+function get_proof_name(id){
+  const hoge = JSON.parse(JSON.stringify(proof_json))
+  const keyList = Object.keys(hoge)
+  for(let key in keyList){
+    if(keyList[key] == id){
       return `${hoge[keyList[key]]}`
     }
   }
@@ -875,7 +915,7 @@ async function consume_item(item_id,quantity,player_id){
 }
 
 async function obtain_sozai(sozai_id,quantity,player_id){
-  if(get_sozai_name(sozai_id) == undefined) console.log("error")
+  if(get_material_name(sozai_id) == undefined) console.log("error")
   const sozaiList = await player_sozais.get(player_id)
   const sozaiIds = [];
   sozaiList.forEach(x => {
@@ -894,7 +934,7 @@ async function obtain_sozai(sozai_id,quantity,player_id){
 }
 
 async function consume_sozai(sozai_id,quantity,player_id){
-  if(get_sozai_name(sozai_id) == undefined) console.log("error")
+  if(get_material_name(sozai_id) == undefined) console.log("error")
   const sozaiList = await player_sozais.get(player_id)
   const sozaiIds = [];
   sozaiList.forEach(x => {
@@ -1762,13 +1802,13 @@ async function exchange(player_id,message){
                 num = 0
               }
             }else if(info.type == "sozai"){
-              if(info.quantity <= await get_sozai_quantity(message.author.id,info.id)){
-                msgs.push(`+ ${info.name}: ${info.quantity}個 | 所有:${await get_sozai_quantity(message.author.id,info.id)} 必要:${info.quantity}個`)
-                if(!num || await get_sozai_quantity(message.author.id,info.id)/info.quantity < num){
-                  num = Math.floor(await get_sozai_quantity(message.author.id,info.id)/info.quantity)
+              if(info.quantity <= await get_material_quantity(message.author.id,info.id)){
+                msgs.push(`+ ${info.name}: ${info.quantity}個 | 所有:${await get_material_quantity(message.author.id,info.id)} 必要:${info.quantity}個`)
+                if(!num || await get_material_quantity(message.author.id,info.id)/info.quantity < num){
+                  num = Math.floor(await get_material_quantity(message.author.id,info.id)/info.quantity)
                 }
               }else{
-                msgs.push(`- ${info.name}: ${info.quantity}個 | 所有:${await get_sozai_quantity(message.author.id,info.id)} 必要:${info.quantity}個`)
+                msgs.push(`- ${info.name}: ${info.quantity}個 | 所有:${await get_material_quantity(message.author.id,info.id)} 必要:${info.quantity}個`)
                 num = 0
               }
             }
@@ -1810,10 +1850,10 @@ async function exchange(player_id,message){
                     msgs.push(`- ${info.name}: ${info.quantity*quant}個 | 所有:${await get_item_quantity(message.author.id,info.id)} -> ${info.quantity*quant-await get_item_quantity(message.author.id,info.id)}個不足`)
                   }
                 }else if(info.type == "sozai"){
-                  if(await get_sozai_quantity(message.author.id,info.id)-info.quantity*quant >= 0){
-                    msgs.push(`+ ${info.name}: ${info.quantity*quant}個 | 所有:${await get_sozai_quantity(message.author.id,info.id)} -> ${await get_sozai_quantity(message.author.id,info.id)-info.quantity*quant}個`)
+                  if(await get_material_quantity(message.author.id,info.id)-info.quantity*quant >= 0){
+                    msgs.push(`+ ${info.name}: ${info.quantity*quant}個 | 所有:${await get_material_quantity(message.author.id,info.id)} -> ${await get_material_quantity(message.author.id,info.id)-info.quantity*quant}個`)
                   }else{
-                    msgs.push(`- ${info.name}: ${info.quantity*quant}個 | 所有:${await get_sozai_quantity(message.author.id,info.id)} -> ${info.quantity*quant-await get_sozai_quantity(message.author.id,info.id)}個不足`)
+                    msgs.push(`- ${info.name}: ${info.quantity*quant}個 | 所有:${await get_material_quantity(message.author.id,info.id)} -> ${info.quantity*quant-await get_material_quantity(message.author.id,info.id)}個不足`)
                   }
                 }
               }
@@ -2300,7 +2340,7 @@ client.on("messageCreate", async message => {
         return message.reply({ content: "Undefined_Player", allowedMentions: { parse: [] } })
       }
       await obtain_sozai(sozaiId,quantity,player)
-      message.reply({ content: `\`${client.users.cache.get(player).username}\`は\`ID:${sozaiId}:${get_sozai_name(sozaiId)}\`を\`${quantity.toLocaleString()}\`個手に入れた！`, allowedMentions: { parse: [] } })
+      message.reply({ content: `\`${client.users.cache.get(player).username}\`は\`ID:${sozaiId}:${get_material_name(sozaiId)}\`を\`${quantity.toLocaleString()}\`個手に入れた！`, allowedMentions: { parse: [] } })
     }
     if(["consumesozai"].includes(command)){
       const error_msg = admin_or_player(message.author.id)
@@ -2467,15 +2507,6 @@ client.on("messageCreate", async message => {
       if(typeof evaled != "string"){
         evaled = util.inspect(evaled);
       }
-      message.channel.send("Done.")
-      message.react("✅")
-    }
-    if(["bulkdb"].includes(command)){
-      const error_msg = admin_or_player(message.author.id)
-      if(error_msg != "admin") return message.reply({ content: error_msg, allowedMentions: { parse: [] } })
-      const option = message.content.split(" ")[1]
-      const instructions = message.content.split(" ").slice(2).join(' ')
-      await bulk_change(option,instructions)
       message.channel.send("Done.")
       message.react("✅")
     }
