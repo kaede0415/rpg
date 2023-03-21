@@ -8,7 +8,6 @@ const fs = require('fs');
 const cron = require('node-cron');
 const player_status = new Keyv(`sqlite://player_data.sqlite`, { table: "status" });
 const player_items = new Keyv(`sqlite://player_data.sqlite`, { table: "item" });
-const player_sozais = new Keyv(`sqlite://player_data.sqlite`, { table: "sozai" });
 const monster_status = new Keyv(`sqlite://monster_data.sqlite`, { table: "status" });
 const channel_status = new Keyv(`sqlite://channel_data.sqlite`, { table: "channel" });
 const lists = new Keyv(`sqlite://db.sqlite`, { table: "list" });
@@ -36,8 +35,11 @@ const newbutton = (buttondata) => {
 const prefix = "_"
 const cmd_list = ["help","status","st","attack","atk","item","i","in","reset","re","rs","inquiry","inq","talent","ranking","rank","training","t","mine","gatya","craft","c","summon","ban","unban","banlist","kill","itemid","consumeitem","sozaiid","consumesozai","exp","eval","db","bulkdb"]
 const command_json = require("./jsons/command.json")
-const item_json = require("./jsons/item.json")
-const sozai_json = require("./jsons/sozai.json")
+const item_json = require("./itemss/item.json")
+const sozai_json = require("./items/sozai.json")
+const weapon_json = require("./items/weapon.json")
+const tool_json = require("./items/tool.json")
+const akashi_json = require("./items/akashi.json")
 const training_json = require("./jsons/training.json")
 const admin_list = ["945460382733058109","759001587422462015","879573587063898192"];
 const mine_cooldown = []
@@ -86,9 +88,11 @@ function monster_count(){
 
 function item_count(){
   const array = []
-  array.push(json_key_length("jsons","item"))
-  array.push(json_key_length("jsons","sozai"))
-  array.push(json_key_length("jsons","weapon"))
+  array.push(json_key_length("items","item"))
+  array.push(json_key_length("items","sozai"))
+  array.push(json_key_length("items","weapon"))
+  array.push(json_key_length("items","tool"))
+  array.push(json_key_length("items","akashi"))
   const reducer = (sum,currentValue) => sum + currentValue
   array.push(array.reduce(reducer))
   return array
@@ -165,8 +169,7 @@ async function splice_status(option,id,start,item){
 async function create_data(option,id){
   if(option == "player"){
     await player_status.set(id,[100,550,10000,0,false,[0,0,0,0,0]])
-    await player_items.set(id,[])
-    await player_sozais.set(id,[])
+    await player_items.set(id,[[],[],[],[],[]])
   }else if(option == "monster"){
     const info = generate_monster("random")
     const array = [1,60].concat(info)
