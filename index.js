@@ -33,7 +33,7 @@ const newbutton = (buttondata) => {
   };
 };
 const prefix = "_"
-const cmd_list = ["help","status","st","attack","atk","item","i","in","reset","re","rs","inquiry","inq","talent","ranking","rank","training","t","mine","gatya","craft","c","summon","ban","unban","banlist","kill","itemid","consumeitem","sozaiid","consumesozai","exp","eval","db","bulkdb"]
+const cmd_list = ["help","status","st","attack","atk","item","i","in","reset","re","rs","inquiry","inq","talent","ranking","rank","training","t","mine","gatya","craft","c","summon","ban","unban","banlist","kill","itemid","consumeitem","materialid","consumematerial","exp","eval","db","bulkdb"]
 const command_json = require("./jsons/command.json")
 const item_json = require("./items/item.json")
 const material_json = require("./items/material.json")
@@ -408,18 +408,69 @@ async function _item(channel_id,item_name,mentions,message){
       m_content.push(`**${material_name}：**\`${material_value.toLocaleString()}個\``)
     }
     m_embed.setDescription(`>>> ${m_content.join("\n")}`)
+    let w_content = [];
+    const w_embed = new MessageEmbed()
+    .setTitle(`${player.username}の武器リスト:`)
+    .setFooter("ページ:3/5")
+    .setColor("RANDOM")
+    if(!p_weapons.length){
+      w_content.push("なし")
+    }
+    const w_time = p_weapons.length
+    for(let i=0;i<w_time;i++){
+      const weapon_name = get_weapon_name(p_weapons[i][0])
+      const weapon_value = p_weapons[i][1]
+      w_content.push(`**${weapon_name}：**\`${weapon_value.toLocaleString()}個\``)
+    }
+    w_embed.setDescription(`>>> ${w_content.join("\n")}`)
+    let t_content = [];
+    const t_embed = new MessageEmbed()
+    .setTitle(`${player.username}のツールリスト:`)
+    .setFooter("ページ:4/5")
+    .setColor("RANDOM")
+    if(!p_tools.length){
+      t_content.push("なし")
+    }
+    const t_time = p_tools.length
+    for(let i=0;i<t_time;i++){
+      const tool_name = get_tool_name(p_tools[i][0])
+      const tool_value = p_tools[i][1]
+      t_content.push(`**${tool_name}：**\`${tool_value.toLocaleString()}個\``)
+    }
+    t_embed.setDescription(`>>> ${t_content.join("\n")}`)
+    let p_content = [];
+    const p_embed = new MessageEmbed()
+    .setTitle(`${player.username}の証リスト:`)
+    .setFooter("ページ:5/5")
+    .setColor("RANDOM")
+    if(!p_proofs.length){
+      p_content.push("なし")
+    }
+    const p_time = p_proofs.length
+    for(let i=0;i<p_time;i++){
+      const proof_name = get_proof_name(p_proofs[i][0])
+      const proof_value = p_proofs[i][1]
+      p_content.push(`**${proof_name}：**\`${proof_value.toLocaleString()}個\``)
+    }
+    p_embed.setDescription(`>>> ${p_content.join("\n")}`)
     const msg = await message.reply({ content: "```js\nページ数を送信してください。\n0で処理を終了します。```", embeds:[i_embed], allowedMentions: { parse: [] } })
     const filter = m => m.author.id == message.author.id;
     const collector = message.channel.createMessageCollector({ filter: filter, idle: 60000 });
     collector.on('collect', async m => {
       m.delete();
-      if(Number.isInteger(Number(m.content)) && 1 <= Number(m.content) && Number(m.content) >= 2){
+      if(Number.isInteger(Number(m.content)) && 1 <= Number(m.content) && Number(m.content) >= 5){
         msg.edit({ content: `\`\`\`js\nページ数を送信してください。\n0で処理を終了します。\`\`\`` })
       }
       if(m.content == "1"){
         msg.edit({ embeds:[i_embed] });
       }else if(m.content == "2"){
         msg.edit({ embeds:[m_embed] });
+      }else if(m.content == "3"){
+        msg.edit({ embeds:[w_embed] });
+      }else if(m.content == "4"){
+        msg.edit({ embeds:[t_embed] });
+      }else if(m.content == "5"){
+        msg.edit({ embeds:[p_embed] });
       }else if(m.content == "0"){
         msg.edit({ content:"```処理を終了しました...```" });
         collector.stop();
@@ -2265,8 +2316,8 @@ client.on("messageCreate", async message => {
         .setDescription("管理者のみ使用可能なコマンド")
         .addField(`= ${prefix}itemid [itemid] [個数] [@メンション/id] =`,">>> アイテム付与",true)
         .addField(`= ${prefix}consumeitem [itemid] [個数] [@メンション/id] =`,">>> アイテム剥奪",true)
-        .addField(`= ${prefix}sozaiid [sozaiid] [個数] [@メンション/id] =`,">>> 素材付与",true)
-        .addField(`= ${prefix}consumesozai [sozaiid] [個数] [@メンション/id] =`,">>> 素材剥奪",true)
+        .addField(`= ${prefix}materialid [materialid] [個数] [@メンション/id] =`,">>> 素材付与",true)
+        .addField(`= ${prefix}consumematerial [materialid] [個数] [@メンション/id] =`,">>> 素材剥奪",true)
         .addField(`= ${prefix}summon [rank] [id] [level] =`,">>> モンスターを召喚",true)
         .addField(`= ${prefix}kill [count] =`,">>> 指定した数字の敵を殺害",true)
         .addField(`= ${prefix}ban [id/@mention] =`,">>> id指定または全員をBAN",true)
@@ -2368,7 +2419,7 @@ client.on("messageCreate", async message => {
       for(let i=0;i<result.length;i++){
         if(result[i][2] == "item"){
           await obtain_item(result[i][3],result[i][4],message.author.id)
-        }else if(result[i][2] == "sozai"){
+        }else if(result[i][2] == "material"){
           await obtain_material(result[i][3],result[i][4],message.author.id)
         }
         msgs.push(`\`\`\`${result[i][0]}${result[i][1]}\`\`\`->${result[i][4]}個`)
@@ -2401,7 +2452,7 @@ client.on("messageCreate", async message => {
       for(let i=0;i<result.length;i++){
         if(result[i][2] == "item"){
           await obtain_item(result[i][3],result[i][4],message.author.id)
-        }else if(result[i][2] == "sozai"){
+        }else if(result[i][2] == "material"){
           await obtain_material(result[i][3],result[i][4],message.author.id)
         }
         msgs.push(`\`\`\`${result[i][0]}${result[i][1]}\`\`\`->${result[i][4]}個`)
@@ -2490,7 +2541,7 @@ client.on("messageCreate", async message => {
     if(["ranking","rank"].includes(command)){
       await ranking(message)
     }
-    if(["itemid"].includes(command)){
+    if(["itemid","ii"].includes(command)){
       const error_msg = admin_or_player(message.author.id)
       if(error_msg != "admin") return message.reply({ content: error_msg, allowedMentions: { parse: [] } })
       const itemId = message.content.split(" ")[1]
@@ -2509,7 +2560,7 @@ client.on("messageCreate", async message => {
       await obtain_item(itemId,quantity,player)
       message.reply({ content: `\`${client.users.cache.get(player).username}\`は\`ID:${itemId}:${get_item_name(itemId)}\`を\`${quantity.toLocaleString()}\`個手に入れた！`, allowedMentions: { parse: [] } })
     }
-    if(["consumeitem"].includes(command)){
+    if(["consumeitem","ci"].includes(command)){
       const error_msg = admin_or_player(message.author.id)
       if(error_msg != "admin") return message.reply({ content: error_msg, allowedMentions: { parse: [] } })
       const itemId = message.content.split(" ")[1]
@@ -2528,10 +2579,10 @@ client.on("messageCreate", async message => {
       await consume_item(itemId,quantity,player)
       message.reply({ content: "unco", allowedMentions: { parse: [] } })
     }
-    if(["sozaiid"].includes(command)){
+    if(["materialid","mi"].includes(command)){
       const error_msg = admin_or_player(message.author.id)
       if(error_msg != "admin") return message.reply({ content: error_msg, allowedMentions: { parse: [] } })
-      const sozaiId = message.content.split(" ")[1]
+      const materialId = message.content.split(" ")[1]
       const quantity = message.content.split(" ")[2]
       let player;
       if(message.mentions.members.size == 1){
@@ -2544,13 +2595,13 @@ client.on("messageCreate", async message => {
       if(await player_status.get(player) == undefined){
         return message.reply({ content: "Undefined_Player", allowedMentions: { parse: [] } })
       }
-      await obtain_material(sozaiId,quantity,player)
-      message.reply({ content: `\`${client.users.cache.get(player).username}\`は\`ID:${sozaiId}:${get_material_name(sozaiId)}\`を\`${quantity.toLocaleString()}\`個手に入れた！`, allowedMentions: { parse: [] } })
+      await obtain_material(materialId,quantity,player)
+      message.reply({ content: `\`${client.users.cache.get(player).username}\`は\`ID:${materialId}:${get_material_name(materialId)}\`を\`${quantity.toLocaleString()}\`個手に入れた！`, allowedMentions: { parse: [] } })
     }
-    if(["consumesozai"].includes(command)){
+    if(["consumematerial","cma"].includes(command)){
       const error_msg = admin_or_player(message.author.id)
       if(error_msg != "admin") return message.reply({ content: error_msg, allowedMentions: { parse: [] } })
-      const sozaiId = message.content.split(" ")[1]
+      const materialId = message.content.split(" ")[1]
       const quantity = message.content.split(" ")[2]
       let player;
       if(message.mentions.members.size == 1){
@@ -2563,7 +2614,121 @@ client.on("messageCreate", async message => {
       if(await player_status.get(player) == undefined){
         return message.reply({ content: "Undefined_Player", allowedMentions: { parse: [] } })
       }
-      await consume_material(sozaiId,quantity,player)
+      await consume_material(materialId,quantity,player)
+      message.reply({ content: "unco", allowedMentions: { parse: [] } })
+    }
+    if(["itemid","ii"].includes(command)){
+      const error_msg = admin_or_player(message.author.id)
+      if(error_msg != "admin") return message.reply({ content: error_msg, allowedMentions: { parse: [] } })
+      const itemId = message.content.split(" ")[1]
+      const quantity = message.content.split(" ")[2]
+      let player;
+      if(message.mentions.members.size == 1){
+        player = message.mentions.members.first().id
+      }else if(message.mentions.members.size >= 2){
+        player = undefined
+      }else{
+        player = message.content.split(" ")[3]
+      }
+      if(await player_status.get(player) == undefined){
+        return message.reply({ content: "Undefined_Player", allowedMentions: { parse: [] } })
+      }
+      await obtain_item(itemId,quantity,player)
+      message.reply({ content: `\`${client.users.cache.get(player).username}\`は\`ID:${itemId}:${get_item_name(itemId)}\`を\`${quantity.toLocaleString()}\`個手に入れた！`, allowedMentions: { parse: [] } })
+    }
+    if(["consumeitem","ci"].includes(command)){
+      const error_msg = admin_or_player(message.author.id)
+      if(error_msg != "admin") return message.reply({ content: error_msg, allowedMentions: { parse: [] } })
+      const itemId = message.content.split(" ")[1]
+      const quantity = message.content.split(" ")[2]
+      let player;
+      if(message.mentions.members.size == 1){
+        player = message.mentions.members.first().id
+      }else if(message.mentions.members.size >= 2){
+        player = undefined
+      }else{
+        player = message.content.split(" ")[3]
+      }
+      if(await player_status.get(player) == undefined){
+        return message.reply({ content: "Undefined_Player", allowedMentions: { parse: [] } })
+      }
+      await consume_item(itemId,quantity,player)
+      message.reply({ content: "unco", allowedMentions: { parse: [] } })
+    }
+    if(["itemid","ii"].includes(command)){
+      const error_msg = admin_or_player(message.author.id)
+      if(error_msg != "admin") return message.reply({ content: error_msg, allowedMentions: { parse: [] } })
+      const itemId = message.content.split(" ")[1]
+      const quantity = message.content.split(" ")[2]
+      let player;
+      if(message.mentions.members.size == 1){
+        player = message.mentions.members.first().id
+      }else if(message.mentions.members.size >= 2){
+        player = undefined
+      }else{
+        player = message.content.split(" ")[3]
+      }
+      if(await player_status.get(player) == undefined){
+        return message.reply({ content: "Undefined_Player", allowedMentions: { parse: [] } })
+      }
+      await obtain_item(itemId,quantity,player)
+      message.reply({ content: `\`${client.users.cache.get(player).username}\`は\`ID:${itemId}:${get_item_name(itemId)}\`を\`${quantity.toLocaleString()}\`個手に入れた！`, allowedMentions: { parse: [] } })
+    }
+    if(["consumeitem","ci"].includes(command)){
+      const error_msg = admin_or_player(message.author.id)
+      if(error_msg != "admin") return message.reply({ content: error_msg, allowedMentions: { parse: [] } })
+      const itemId = message.content.split(" ")[1]
+      const quantity = message.content.split(" ")[2]
+      let player;
+      if(message.mentions.members.size == 1){
+        player = message.mentions.members.first().id
+      }else if(message.mentions.members.size >= 2){
+        player = undefined
+      }else{
+        player = message.content.split(" ")[3]
+      }
+      if(await player_status.get(player) == undefined){
+        return message.reply({ content: "Undefined_Player", allowedMentions: { parse: [] } })
+      }
+      await consume_item(itemId,quantity,player)
+      message.reply({ content: "unco", allowedMentions: { parse: [] } })
+    }
+    if(["itemid","ii"].includes(command)){
+      const error_msg = admin_or_player(message.author.id)
+      if(error_msg != "admin") return message.reply({ content: error_msg, allowedMentions: { parse: [] } })
+      const itemId = message.content.split(" ")[1]
+      const quantity = message.content.split(" ")[2]
+      let player;
+      if(message.mentions.members.size == 1){
+        player = message.mentions.members.first().id
+      }else if(message.mentions.members.size >= 2){
+        player = undefined
+      }else{
+        player = message.content.split(" ")[3]
+      }
+      if(await player_status.get(player) == undefined){
+        return message.reply({ content: "Undefined_Player", allowedMentions: { parse: [] } })
+      }
+      await obtain_item(itemId,quantity,player)
+      message.reply({ content: `\`${client.users.cache.get(player).username}\`は\`ID:${itemId}:${get_item_name(itemId)}\`を\`${quantity.toLocaleString()}\`個手に入れた！`, allowedMentions: { parse: [] } })
+    }
+    if(["consumeitem","ci"].includes(command)){
+      const error_msg = admin_or_player(message.author.id)
+      if(error_msg != "admin") return message.reply({ content: error_msg, allowedMentions: { parse: [] } })
+      const itemId = message.content.split(" ")[1]
+      const quantity = message.content.split(" ")[2]
+      let player;
+      if(message.mentions.members.size == 1){
+        player = message.mentions.members.first().id
+      }else if(message.mentions.members.size >= 2){
+        player = undefined
+      }else{
+        player = message.content.split(" ")[3]
+      }
+      if(await player_status.get(player) == undefined){
+        return message.reply({ content: "Undefined_Player", allowedMentions: { parse: [] } })
+      }
+      await consume_item(itemId,quantity,player)
       message.reply({ content: "unco", allowedMentions: { parse: [] } })
     }
     if(["exp"].includes(command)){
