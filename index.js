@@ -35,7 +35,7 @@ const newbutton = (buttondata) => {
 const prefix = "_"
 const cmd_list = ["help","status","st","attack","atk","item","i","in","reset","re","rs","inquiry","inq","talent","ranking","rank","training","t","mine","gatya","craft","c","summon","ban","unban","banlist","kill","itemid","consumeitem","sozaiid","consumesozai","exp","eval","db","bulkdb"]
 const command_json = require("./jsons/command.json")
-const item_json = require("./itemss/item.json")
+const item_json = require("./items/item.json")
 const material_json = require("./items/material.json")
 const weapon_json = require("./items/weapon.json")
 const tool_json = require("./items/tool.json")
@@ -353,8 +353,12 @@ async function _item(channel_id,item_name,mentions,message){
       const error_msg = admin_or_player(message.author.id)
       if(error_msg != "admin") return message.reply({ content: error_msg, allowedMentions: { parse: [] } })
     }
-    const p_items = await player_items.get(id)
-    const p_sozais = await player_sozais.get(id)
+    const items = await player_items.get(id)
+    const p_items = items[0]
+    const p_materials = items[1]
+    const p_weapons = items[2]
+    const p_tools = items[3]
+    const p_proofs = items[4]
     const player = client.users.cache.get(id)
     const comparefunction = function(a,b){
       return a[0] - b[0]
@@ -362,13 +366,22 @@ async function _item(channel_id,item_name,mentions,message){
     if(p_items){
       p_items.sort(comparefunction)
     }
-    if(p_sozais){
-      p_sozais.sort(comparefunction)
+    if(p_materials){
+      p_materials.sort(comparefunction)
+    }
+    if(p_weapons){
+      p_weapons.sort(comparefunction)
+    }
+    if(p_tools){
+      p_tools.sort(comparefunction)
+    }
+    if(p_proofs){
+      p_proofs.sort(comparefunction)
     }
     let i_content = [];
     const i_embed = new MessageEmbed()
     .setTitle(`${player.username}のアイテムリスト:`)
-    .setFooter("ページ:1/2")
+    .setFooter("ページ:1/5")
     .setColor("RANDOM")
     if(!p_items.length){
       i_content.push("なし")
@@ -380,21 +393,21 @@ async function _item(channel_id,item_name,mentions,message){
       i_content.push(`**${item_name}：**\`${item_value.toLocaleString()}個\``)
     }
     i_embed.setDescription(`>>> ${i_content.join("\n")}`)
-    let s_content = [];
-    const s_embed = new MessageEmbed()
+    let m_content = [];
+    const m_embed = new MessageEmbed()
     .setTitle(`${player.username}の素材リスト:`)
-    .setFooter("ページ:2/2")
+    .setFooter("ページ:2/5")
     .setColor("RANDOM")
-    if(!p_sozais.length){
-      s_content.push("なし")
+    if(!p_materials.length){
+      m_content.push("なし")
     }
-    const s_time = p_sozais.length
-    for(let i=0;i<s_time;i++){
-      const sozai_name = get_material_name(p_sozais[i][0])
-      const sozai_value = p_sozais[i][1]
-      s_content.push(`**${sozai_name}：**\`${sozai_value.toLocaleString()}個\``)
+    const m_time = p_materials.length
+    for(let i=0;i<m_time;i++){
+      const material_name = get_material_name(p_materials[i][0])
+      const material_value = p_materials[i][1]
+      m_content.push(`**${material_name}：**\`${material_value.toLocaleString()}個\``)
     }
-    s_embed.setDescription(`>>> ${s_content.join("\n")}`)
+    m_embed.setDescription(`>>> ${m_content.join("\n")}`)
     const msg = await message.reply({ content: "```js\nページ数を送信してください。\n0で処理を終了します。```", embeds:[i_embed], allowedMentions: { parse: [] } })
     const filter = m => m.author.id == message.author.id;
     const collector = message.channel.createMessageCollector({ filter: filter, idle: 60000 });
@@ -406,7 +419,7 @@ async function _item(channel_id,item_name,mentions,message){
       if(m.content == "1"){
         msg.edit({ embeds:[i_embed] });
       }else if(m.content == "2"){
-        msg.edit({ embeds:[s_embed] });
+        msg.edit({ embeds:[m_embed] });
       }else if(m.content == "0"){
         msg.edit({ content:"```処理を終了しました...```" });
         collector.stop();
@@ -2024,16 +2037,16 @@ async function exchange(player_id,message){
                     msgs.push(`- ${info.name}: ${info.quantity*quant}個 | 所有:${await get_weapon_quantity(message.author.id,info.id)} -> ${info.quantity*quant-await get_weapon_quantity(message.author.id,info.id)}個不足`)
                   }
                 }else if(info.type == "tool"){
-                  if(await get_material_quantity(message.author.id,info.id)-info.quantity*quant >= 0){
-                    msgs.push(`+ ${info.name}: ${info.quantity*quant}個 | 所有:${await get_material_quantity(message.author.id,info.id)} -> ${await get_material_quantity(message.author.id,info.id)-info.quantity*quant}個`)
+                  if(await get_tool_quantity(message.author.id,info.id)-info.quantity*quant >= 0){
+                    msgs.push(`+ ${info.name}: ${info.quantity*quant}個 | 所有:${await get_tool_quantity(message.author.id,info.id)} -> ${await get_tool_quantity(message.author.id,info.id)-info.quantity*quant}個`)
                   }else{
-                    msgs.push(`- ${info.name}: ${info.quantity*quant}個 | 所有:${await get_material_quantity(message.author.id,info.id)} -> ${info.quantity*quant-await get_material_quantity(message.author.id,info.id)}個不足`)
+                    msgs.push(`- ${info.name}: ${info.quantity*quant}個 | 所有:${await get_tool_quantity(message.author.id,info.id)} -> ${info.quantity*quant-await get_tool_quantity(message.author.id,info.id)}個不足`)
                   }
-                }else if(info.type == "material"){
-                  if(await get_material_quantity(message.author.id,info.id)-info.quantity*quant >= 0){
-                    msgs.push(`+ ${info.name}: ${info.quantity*quant}個 | 所有:${await get_material_quantity(message.author.id,info.id)} -> ${await get_material_quantity(message.author.id,info.id)-info.quantity*quant}個`)
+                }else if(info.type == "proof"){
+                  if(await get_proof_quantity(message.author.id,info.id)-info.quantity*quant >= 0){
+                    msgs.push(`+ ${info.name}: ${info.quantity*quant}個 | 所有:${await get_proof_quantity(message.author.id,info.id)} -> ${await get_proof_quantity(message.author.id,info.id)-info.quantity*quant}個`)
                   }else{
-                    msgs.push(`- ${info.name}: ${info.quantity*quant}個 | 所有:${await get_material_quantity(message.author.id,info.id)} -> ${info.quantity*quant-await get_material_quantity(message.author.id,info.id)}個不足`)
+                    msgs.push(`- ${info.name}: ${info.quantity*quant}個 | 所有:${await get_proof_quantity(message.author.id,info.id)} -> ${info.quantity*quant-await get_proof_quantity(message.author.id,info.id)}個不足`)
                   }
                 }
               }
@@ -2059,14 +2072,26 @@ async function exchange(player_id,message){
                       const info = data[`item_${i+1}`]
                       if(info.type == "item"){
                         await consume_item(info.id,info.quantity*quant,message.author.id)
-                      }else if(info.type == "sozai"){
+                      }else if(info.type == "material"){
                         await consume_material(info.id,info.quantity*quant,message.author.id)
+                      }else if(info.type == "weapon"){
+                        await consume_weapon(info.id,info.quantity*quant,message.author.id)
+                      }else if(info.type == "tool"){
+                        await consume_tool(info.id,info.quantity*quant,message.author.id)
+                      }else if(info.type == "proof"){
+                        await consume_proof(info.id,info.quantity*quant,message.author.id)
                       }
                     }
                     if(data["item_type"] == "item"){
                       await obtain_item(data["item_id"],quant,message.author.id)
-                    }else if(data["item_type"] == "sozai"){
+                    }else if(data["item_type"] == "material"){
                       await obtain_material(data["item_id"],quant,message.author.id)
+                    }else if(data["item_type"] == "weapon"){
+                      await obtain_weapon(data["item_id"],quant,message.author.id)
+                    }else if(data["item_type"] == "tool"){
+                      await obtain_tool(data["item_id"],quant,message.author.id)
+                    }else if(data["item_type"] == "proof"){
+                      await obtain_proof(data["item_id"],quant,message.author.id)
                     }
                     msg.edit({ embeds:[o_embed] })
                   }else if(m.content == "0"){
