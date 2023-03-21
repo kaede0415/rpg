@@ -1,13 +1,13 @@
 [
   {
     "name": "木材1万個",
-    "type": "sozai",
+    "type": "material",
     "id": "1",
     "quantity": 10000
   },
   {
     "name": "丸石5000個",
-    "type": "sozai",
+    "type": "material",
     "id": "2",
     "quantity": 5000
   }

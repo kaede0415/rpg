@@ -1235,7 +1235,7 @@ async function win_process(player_id,channel_id,exp){
       if(Math.random() <= 0.5 && i==0){
         const number = Math.floor( Math.random() * members.length )
         item_members.push(`<@${members[number]}>は幻の証を**1個**手に入れた！`)
-        await obtain_item("-100002",1,members[number])
+        await obtain_proof("-100002",1,members[number])
       }
     }else{
       if(Math.random() <= 0.05){
@@ -1891,7 +1891,7 @@ async function exchange(player_id,message){
       if(category == "normal"){
         recipe_menu.setDescription(`\`\`\`css\n${recipes_txt.join("\n\n\n")}\`\`\``)
       }else if(category == "sagyoudai"){
-        if(await get_item_quantity(message.author.id,"100") != 0){
+        if(await get_tool_quantity(message.author.id,"100") != 0){
           recipe_menu.setDescription(`\`\`\`css\n${recipes_txt.join("\n\n\n")}\`\`\``)
         }else{
           recipe_menu.setDescription("```diff\n- 必要なものが揃っていないので開けません```")
@@ -1899,7 +1899,7 @@ async function exchange(player_id,message){
           return msg.edit({ embeds:[recipe_menu] })
         }
       }else if(category == "kanadoko"){
-        if(await get_item_quantity(message.author.id,"101") != 0){
+        if(await get_tool_quantity(message.author.id,"101") != 0){
           recipe_menu.setDescription(`\`\`\`css\n${recipes_txt.join("\n\n\n")}\`\`\``)
         }else{
           recipe_menu.setDescription("```diff\n- 必要なものが揃っていないので開けません```")
@@ -1933,7 +1933,7 @@ async function exchange(player_id,message){
                 msgs.push(`- ${info.name}: ${info.quantity}個 | 所有:${await get_item_quantity(message.author.id,info.id)} 必要:${info.quantity}個`)
                 num = 0
               }
-            }else if(info.type == "sozai"){
+            }else if(info.type == "material"){
               if(info.quantity <= await get_material_quantity(message.author.id,info.id)){
                 msgs.push(`+ ${info.name}: ${info.quantity}個 | 所有:${await get_material_quantity(message.author.id,info.id)} 必要:${info.quantity}個`)
                 if(!num || await get_material_quantity(message.author.id,info.id)/info.quantity < num){
@@ -1941,6 +1941,36 @@ async function exchange(player_id,message){
                 }
               }else{
                 msgs.push(`- ${info.name}: ${info.quantity}個 | 所有:${await get_material_quantity(message.author.id,info.id)} 必要:${info.quantity}個`)
+                num = 0
+              }
+            }else if(info.type == "weapon"){
+              if(info.quantity <= await get_weapon_quantity(message.author.id,info.id)){
+                msgs.push(`+ ${info.name}: ${info.quantity}個 | 所有:${await get_weapon_quantity(message.author.id,info.id)} 必要:${info.quantity}個`)
+                if(!num || await get_weapon_quantity(message.author.id,info.id)/info.quantity < num){
+                  num = Math.floor(await get_weapon_quantity(message.author.id,info.id)/info.quantity)
+                }
+              }else{
+                msgs.push(`- ${info.name}: ${info.quantity}個 | 所有:${await get_weapon_quantity(message.author.id,info.id)} 必要:${info.quantity}個`)
+                num = 0
+              }
+            }else if(info.type == "tool"){
+              if(info.quantity <= await get_tool_quantity(message.author.id,info.id)){
+                msgs.push(`+ ${info.name}: ${info.quantity}個 | 所有:${await get_tool_quantity(message.author.id,info.id)} 必要:${info.quantity}個`)
+                if(!num || await get_tool_quantity(message.author.id,info.id)/info.quantity < num){
+                  num = Math.floor(await get_tool_quantity(message.author.id,info.id)/info.quantity)
+                }
+              }else{
+                msgs.push(`- ${info.name}: ${info.quantity}個 | 所有:${await get_tool_quantity(message.author.id,info.id)} 必要:${info.quantity}個`)
+                num = 0
+              }
+            }else if(info.type == "proof"){
+              if(info.quantity <= await get_proof_quantity(message.author.id,info.id)){
+                msgs.push(`+ ${info.name}: ${info.quantity}個 | 所有:${await get_proof_quantity(message.author.id,info.id)} 必要:${info.quantity}個`)
+                if(!num || await get_proof_quantity(message.author.id,info.id)/info.quantity < num){
+                  num = Math.floor(await get_proof_quantity(message.author.id,info.id)/info.quantity)
+                }
+              }else{
+                msgs.push(`- ${info.name}: ${info.quantity}個 | 所有:${await get_proof_quantity(message.author.id,info.id)} 必要:${info.quantity}個`)
                 num = 0
               }
             }
@@ -1981,7 +2011,25 @@ async function exchange(player_id,message){
                   }else{
                     msgs.push(`- ${info.name}: ${info.quantity*quant}個 | 所有:${await get_item_quantity(message.author.id,info.id)} -> ${info.quantity*quant-await get_item_quantity(message.author.id,info.id)}個不足`)
                   }
-                }else if(info.type == "sozai"){
+                }else if(info.type == "material"){
+                  if(await get_material_quantity(message.author.id,info.id)-info.quantity*quant >= 0){
+                    msgs.push(`+ ${info.name}: ${info.quantity*quant}個 | 所有:${await get_material_quantity(message.author.id,info.id)} -> ${await get_material_quantity(message.author.id,info.id)-info.quantity*quant}個`)
+                  }else{
+                    msgs.push(`- ${info.name}: ${info.quantity*quant}個 | 所有:${await get_material_quantity(message.author.id,info.id)} -> ${info.quantity*quant-await get_material_quantity(message.author.id,info.id)}個不足`)
+                  }
+                }else if(info.type == "weapon"){
+                  if(await get_weapon_quantity(message.author.id,info.id)-info.quantity*quant >= 0){
+                    msgs.push(`+ ${info.name}: ${info.quantity*quant}個 | 所有:${await get_weapon_quantity(message.author.id,info.id)} -> ${await get_weapon_quantity(message.author.id,info.id)-info.quantity*quant}個`)
+                  }else{
+                    msgs.push(`- ${info.name}: ${info.quantity*quant}個 | 所有:${await get_weapon_quantity(message.author.id,info.id)} -> ${info.quantity*quant-await get_weapon_quantity(message.author.id,info.id)}個不足`)
+                  }
+                }else if(info.type == "tool"){
+                  if(await get_material_quantity(message.author.id,info.id)-info.quantity*quant >= 0){
+                    msgs.push(`+ ${info.name}: ${info.quantity*quant}個 | 所有:${await get_material_quantity(message.author.id,info.id)} -> ${await get_material_quantity(message.author.id,info.id)-info.quantity*quant}個`)
+                  }else{
+                    msgs.push(`- ${info.name}: ${info.quantity*quant}個 | 所有:${await get_material_quantity(message.author.id,info.id)} -> ${info.quantity*quant-await get_material_quantity(message.author.id,info.id)}個不足`)
+                  }
+                }else if(info.type == "material"){
                   if(await get_material_quantity(message.author.id,info.id)-info.quantity*quant >= 0){
                     msgs.push(`+ ${info.name}: ${info.quantity*quant}個 | 所有:${await get_material_quantity(message.author.id,info.id)} -> ${await get_material_quantity(message.author.id,info.id)-info.quantity*quant}個`)
                   }else{

@@ -6,7 +6,7 @@
       "item_id": "101",
       "item_1": {  
         "name": "鉄",
-        "type": "sozai",
+        "type": "material",
         "id": "3",
         "quantity": 500
       }

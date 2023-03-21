@@ -1,19 +1,19 @@
 [
   {
     "name": "鉄3000個",
-    "type": "sozai",
+    "type": "material",
     "id": "3",
     "quantity": 3000
   },
   {
     "name": "ダイヤモンド1000個",
-    "type": "sozai",
+    "type": "material",
     "id": "4",
     "quantity": 1000
   },
   {
     "name": "石炭3000個",
-    "type": "sozai",
+    "type": "material",
     "id": "5",
     "quantity": 3000
   }
