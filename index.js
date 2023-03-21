@@ -2421,6 +2421,12 @@ client.on("messageCreate", async message => {
           await obtain_item(result[i][3],result[i][4],message.author.id)
         }else if(result[i][2] == "material"){
           await obtain_material(result[i][3],result[i][4],message.author.id)
+        }else if(result[i][2] == "weapon"){
+          await obtain_weapon(result[i][3],result[i][4],message.author.id)
+        }else if(result[i][2] == "tool"){
+          await obtain_tool(result[i][3],result[i][4],message.author.id)
+        }else if(result[i][2] == "proof"){
+          await obtain_proof(result[i][3],result[i][4],message.author.id)
         }
         msgs.push(`\`\`\`${result[i][0]}${result[i][1]}\`\`\`->${result[i][4]}個`)
       }
@@ -2454,6 +2460,12 @@ client.on("messageCreate", async message => {
           await obtain_item(result[i][3],result[i][4],message.author.id)
         }else if(result[i][2] == "material"){
           await obtain_material(result[i][3],result[i][4],message.author.id)
+        }else if(result[i][2] == "weapon"){
+          await obtain_weapon(result[i][3],result[i][4],message.author.id)
+        }else if(result[i][2] == "tool"){
+          await obtain_tool(result[i][3],result[i][4],message.author.id)
+        }else if(result[i][2] == "proof"){
+          await obtain_proof(result[i][3],result[i][4],message.author.id)
         }
         msgs.push(`\`\`\`${result[i][0]}${result[i][1]}\`\`\`->${result[i][4]}個`)
       }
@@ -2582,7 +2594,7 @@ client.on("messageCreate", async message => {
     if(["materialid","mi"].includes(command)){
       const error_msg = admin_or_player(message.author.id)
       if(error_msg != "admin") return message.reply({ content: error_msg, allowedMentions: { parse: [] } })
-      const materialId = message.content.split(" ")[1]
+      const itemId = message.content.split(" ")[1]
       const quantity = message.content.split(" ")[2]
       let player;
       if(message.mentions.members.size == 1){
@@ -2595,13 +2607,13 @@ client.on("messageCreate", async message => {
       if(await player_status.get(player) == undefined){
         return message.reply({ content: "Undefined_Player", allowedMentions: { parse: [] } })
       }
-      await obtain_material(materialId,quantity,player)
-      message.reply({ content: `\`${client.users.cache.get(player).username}\`は\`ID:${materialId}:${get_material_name(materialId)}\`を\`${quantity.toLocaleString()}\`個手に入れた！`, allowedMentions: { parse: [] } })
+      await obtain_material(itemId,quantity,player)
+      message.reply({ content: `\`${client.users.cache.get(player).username}\`は\`ID:${itemId}:${get_material_name(itemId)}\`を\`${quantity.toLocaleString()}\`個手に入れた！`, allowedMentions: { parse: [] } })
     }
     if(["consumematerial","cma"].includes(command)){
       const error_msg = admin_or_player(message.author.id)
       if(error_msg != "admin") return message.reply({ content: error_msg, allowedMentions: { parse: [] } })
-      const materialId = message.content.split(" ")[1]
+      const itemId = message.content.split(" ")[1]
       const quantity = message.content.split(" ")[2]
       let player;
       if(message.mentions.members.size == 1){
@@ -2614,10 +2626,10 @@ client.on("messageCreate", async message => {
       if(await player_status.get(player) == undefined){
         return message.reply({ content: "Undefined_Player", allowedMentions: { parse: [] } })
       }
-      await consume_material(materialId,quantity,player)
+      await consume_material(itemId,quantity,player)
       message.reply({ content: "unco", allowedMentions: { parse: [] } })
     }
-    if(["itemid","ii"].includes(command)){
+    if(["weaponid","wi"].includes(command)){
       const error_msg = admin_or_player(message.author.id)
       if(error_msg != "admin") return message.reply({ content: error_msg, allowedMentions: { parse: [] } })
       const itemId = message.content.split(" ")[1]
@@ -2633,10 +2645,10 @@ client.on("messageCreate", async message => {
       if(await player_status.get(player) == undefined){
         return message.reply({ content: "Undefined_Player", allowedMentions: { parse: [] } })
       }
-      await obtain_item(itemId,quantity,player)
-      message.reply({ content: `\`${client.users.cache.get(player).username}\`は\`ID:${itemId}:${get_item_name(itemId)}\`を\`${quantity.toLocaleString()}\`個手に入れた！`, allowedMentions: { parse: [] } })
+      await obtain_weapon(itemId,quantity,player)
+      message.reply({ content: `\`${client.users.cache.get(player).username}\`は\`ID:${itemId}:${get_weapon_name(itemId)}\`を\`${quantity.toLocaleString()}\`個手に入れた！`, allowedMentions: { parse: [] } })
     }
-    if(["consumeitem","ci"].includes(command)){
+    if(["consumeweapon","cw"].includes(command)){
       const error_msg = admin_or_player(message.author.id)
       if(error_msg != "admin") return message.reply({ content: error_msg, allowedMentions: { parse: [] } })
       const itemId = message.content.split(" ")[1]
@@ -2652,10 +2664,10 @@ client.on("messageCreate", async message => {
       if(await player_status.get(player) == undefined){
         return message.reply({ content: "Undefined_Player", allowedMentions: { parse: [] } })
       }
-      await consume_item(itemId,quantity,player)
+      await consume_weapon(itemId,quantity,player)
       message.reply({ content: "unco", allowedMentions: { parse: [] } })
     }
-    if(["itemid","ii"].includes(command)){
+    if(["toolid","ti"].includes(command)){
       const error_msg = admin_or_player(message.author.id)
       if(error_msg != "admin") return message.reply({ content: error_msg, allowedMentions: { parse: [] } })
       const itemId = message.content.split(" ")[1]
@@ -2671,10 +2683,10 @@ client.on("messageCreate", async message => {
       if(await player_status.get(player) == undefined){
         return message.reply({ content: "Undefined_Player", allowedMentions: { parse: [] } })
       }
-      await obtain_item(itemId,quantity,player)
-      message.reply({ content: `\`${client.users.cache.get(player).username}\`は\`ID:${itemId}:${get_item_name(itemId)}\`を\`${quantity.toLocaleString()}\`個手に入れた！`, allowedMentions: { parse: [] } })
+      await obtain_tool(itemId,quantity,player)
+      message.reply({ content: `\`${client.users.cache.get(player).username}\`は\`ID:${itemId}:${get_tool_name(itemId)}\`を\`${quantity.toLocaleString()}\`個手に入れた！`, allowedMentions: { parse: [] } })
     }
-    if(["consumeitem","ci"].includes(command)){
+    if(["consumetool","ct"].includes(command)){
       const error_msg = admin_or_player(message.author.id)
       if(error_msg != "admin") return message.reply({ content: error_msg, allowedMentions: { parse: [] } })
       const itemId = message.content.split(" ")[1]
@@ -2690,10 +2702,10 @@ client.on("messageCreate", async message => {
       if(await player_status.get(player) == undefined){
         return message.reply({ content: "Undefined_Player", allowedMentions: { parse: [] } })
       }
-      await consume_item(itemId,quantity,player)
+      await consume_tool(itemId,quantity,player)
       message.reply({ content: "unco", allowedMentions: { parse: [] } })
     }
-    if(["itemid","ii"].includes(command)){
+    if(["proofid","pi"].includes(command)){
       const error_msg = admin_or_player(message.author.id)
       if(error_msg != "admin") return message.reply({ content: error_msg, allowedMentions: { parse: [] } })
       const itemId = message.content.split(" ")[1]
@@ -2709,10 +2721,10 @@ client.on("messageCreate", async message => {
       if(await player_status.get(player) == undefined){
         return message.reply({ content: "Undefined_Player", allowedMentions: { parse: [] } })
       }
-      await obtain_item(itemId,quantity,player)
-      message.reply({ content: `\`${client.users.cache.get(player).username}\`は\`ID:${itemId}:${get_item_name(itemId)}\`を\`${quantity.toLocaleString()}\`個手に入れた！`, allowedMentions: { parse: [] } })
+      await obtain_proof(itemId,quantity,player)
+      message.reply({ content: `\`${client.users.cache.get(player).username}\`は\`ID:${itemId}:${get_proof_name(itemId)}\`を\`${quantity.toLocaleString()}\`個手に入れた！`, allowedMentions: { parse: [] } })
     }
-    if(["consumeitem","ci"].includes(command)){
+    if(["consumeproof","cp"].includes(command)){
       const error_msg = admin_or_player(message.author.id)
       if(error_msg != "admin") return message.reply({ content: error_msg, allowedMentions: { parse: [] } })
       const itemId = message.content.split(" ")[1]
@@ -2728,7 +2740,7 @@ client.on("messageCreate", async message => {
       if(await player_status.get(player) == undefined){
         return message.reply({ content: "Undefined_Player", allowedMentions: { parse: [] } })
       }
-      await consume_item(itemId,quantity,player)
+      await consume_proof(itemId,quantity,player)
       message.reply({ content: "unco", allowedMentions: { parse: [] } })
     }
     if(["exp"].includes(command)){
