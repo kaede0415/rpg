@@ -154,8 +154,8 @@ async function create_data(option,id){
 
 async function generate_detection(player_id,message){
   let status = await player_status.get(player_id)
-  const deru = await get_item_quantity(player_id,999)
-  const denai = await get_item_quantity(player_id,-999)
+  const deru = await get_proof_quantity(player_id,999)
+  const denai = await get_proof_quantity(player_id,-999)
   let probability = 0.001
   if(denai >= 1){
     probability = 0
@@ -1867,10 +1867,10 @@ async function ranking(message){
       }
     }else if(m.content == "3"){
       for await(const [key, value] of player_items.iterator()){
-        if(await get_item_quantity(key,0) != 0){
+        if(await get_proof_quantity(key,0) != 0){
           keys.push(key)
-          values.push(await get_item_quantity(key,0))
-          n_values.push(await get_item_quantity(key,0))
+          values.push(await get_proof_quantity(key,0))
+          n_values.push(await get_proof_quantity(key,0))
         }
       };
       const newvalues = n_values.sort(function(a,b){
@@ -2238,7 +2238,7 @@ client.on("messageCreate", async message => {
       return message.reply({ content: "質問に答えてください。", allowedMentions: { parse: [] } })
     }
     if(!login_list.includes(message.author.id)){
-      const day = await get_item_quantity(message.author.id,0)+1
+      const day = await get_proof_quantity(message.author.id,0)+1
       const elength = day+29
       const flength = day*3+52
       const plength = day*3+42
@@ -2248,7 +2248,7 @@ client.on("messageCreate", async message => {
       .setThumbnail(client.user.displayAvatarURL())
       .setColor("RANDOM")
       message.channel.send({ embeds:[embed] })
-      await obtain_item("0",1,message.author.id)
+      await obtain_proof("0",1,message.author.id)
       await obtain_item("1",elength,message.author.id)
       await obtain_item("2",flength,message.author.id)
       await obtain_item("3",plength,message.author.id)
