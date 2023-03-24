@@ -1455,6 +1455,10 @@ async function get_mode(channel_id){
   return status[3]
 }
 
+async function get_equipped_weapon(player_id){
+  
+}
+
 async function talent(player_id,message){
   const player_name = client.users.cache.get(player_id).username
   const status = await player_status.get(player_id)
