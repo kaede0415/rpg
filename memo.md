@@ -1,11 +1,11 @@
 # DB保存方法
-| DB名 | 要素1 | 要素2 | 要素3 | 要素4 | 要素5 | 要素6 | 要素7 | 
-|:----:|:----:|:----:|:----:|:----:|:----:|:----:|:----:|
-|  player_status  |  Level  | HP(leftover) | EXP | Subjugations | Now_in_battle | [talent_array] | ban_status |
-| player_items | item [[id,quantity],...] | material [[id,quantity],...] | weapon [[id,quantity],...] | tool [[id,quantity],...] | proof [[id,quantity],...] | - | - |
-| enemy_status | Level | HP(leftover) | Name | Rank | Image | - | - |
-| channel_status | Level | On_battle | [Battler_list] | mode | - | - | - |
-| lists | [Login_list] | [Ban_list] | - | - | - | - | - |
+| DB名 | 要素1 | 要素2 | 要素3 | 要素4 | 要素5 | 要素6 | 要素7 | 要素8 |
+|:----:|:----:|:----:|:----:|:----:|:----:|:----:|:----:|:-----:|
+|  player_status  |  Level  | HP(leftover) | EXP | Subjugations | Now_in_battle | [talent_array] | ban_status | weapon_id |
+| player_items | item [[id,quantity],...] | material [[id,quantity],...] | weapon [[id,quantity],...] | tool [[id,quantity],...] | proof [[id,quantity],...] | - | - | - |
+| enemy_status | Level | HP(leftover) | Name | Rank | Image | - | - | - |
+| channel_status | Level | On_battle | [Battler_list] | mode | - | - | - | - |
+| lists | [Login_list] | [Ban_list] | - | - | - | - | - | - |
 
 # 関数一覧
 | 関数名 | 必要引数 | 主な用途 |
