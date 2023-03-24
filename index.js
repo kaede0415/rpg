@@ -1464,6 +1464,17 @@ async function get_equipped_weapon(player_id){
   }
 }
 
+function get_weapon_outline(id){
+  const hoge = JSON.parse(JSON.stringify(weapon_json))
+  const valueList = Object.values(hoge)
+  for(let i=0;i<valueList.length;i++){
+    if(valueList[i].id == id){
+      return `${valueList[i].name}`
+    }
+  }
+  return undefined
+}
+
 async function weapon_list(player_id){
   const items = await player_items.get(player_id)
   const weapons = items[2]
@@ -1489,7 +1500,7 @@ async function weapon(player_id,message){
   const collector = message.channel.createMessageCollector({ filter: filter, idle: 60000 });
   collector.on('collect', async m => {
     m.delete();
-    if((!Number.isInteger(Number(m.content)) && m.content != "x") || !list[0].includes(m.content)){
+    if(m.content != "x" && !list[0].includes(m.content)){
     }else if(m.content == "x"){
       collector.stop()
       return msg.edit({ content:"```処理を終了しました...```" });
@@ -2527,6 +2538,9 @@ client.on("messageCreate", async message => {
       .setTitle(`ガチャ結果${time}枚`)
       .setDescription(msgs.join("\n"))
       message.channel.send({ embeds:[embed] })
+    }
+    if(["weapon","we"].includes(command)){
+      await weapon(message.author.id,message)
     }
     if(["changemode","cm"].includes(command)){
       const role = admin_or_player(message.author.id)
