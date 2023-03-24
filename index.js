@@ -1464,7 +1464,27 @@ async function get_equipped_weapon(player_id){
   }
 }
 
-async function weapon_list(player_id)
+async function weapon_list(player_id){
+  const items = await player_items.get(player_id)
+  const weapons = items[2]
+  const ids = []
+  const msgs = []
+  for(let i=0;i<weapons.length;i++){
+    const id = weapons[i][0]
+    ids.push(id)
+    msgs.push(`[${id}:${get_weapon_name(id)}]`)
+  }
+  return [ids,msgs]
+}
+
+async function weapon(player_id,message){
+  const list = await weapon_list(player_id)
+  const embed = new MessageEmbed()
+  .setTitle(`現在は「${get_weapon_name(await get_equipped_weapon(player_id))}」`)
+  .setDescription(`<@${player_id}>\`\`\`css\n${list[2].join("\n")}\`\`\``)
+  .setColor("RANDOM")
+  message.reply({ e,beds:[embed], allowedm, })
+}
 
 async function talent(player_id,message){
   const player_name = client.users.cache.get(player_id).username
