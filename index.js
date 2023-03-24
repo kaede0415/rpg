@@ -1456,7 +1456,12 @@ async function get_mode(channel_id){
 }
 
 async function get_equipped_weapon(player_id){
-  
+  const status = await player_status.get(player_id)
+  if(status){
+    return status[7]
+  }else{
+    return false
+  }
 }
 
 async function talent(player_id,message){
