@@ -1469,7 +1469,7 @@ function get_weapon_outline(id){
   const valueList = Object.values(hoge)
   for(let i=0;i<valueList.length;i++){
     if(valueList[i].id == id){
-      return `${valueList[i].name}`
+      return `${valueList[i].outline}`
     }
   }
   return undefined
@@ -1492,7 +1492,7 @@ async function weapon(player_id,message){
   const list = await weapon_list(player_id)
   const embed = new MessageEmbed()
   .setTitle(`現在は「${get_weapon_name(await get_equipped_weapon(player_id))}」`)
-  .setDescription(`<@${player_id}>\`\`\`css\n${list[1].join("\n")}\`\`\``)
+  .setDescription(`<@${player_id}>\`\`\`css\n${list[1].join("\n")}\`\`\`\`\`\`js\n${get_weapon_outline(await get_equipped_weapon(player_id))}\`\`\``)
   .setFooter("数字を送信してください(xで処理終了)")
   .setColor("RANDOM")
   const msg = await message.reply({ embeds:[embed], allowedMentions: { parse: [] } })
@@ -1507,7 +1507,7 @@ async function weapon(player_id,message){
     }else{
       collector.stop()
       const emb = new MessageEmbed()
-      .setDescription(`\`\`\`diff\n+ 武器を「${get_weapon_name(m.content)}」に変更しました\`\`\``)
+      .setDescription(`\`\`\`diff\n+ 武器を「${get_weapon_name(m.content)}」に変更しました\`\`\`\`\`\`js\n${get_weapon_outline(m.content)}\`\`\``)
       .setColor("RANDOM")
       msg.edit({ embeds:[emb] })
       await splice_status("player_status",player_id,7,Number(m.content))
