@@ -1481,9 +1481,32 @@ async function weapon(player_id,message){
   const list = await weapon_list(player_id)
   const embed = new MessageEmbed()
   .setTitle(`現在は「${get_weapon_name(await get_equipped_weapon(player_id))}」`)
-  .setDescription(`<@${player_id}>\`\`\`css\n${list[2].join("\n")}\`\`\``)
+  .setDescription(`<@${player_id}>\`\`\`css\n${list[1].join("\n")}\`\`\``)
+  .setFooter("数字を送信してください(xで処理終了)")
   .setColor("RANDOM")
-  message.reply({ e,beds:[embed], allowedm, })
+  const msg = await message.reply({ embeds:[embed], allowedMentions: { parse: [] } })
+  const filter = m => m.author.id == message.author.id;
+  const collector = message.channel.createMessageCollector({ filter: filter, idle: 60000 });
+  collector.on('collect', async m => {
+    m.delete();
+    if((!Number.isInteger(Number(m.content)) && m.content != "x") || !list[0].includes(m.content)){
+    }else if(m.content == "x"){
+      collector.stop()
+      return msg.edit({ content:"```処理を終了しました...```" });
+    }else{
+      collector.stop()
+      const emb = new MessageEmbed()
+      .setDescription(`\`\`\`diff\n+ 武器を「${get_weapon_name(m.content)}」に変更しました\`\`\``)
+      .setColor("RANDOM")
+      msg.edit({ embeds:[emb] })
+      await splice_status("player_status",player_id,7,Number(m.content))
+    }
+  })
+  collector.on('end', async (collected, reason) => {
+    if(reason == "idle"){
+      msg.edit({ content:"```時間切れです...```" });
+    }
+  })
 }
 
 async function talent(player_id,message){
