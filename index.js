@@ -33,7 +33,7 @@ const newbutton = (buttondata) => {
   };
 };
 const prefix = "_"
-const cmd_list = ["help","status","st","attack","atk","item","i","in","reset","re","rs","inquiry","inq","talent","ranking","rank","training","t","mine","gatya","craft","c","summon","ban","unban","banlist","kill","itemid","consumeitem","materialid","consumematerial","exp","eval","db","bulkdb"]
+const cmd_list = ["help","status","st","attack","atk","item","i","in","reset","re","rs","inquiry","inq","weapon","we","talent","ranking","rank","training","t","mine","gatya","gacha","xgatya","xgacha","craft","c","changemode","cm","summon","ban","unban","banlist","kill","itemid","ii","materialid","mi","weaponid","wi","toolid","ti","proofid","pi","consumeitem","ci","consumematerial","cma","consumeweapon","cw","consumetool","ct","consumeproof","cp","register_info","ri","exp","eval","db","bulkdb"]
 const command_json = require("./jsons/command.json")
 const item_json = require("./items/item.json")
 const material_json = require("./items/material.json")
@@ -2936,7 +2936,7 @@ client.on("messageCreate", async message => {
       const embed = new MessageEmbed()
       .setTitle("各種登録情報")
       .addField("モンスター",`弱敵:${monster[0]}体\n通常:${monster[1]}体\n強敵:${monster[2]}体\n超強敵:${monster[3]}体\n極:${monster[4]}体\nレア:${monster[5]}体\n激レア:${monster[6]}体\n超激レア:${monster[7]}体\n幻:${monster[8]}体\n合計:${monster[9]}体`,true)
-      .addField("所持品関連",`アイテム:${item[0]}種類\n素材:${item[1]}種類\n武器:${item[2]}種類\n合計:${item[3]}種類`,true)
+      .addField("所持品関連",`アイテム:${item[0]}種類\n素材:${item[1]}種類\n武器:${item[2]}種類\nツール:${item[3]}種類\n証:${item[4]}種類\n合計:${item[5]}種類`,true)
       .addField("コマンド数",`${cmd_list.length}`)
       .setColor("RANDOM")
       message.reply({ embeds:[embed], allowedMentions: { parse: [] } })
