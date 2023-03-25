@@ -1472,7 +1472,13 @@ function get_weapon_abi(id){
   }else if(id == 1){
     return 1.1
   }else if(id == 2){
-    return 1.2
+    return 1.3
+  }else if(id == 3){
+    return 1.6
+  }else if(id == 4){
+    return 2
+  }else if(id == 5){
+    return -1
   }
 }
 
