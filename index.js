@@ -2296,7 +2296,7 @@ client.on("messageCreate", async message => {
     if(!p_status){
       await create_data("player",message.author.id)
     }
-    if(ban_list.includes(message.author.id) && !admin_list.includes(message.author.id)){
+    if(ban_list.includes(message.author.id) && !admin_list.includes(message.author.id) && !["help"].includes(command)){
       return message.reply({ content: "BANされてますよ...?", allowedMentions: { parse: [] } })
     }else if(p_status[6] == true){
       return message.reply({ content: "質問に答えてください。", allowedMentions: { parse: [] } })
