@@ -1904,7 +1904,6 @@ async function ranking(message){
         return Number(b) - Number(a);
       });
       const max = values.length
-      
       for(var i = 0;  i < max; i++){
         const num = values.indexOf(n_values[i])
         content.push(`${i+1}位 \`${client.users.cache.get(keys[num]).tag}\` **Lv.${n_values[i].toLocaleString()}**`)
