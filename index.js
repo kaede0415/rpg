@@ -286,7 +286,7 @@ async function _attack(player_id,channel_id,message){
   const player_name = client.users.cache.get(player_id).username
   const random = Math.random()
   const atk_talent = await get_talent_level("攻撃力",player_id)
-  const player_attack = get_player_attack(player_level*(1+0.01*atk_talent),random)
+  const player_attack = get_player_attack(player_level*(1+0.01*atk_talent),random) * get_weapon_abi(get_equipped_weapon)
   monster_hp -= player_attack
   const attack_message = get_attack_message(player_name,player_attack,monster_name,monster_level,monster_hp,random)
   if(monster_hp <= 0){
@@ -1461,6 +1461,18 @@ async function get_equipped_weapon(player_id){
     return status[7]
   }else{
     return false
+  }
+}
+
+function get_weapon_abi(id){
+  if(id == -1){
+    return 1000000000000
+  }else if(id == 0){
+    return 1
+  }else if(id == 1){
+    return 1.1
+  }else if(id == 2){
+    return 1.2
   }
 }
 
