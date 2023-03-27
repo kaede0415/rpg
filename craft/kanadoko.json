@@ -1,14 +1,71 @@
 [
   {
     "1": {
-      "item_name": "デバッグアイテムX",
-      "item_type": "item",
-      "item_id": "X",
+      "item_name": "木の剣",
+      "item_type": "weapon",
+      "item_id": "1",
       "item_1": {  
-        "name": "デバッグアイテムX",
-        "type": "item",
-        "id": "X",
+        "name": "木材",
+        "type": "material",
+        "id": "1",
+        "quantity": 10
+      },
+      "item_2": {  
+        "name": "錆びた石材",
+        "type": "material",
+        "id": "10",
         "quantity": 1
+      }
+    },
+    "2": {
+      "item_name": "石の剣",
+      "item_type": "weapon",
+      "item_id": "2",
+      "item_1": {  
+        "name": "丸石",
+        "type": "material",
+        "id": "2",
+        "quantity": 10
+      },
+      "item_2": {  
+        "name": "錆びた石材",
+        "type": "material",
+        "id": "10",
+        "quantity": 2
+      }
+    },
+    "3": {
+      "item_name": "鉄の剣",
+      "item_type": "weapon",
+      "item_id": "3",
+      "item_1": {  
+        "name": "鉄",
+        "type": "material",
+        "id": "3",
+        "quantity": 10
+      },
+      "item_2": {  
+        "name": "錆びた石材",
+        "type": "material",
+        "id": "10",
+        "quantity": 3
+      }
+    },
+    "4": {
+      "item_name": "ダイヤの剣",
+      "item_type": "weapon",
+      "item_id": "4",
+      "item_1": {  
+        "name": "ダイヤ",
+        "type": "material",
+        "id": "4",
+        "quantity": 10
+      },
+      "item_2": {  
+        "name": "錆びた石材",
+        "type": "material",
+        "id": "10",
+        "quantity": 5
       }
     }
   }
