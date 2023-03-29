@@ -1142,6 +1142,23 @@ class func{
     status[8].splice(num,1,newcoin)
     await player_status.set(player_id,status)
   }
+  async consume_coin(option,player_id,number){
+    let num;
+    if(option == "free"){
+      num = 0
+    }else if(option == "paid"){
+      num = 1
+    }else{
+      return false
+    }
+    const status = await player_status.get(player_id)
+    const newcoin = status[8][num]-number
+    if(newcoin < 0){
+      return false
+    }
+    status[8].splice(num,1,newcoin)
+    await player_status.set(player_id,status)
+  }
   async win_process(player_id,channel_id,exp){
     const ch_status = await channel_status.get(channel_id)
     const exp_coin_members = []
@@ -1737,7 +1754,7 @@ class func{
         .setFooter("購入したいアイテムの番号を送信してください(0で処理を終了)")
         for(let x=0;x<r_length;x++){
           const target = goods[`${x+1}`]
-          categories_txt.push(`[${x+1}:${target["item_name"]}]\n${msgs.join("\n")}`)
+          categories_txt.push(`[${x+1}:${target["item_name"]}] ${target["price"]}コイン`)
         }
         menu.setDescription(`\`\`\`css\n${categories_txt.join("\n\n\n")}\`\`\``)
         msg.edit({ embeds:[menu] })
@@ -1753,19 +1770,18 @@ class func{
             const w = await this.wallet(player_id)
             const data = goods[`${m.content}`]
             const i_length = Object.keys(data).length-3
-            const msgs = []
+            let mes
             let num
-            for(let i=0;i<i_length;i++){
-              const price = data[`price`]
-              if(price > w[index]){
-                
-              }
+            const price = data[`price`]
+            if(price > w[index]){
+              mes = `- 必要:${price}枚 | 所持:${w[index]}枚 | ${price-w[index]}枚不足`
+            }else{
+              mes = `+ 必要:${price}枚 | 所持:${w[index]}枚`
             }
-            const mes = msgs.join("\n")
             const check_embed = new MessageEmbed()
             .setColor("RANDOM")
             if(mes.includes("-")){
-              check_embed.setDescription(`\`\`\`fix\n${data["item_name"]}\`\`\`\`\`\`diff\n${mes}\`\`\`\`\`\`diff\n- 素材が不足しています\`\`\``)
+              check_embed.setDescription(`\`\`\`fix\n${data["item_name"]}\`\`\`\`\`\`diff\n${mes}\`\`\`\`\`\`diff\n- コインが不足しています\`\`\``)
               return msg.edit({ embeds:[check_embed] })
             }else{
               check_embed.setDescription(`\`\`\`fix\n${data["item_name"]}\`\`\`\`\`\`diff\n${mes}\n\n\n最大${num}個作成可能(allで一括作成)\`\`\`\`\`\`diff\n+ 作成したい数を数字で送信してください\`\`\``)
@@ -1788,73 +1804,31 @@ class func{
               }
               if(!quant){
               }else{
-                const msgs = []
-                for(let i=0;i<i_length;i++){
-                  const info = data[`item_${i+1}`]
-                  if(info.type == "item"){
-                    if(await this.get_item_quantity(message.author.id,info.id)-info.quantity*quant >= 0){
-                      msgs.push(`+ ${info.name}: ${info.quantity*quant}個 | 所有:${await this.get_item_quantity(message.author.id,info.id)} -> ${await this.get_item_quantity(message.author.id,info.id)-info.quantity*quant}個`)
-                    }else{
-                      msgs.push(`- ${info.name}: ${info.quantity*quant}個 | 所有:${await this.get_item_quantity(message.author.id,info.id)} -> ${info.quantity*quant-await this.get_item_quantity(message.author.id,info.id)}個不足`)
-                    }
-                  }else if(info.type == "material"){
-                    if(await this.get_material_quantity(message.author.id,info.id)-info.quantity*quant >= 0){
-                      msgs.push(`+ ${info.name}: ${info.quantity*quant}個 | 所有:${await this.get_material_quantity(message.author.id,info.id)} -> ${await this.get_material_quantity(message.author.id,info.id)-info.quantity*quant}個`)
-                    }else{
-                      msgs.push(`- ${info.name}: ${info.quantity*quant}個 | 所有:${await this.get_material_quantity(message.author.id,info.id)} -> ${info.quantity*quant-await this.get_material_quantity(message.author.id,info.id)}個不足`)
-                    }
-                  }else if(info.type == "weapon"){
-                    if(await this.get_weapon_quantity(message.author.id,info.id)-info.quantity*quant >= 0){
-                      msgs.push(`+ ${info.name}: ${info.quantity*quant}個 | 所有:${await this.get_weapon_quantity(message.author.id,info.id)} -> ${await this.get_weapon_quantity(message.author.id,info.id)-info.quantity*quant}個`)
-                    }else{
-                      msgs.push(`- ${info.name}: ${info.quantity*quant}個 | 所有:${await this.get_weapon_quantity(message.author.id,info.id)} -> ${info.quantity*quant-await this.get_weapon_quantity(message.author.id,info.id)}個不足`)
-                    }
-                  }else if(info.type == "tool"){
-                    if(await this.get_tool_quantity(message.author.id,info.id)-info.quantity*quant >= 0){
-                      msgs.push(`+ ${info.name}: ${info.quantity*quant}個 | 所有:${await this.get_tool_quantity(message.author.id,info.id)} -> ${await this.get_tool_quantity(message.author.id,info.id)-info.quantity*quant}個`)
-                    }else{
-                      msgs.push(`- ${info.name}: ${info.quantity*quant}個 | 所有:${await this.get_tool_quantity(message.author.id,info.id)} -> ${info.quantity*quant-await this.get_tool_quantity(message.author.id,info.id)}個不足`)
-                    }
-                  }else if(info.type == "proof"){
-                    if(await this.get_proof_quantity(message.author.id,info.id)-info.quantity*quant >= 0){
-                      msgs.push(`+ ${info.name}: ${info.quantity*quant}個 | 所有:${await this.get_proof_quantity(message.author.id,info.id)} -> ${await this.get_proof_quantity(message.author.id,info.id)-info.quantity*quant}個`)
-                    }else{
-                      msgs.push(`- ${info.name}: ${info.quantity*quant}個 | 所有:${await this.get_proof_quantity(message.author.id,info.id)} -> ${info.quantity*quant-await this.get_proof_quantity(message.author.id,info.id)}個不足`)
-                    }
-                  }
+                const price = data[`price`]
+                let n_mes
+                if(price*quant > w[index]){
+                  n_mes = `- 必要:${price*quant}枚 | 所持:${w[index]}枚 | ${price*quant-w[index]}枚不足`
+                }else{
+                  n_mes = `+ 必要:${price*quant}枚 | 所持:${w[index]}枚`
                 }
-                const n_mes = msgs.join("\n")
                 const q_embed = new MessageEmbed()
                 .setColor("RANDOM")
                 if(n_mes.includes("- ")){
-                  q_embed.setDescription(`\`\`\`fix\n${data["item_name"]}\`\`\`\`\`\`diff\n${n_mes}\n\n\n${quant}個作成\`\`\`\`\`\`diff\n- 素材が不足しています\`\`\``)
+                  q_embed.setDescription(`\`\`\`fix\n${data["item_name"]}\`\`\`\`\`\`diff\n${n_mes}\n\n\n${quant}個購入\`\`\`\`\`\`diff\n- コインが不足しています\`\`\``)
                   return msg.edit({ embeds:[q_embed] })
                 }else{
-                  q_embed.setDescription(`\`\`\`fix\n${data["item_name"]}\`\`\`\`\`\`diff\n${n_mes}\n\n\n${quant}個作成\`\`\``)
+                  q_embed.setDescription(`\`\`\`fix\n${data["item_name"]}\`\`\`\`\`\`diff\n${n_mes}\n\n\n${quant}個購入\`\`\``)
                   .setFooter("ok or 0")
                   msg.edit({ embeds:[q_embed] })
                   const collector4 = message.channel.createMessageCollector({ filter: filter, idle: 60000 });
                   collector4.on('collect', async m => {
                     m.delete()
                     const o_embed = new MessageEmbed()
-                    .setDescription(`\`\`\`fix\n「${data["item_name"]}」を${quant}個作りました\`\`\``)
+                    .setDescription(`\`\`\`fix\n「${data["item_name"]}」を${quant}個購入しました\`\`\``)
                     .setColor("RANDOM")
                     if(m.content.toLowerCase() == "ok"){
                       collector4.stop()
-                      for(let i=0;i<i_length;i++){
-                        const info = data[`item_${i+1}`]
-                        if(info.type == "item"){
-                          await this.consume_item(info.id,info.quantity*quant,message.author.id)
-                        }else if(info.type == "material"){
-                          await this.consume_material(info.id,info.quantity*quant,message.author.id)
-                        }else if(info.type == "weapon"){
-                          await this.consume_weapon(info.id,info.quantity*quant,message.author.id)
-                        }else if(info.type == "tool"){
-                          await this.consume_tool(info.id,info.quantity*quant,message.author.id)
-                        }else if(info.type == "proof"){
-                          await this.consume_proof(info.id,info.quantity*quant,message.author.id)
-                        }
-                      }
+                      await this.consume_coin(category,player_id,data["price"])
                       if(data["item_type"] == "item"){
                         await this.obtain_item(data["item_id"],quant,message.author.id)
                       }else if(data["item_type"] == "material"){
