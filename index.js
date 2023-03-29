@@ -655,6 +655,23 @@ client.on("messageCreate", async message => {
       .setDescription(`<@${player_id}>に${exp.toLocaleString()}EXPを付与しました\n${levelup_msg}`)
       message.reply({ embeds:[embed], allowedMentions: { parse: [] } })
     }
+    if(["coin"].includes(command)){
+      const error_msg = func.admin_or_player(message.author.id)
+      if(error_msg != "admin") return message.reply({ content: error_msg, allowedMentions: { parse: [] } })
+      const option = message.content.splice(" ")[1]
+      const player_id = message.content.split(" ")[2]
+      const coin = Number(message.content.split(" ")[3])
+      let mes
+      if(coin >= 0){
+        await func.coinment(option,player_id,coin)
+        mes = `<@${player_id}>に${coin.toLocaleString()}コインを付与しました`
+      }else{
+        mes = `<@${player_id}>から${coin.toLocaleString()}コインを剥奪しました`
+      }
+      const embed = new MessageEmbed()
+      .setDescription(`<@${player_id}>に${exp.toLocaleString()}EXPを付与しました\n${levelup_msg}`)
+      message.reply({ embeds:[embed], allowedMentions: { parse: [] } })
+    }
     if(["monstergen"].includes(command)){
       let rank = message.content.slice(prefix.length+11)
       const info = func.generate_monster(rank)

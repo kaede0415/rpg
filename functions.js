@@ -1756,7 +1756,7 @@ class func{
           const target = goods[`${x+1}`]
           categories_txt.push(`[${x+1}:${target["item_name"]}] ${target["price"]}コイン`)
         }
-        menu.setDescription(`\`\`\`css\n${categories_txt.join("\n\n\n")}\`\`\``)
+        menu.setDescription(`\`\`\`css\n${categories_txt.join("\n")}\`\`\``)
         msg.edit({ embeds:[menu] })
         const collector2 = message.channel.createMessageCollector({ filter: filter, idle: 60000 });
         collector2.on('collect', async m => {
@@ -1771,8 +1771,8 @@ class func{
             const data = goods[`${m.content}`]
             const i_length = Object.keys(data).length-3
             let mes
-            let num
             const price = data[`price`]
+            let num = Math.floor(w[index]/price)
             if(price > w[index]){
               mes = `- 必要:${price}枚 | 所持:${w[index]}枚 | ${price-w[index]}枚不足`
             }else{
@@ -1784,7 +1784,7 @@ class func{
               check_embed.setDescription(`\`\`\`fix\n${data["item_name"]}\`\`\`\`\`\`diff\n${mes}\`\`\`\`\`\`diff\n- コインが不足しています\`\`\``)
               return msg.edit({ embeds:[check_embed] })
             }else{
-              check_embed.setDescription(`\`\`\`fix\n${data["item_name"]}\`\`\`\`\`\`diff\n${mes}\n\n\n最大${num}個作成可能(allで一括作成)\`\`\`\`\`\`diff\n+ 作成したい数を数字で送信してください\`\`\``)
+              check_embed.setDescription(`\`\`\`fix\n${data["item_name"]}\`\`\`\`\`\`diff\n${mes}\n\n\n最大${num}個購入可能(allで一括作成)\`\`\`\`\`\`diff\n+ 作成したい数を数字で送信してください\`\`\``)
               msg.edit({ embeds:[check_embed] })
             }
             const collector3 = message.channel.createMessageCollector({ filter: filter, idle: 60000 });
@@ -1828,7 +1828,7 @@ class func{
                     .setColor("RANDOM")
                     if(m.content.toLowerCase() == "ok"){
                       collector4.stop()
-                      await this.consume_coin(category,player_id,data["price"])
+                      await this.consume_coin(category,player_id,data["price"]*quant)
                       if(data["item_type"] == "item"){
                         await this.obtain_item(data["item_id"],quant,message.author.id)
                       }else if(data["item_type"] == "material"){
