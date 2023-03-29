@@ -1186,7 +1186,7 @@ async function coinment(option,player_id,coin){
 
 async function win_process(player_id,channel_id,exp){
   const ch_status = await channel_status.get(channel_id)
-  const exp_members = []
+  const exp_coin_members = []
   const levelup_members = []
   const item_members = []
   const members = ch_status[2]
@@ -1196,10 +1196,12 @@ async function win_process(player_id,channel_id,exp){
     status.splice(3,1,sub+1)
     await player_status.set(members[i],status)
     let expcalc = exp
+    let coincalc
     const rank = await get_monster_rank(channel_id)
     const exp_talent = await get_talent_level("経験値",player_id)
     if(rank == "【強敵】"){
       expcalc = expcalc*(2+exp_talent*0.02)
+      coincalc = 2
       if(Math.random() <= 0.06){
         item_members.push(`<@${members[i]}>はエリクサーを**1個**手に入れた！`)
         await obtain_item("1",1,members[i])
@@ -1218,6 +1220,7 @@ async function win_process(player_id,channel_id,exp){
       }
     }else if(rank == "【超強敵】"){
       expcalc = expcalc*(5+exp_talent*0.02)
+      coincalc = 5
       item_members.push(`<@${members[i]}>はエリクサーを**1個**手に入れた！`)
       await obtain_item("1",1,members[i])
       item_members.push(`<@${members[i]}>はファイアボールの書を**1個**手に入れた！`)
@@ -1234,6 +1237,7 @@ async function win_process(player_id,channel_id,exp){
       }
     }else if(rank == "【極】"){
       expcalc = expcalc*(10+exp_talent*0.02)
+      coincalc = 10
       item_members.push(`<@${members[i]}>はエリクサーを**1個**手に入れた！`)
       await obtain_item("1",1,members[i])
       item_members.push(`<@${members[i]}>はファイアボールの書を**1個**手に入れた！`)
@@ -1247,6 +1251,8 @@ async function win_process(player_id,channel_id,exp){
         await obtain_item("100000",1,members[i])
       }
     }else if(rank == "【レア】"){
+      expcalc = expcalc*(10+exp_talent*0.02)
+      coincalc = 10
       if(Math.random() <= 0.1){
         item_members.push(`<@${members[i]}>はエリクサーを**1個**手に入れた！`)
         await obtain_item("1",1,members[i])
@@ -1263,9 +1269,9 @@ async function win_process(player_id,channel_id,exp){
         item_members.push(`<@${members[i]}>は100円硬貨を**1個**手に入れた！`)
         await obtain_item("100000",1,members[i])
       }
-      expcalc = expcalc*(10+exp_talent*0.02)
     }else if(rank == "【激レア】"){
       expcalc = expcalc*(100+exp_talent*0.02)
+      coincalc = 50
       if(Math.random() <= 0.25){
         item_members.push(`<@${members[i]}>はエリクサーを**1個**手に入れた！`)
         await obtain_item("1",1,members[i])
@@ -1284,6 +1290,7 @@ async function win_process(player_id,channel_id,exp){
       }
     }else if(rank == "【超激レア】"){
       expcalc = expcalc*(1000+exp_talent*0.02)
+      coincalc = 100
       item_members.push(`<@${members[i]}>はエリクサーを**1個**手に入れた！`)
       await obtain_item("1",1,members[i])
       item_members.push(`<@${members[i]}>はファイアボールの書を**1個**手に入れた！`)
@@ -1298,6 +1305,7 @@ async function win_process(player_id,channel_id,exp){
       }
     }else if(rank == "【幻】"){
       expcalc = expcalc*(10000+exp_talent*0.02)
+      coincalc = 
       item_members.push(`<@${members[i]}>はエリクサーを**1個**手に入れた！`)
       await obtain_item("1",1,members[i])
       item_members.push(`<@${members[i]}>はファイアボールの書を**1個**手に入れた！`)
@@ -1335,13 +1343,14 @@ async function win_process(player_id,channel_id,exp){
       }
       expcalc = expcalc*(1+exp_talent*0.02)
     }
-    exp_members.push(`<@${members[i]}>は**${expcalc.toLocaleString()}EXP**を獲得した。`)
+    exp_coin_members.push(`<@${members[i]}>は**${expcalc.toLocaleString()}EXP**を獲得した。`)
     const msg = await experiment(members[i],expcalc)
+    await coinment("free",members[i],coincalc)
     if(msg != "none"){
       levelup_members.push(msg)
     }
   }
-  const exp_message = exp_members.join("\n")
+  const exp_message = exp_coin_members.join("\n")
   const levelup_message = levelup_members.join("\n")
   const item_message = item_members.join("\n")
   return [exp_message,levelup_message,item_message]
