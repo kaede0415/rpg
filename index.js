@@ -54,7 +54,7 @@ let timeout;
 let time;
 process.env.TZ = 'Asia/Tokyo'
 const {FUNC} = require("./functions")
-const func = new FUNC
+const func = new FUNC()
 //const dbFiles = fs.readdirSync('./').filter(file => file.endsWith('.sqlite'));
 
 /*function admin_or_player(id){
