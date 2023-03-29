@@ -1701,6 +1701,7 @@ class func{
   async shop(player_id,message){
     let category;
     let title;
+    let index;
     const menu = new MessageEmbed()
     .setTitle("ショップ一覧")
     .setDescription("```diff\n+ 1\n無償ショップ\n+ 2\n有償ショップ\n\n0:処理終了```")
@@ -1714,10 +1715,12 @@ class func{
       if(m.content == "1"){
         category = "free"
         title = "無償ショップ"
+        index = 0
         collector.stop();
       }else if(m.content == "2"){
         category = "paid"
         title = "有償"
+        index = 1
         collector.stop();
       }else if(m.content == "0"){
         msg.edit({ content:"```処理を終了しました...```" });
@@ -1725,25 +1728,19 @@ class func{
       }
       if(category == undefined){
       }else{
-        const recipe = require(`./shop/${category}.json`)[0]
-        const r_length = Object.keys(recipe).length
-        const recipes_txt = []
-        const recipe_menu = new MessageEmbed()
+        const goods = require(`./shop/${category}.json`)[0]
+        const r_length = Object.keys(goods).length
+        const categories_txt = []
+        const menu = new MessageEmbed()
         .setTitle(title)
         .setColor("RANDOM")
         .setFooter("購入したいアイテムの番号を送信してください(0で処理を終了)")
         for(let x=0;x<r_length;x++){
-          const target = recipe[`${x+1}`]
-          const length = Object.keys(target).length-3
-          const msgs = []
-          for(let y=0;y<length;y++){
-            const info = target[`item_${y+1}`]
-            msgs.push(`・${info.name} ${info.quantity}個`)
-          }
-          recipes_txt.push(`[${x+1}:${target["item_name"]}]\n${msgs.join("\n")}`)
+          const target = goods[`${x+1}`]
+          categories_txt.push(`[${x+1}:${target["item_name"]}]\n${msgs.join("\n")}`)
         }
-        recipe_menu.setDescription(`\`\`\`css\n${recipes_txt.join("\n\n\n")}\`\`\``)
-        msg.edit({ embeds:[recipe_menu] })
+        menu.setDescription(`\`\`\`css\n${categories_txt.join("\n\n\n")}\`\`\``)
+        msg.edit({ embeds:[menu] })
         const collector2 = message.channel.createMessageCollector({ filter: filter, idle: 60000 });
         collector2.on('collect', async m => {
           m.delete();
@@ -1753,62 +1750,15 @@ class func{
             return collector2.stop();
           }else{
             collector2.stop()
-            const data = recipe[`${m.content}`]
+            const w = await this.wallet(player_id)
+            const data = goods[`${m.content}`]
             const i_length = Object.keys(data).length-3
             const msgs = []
             let num
             for(let i=0;i<i_length;i++){
-              const info = data[`item_${i+1}`]
-              if(info.type == "item"){
-                if(info.quantity <= await this.get_item_quantity(message.author.id,info.id)){
-                  msgs.push(`+ ${info.name}: ${info.quantity}個 | 所有:${await this.get_item_quantity(message.author.id,info.id)} 必要:${info.quantity}個`)
-                  if(!num || await this.get_item_quantity(message.author.id,info.id)/info.quantity < num){
-                    num = Math.floor(await this.get_item_quantity(message.author.id,info.id)/info.quantity)
-                  }
-                }else{
-                  msgs.push(`- ${info.name}: ${info.quantity}個 | 所有:${await this.get_item_quantity(message.author.id,info.id)} 必要:${info.quantity}個`)
-                  num = 0
-                }
-              }else if(info.type == "material"){
-                if(info.quantity <= await this.get_material_quantity(message.author.id,info.id)){
-                  msgs.push(`+ ${info.name}: ${info.quantity}個 | 所有:${await this.get_material_quantity(message.author.id,info.id)} 必要:${info.quantity}個`)
-                  if(!num || await this.get_material_quantity(message.author.id,info.id)/info.quantity < num){
-                    num = Math.floor(await this.get_material_quantity(message.author.id,info.id)/info.quantity)
-                  }
-                }else{
-                  msgs.push(`- ${info.name}: ${info.quantity}個 | 所有:${await this.get_material_quantity(message.author.id,info.id)} 必要:${info.quantity}個`)
-                  num = 0
-                }
-              }else if(info.type == "weapon"){
-                if(info.quantity <= await this.get_weapon_quantity(message.author.id,info.id)){
-                  msgs.push(`+ ${info.name}: ${info.quantity}個 | 所有:${await this.get_weapon_quantity(message.author.id,info.id)} 必要:${info.quantity}個`)
-                  if(!num || await this.get_weapon_quantity(message.author.id,info.id)/info.quantity < num){
-                    num = Math.floor(await this.get_weapon_quantity(message.author.id,info.id)/info.quantity)
-                  }
-                }else{
-                  msgs.push(`- ${info.name}: ${info.quantity}個 | 所有:${await this.get_weapon_quantity(message.author.id,info.id)} 必要:${info.quantity}個`)
-                  num = 0
-                }
-              }else if(info.type == "tool"){
-                if(info.quantity <= await this.get_tool_quantity(message.author.id,info.id)){
-                  msgs.push(`+ ${info.name}: ${info.quantity}個 | 所有:${await this.get_tool_quantity(message.author.id,info.id)} 必要:${info.quantity}個`)
-                  if(!num || await this.get_tool_quantity(message.author.id,info.id)/info.quantity < num){
-                    num = Math.floor(await this.get_tool_quantity(message.author.id,info.id)/info.quantity)
-                  }
-                }else{
-                  msgs.push(`- ${info.name}: ${info.quantity}個 | 所有:${await this.get_tool_quantity(message.author.id,info.id)} 必要:${info.quantity}個`)
-                  num = 0
-                }
-              }else if(info.type == "proof"){
-                if(info.quantity <= await this.get_proof_quantity(message.author.id,info.id)){
-                  msgs.push(`+ ${info.name}: ${info.quantity}個 | 所有:${await this.get_proof_quantity(message.author.id,info.id)} 必要:${info.quantity}個`)
-                  if(!num || await this.get_proof_quantity(message.author.id,info.id)/info.quantity < num){
-                    num = Math.floor(await this.get_proof_quantity(message.author.id,info.id)/info.quantity)
-                  }
-                }else{
-                  msgs.push(`- ${info.name}: ${info.quantity}個 | 所有:${await this.get_proof_quantity(message.author.id,info.id)} 必要:${info.quantity}個`)
-                  num = 0
-                }
+              const price = data[`price`]
+              if(price > w[index]){
+                
               }
             }
             const mes = msgs.join("\n")

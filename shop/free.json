@@ -1,38 +1,22 @@
 [
   {
     "1": {
-      "item_name": "",
+      "item_name": "経験値玉(小)",
       "item_type": "item",
       "item_id": "100",
-      "item_1": {  
-        "name": "木材",
-        "type": "material",
-        "id": "1",
-        "quantity": 500
-      }
+      "price": 100
     },
     "2": {
-      "item_name": "錆びた石材",
-      "item_type": "material",
-      "item_id": "10",
-      "item_1": {
-        "name": "木材",
-        "type": "material",
-        "id": "1",
-        "quantity": 50
-      },
-      "item_2": {
-        "name": "丸石",
-        "type": "material",
-        "id": "2",
-        "quantity": 30
-      },
-      "item_3": {
-        "name": "鉄",
-        "type": "material",
-        "id": "3",
-        "quantity": 10
-      }
+      "item_name": "経験値玉(中)",
+      "item_type": "item",
+      "item_id": "101",
+      "price": 500
+    },
+    "3": {
+      "item_name": "経験値玉(大)",
+      "item_type": "item",
+      "item_id": "102",
+      "price": 1000
     }
   }
 ]
