@@ -32,6 +32,13 @@ const newbutton = (buttondata) => {
     type: 1,
   };
 };
+String.prototype.format = function(){
+  let formatted = this;
+  for(let arg in arguments){
+    formatted = formatted.replace("{" + arg + "}", arguments[arg]);
+  }
+  return formatted;
+};
 const prefix = "_"
 const cmd_list = ["help","status","st","attack","atk","item","i","in","reset","re","rs","inquiry","inq","weapon","we","talent","ranking","rank","training","t","mine","gatya","gacha","xgatya","xgacha","craft","c","changemode","cm","summon","ban","unban","banlist","kill","itemid","ii","materialid","mi","weaponid","wi","toolid","ti","proofid","pi","consumeitem","ci","consumematerial","cma","consumeweapon","cw","consumetool","ct","consumeproof","cp","register_info","ri","exp","eval","db","bulkdb"]
 const command_json = require("./jsons/command.json")
