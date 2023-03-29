@@ -1142,7 +1142,6 @@ class func{
     status[8].splice(num,1,newcoin)
     await player_status.set(player_id,status)
   }
-  
   async win_process(player_id,channel_id,exp){
     const ch_status = await channel_status.get(channel_id)
     const exp_coin_members = []
@@ -1315,7 +1314,6 @@ class func{
     const item_message = item_members.join("\n")
     return [exp_message,levelup_message,item_message]
   }
-  
   async into_battle(player_id,channel_id){
     const status = await player_status.get(player_id)
     const m_status = await monster_status.get(channel_id)
@@ -1347,7 +1345,6 @@ class func{
     }
     return [player_hp,error_message]
   }
-  
   async reset_battle(channel_id,level){
     let ch_status = await channel_status.get(channel_id)
     if(ch_status[1] == false){
@@ -1397,7 +1394,6 @@ class func{
       await monster_status.set(channel_id,monster_info.concat(info))
     }
   }
-  
   async inquiry(channel_id,message){
     let ch_status = await channel_status.get(channel_id)
     if(ch_status[1] == false){
@@ -1420,7 +1416,6 @@ class func{
     .setColor("RANDOM")
     message.reply({ embeds:[embed], allowedMentions: { parse: [] } })
   }
-  
   async change_mode(channel_id,option){
     const status = await channel_status.get(channel_id)
     if(option == "normal"){
@@ -1433,12 +1428,10 @@ class func{
       return false
     }
   }
-  
   async get_mode(channel_id){
     const status = await channel_status.get(channel_id)
     return status[3]
   }
-  
   async get_equipped_weapon(player_id){
     const status = await player_status.get(player_id)
     if(status){
@@ -1447,8 +1440,7 @@ class func{
       return false
     }
   }
-  
-   get_weapon_abi(id){
+  get_weapon_abi(id){
     if(id == -1){
       return 10000
     }else if(id == 0){
@@ -1465,8 +1457,7 @@ class func{
       return -1
     }
   }
-  
-   get_weapon_outline(id){
+  get_weapon_outline(id){
     const hoge = JSON.parse(JSON.stringify(weapon_json))
     const valueList = Object.values(hoge)
     for(let i=0;i<valueList.length;i++){
@@ -1476,7 +1467,6 @@ class func{
     }
     return undefined
   }
-  
   async weapon_list(player_id){
     const items = await player_items.get(player_id)
     const weapons = items[2]
@@ -1489,7 +1479,6 @@ class func{
     }
     return [ids,msgs]
   }
-  
   async weapon(player_id,message){
     const list = await this.weapon_list(player_id)
     const id = await this.get_equipped_weapon(player_id)
@@ -1522,7 +1511,6 @@ class func{
       }
     })
   }
-  
   async talent(player_id,message){
     const player_name = client.users.cache.get(player_id).username
     const status = await player_status.get(player_id)
@@ -1611,7 +1599,6 @@ class func{
       }
     })
   }
-  
   async get_talent_level(option,player_id){
     let num;
     const status = await player_status.get(player_id)
@@ -1633,7 +1620,6 @@ class func{
     }
     return status[5][num]
   }
-  
   async add_talent_level(option,player_id,value){
     let num;
     if(option == "体力"){
@@ -1654,7 +1640,6 @@ class func{
     status[5].splice(num,1,nowlv+value)
     await player_status.set(player_id,status)
   }
-  
   async training(player_id,message){
     const random = Math.floor(Math.random()*training_json.length);
     const q = training_json[random][0]
@@ -1709,12 +1694,10 @@ class func{
       }
     });
   }
-  
   async wallet(player_id){
     const status = await player_status.get(player_id)
     return status[8]
   }
-  
   async mine(player_id,channel_id){
     let comment = []
     if(!mine_cooldown.includes(player_id)){
@@ -1754,8 +1737,7 @@ class func{
     const m_info = await monster_status.get(channel_id)
     return m_info[3]
   }
-  
-   get_monster_id(monster_rank,monster_name){
+  get_monster_id(monster_rank,monster_name){
     const array = []
     let rank
     if(["【通常】"].includes(monster_rank)){
@@ -1789,8 +1771,7 @@ class func{
     }
     return undefined
   }
-  
-   generate_monster(rank){
+  generate_monster(rank){
     try{
       if(rank == "random"){
         const random = Math.random()
@@ -1821,8 +1802,7 @@ class func{
       return undefined
     }
   }
-  
-   summon_monster(rank,id){
+  summon_monster(rank,id){
     try{
       const monsters = require(`./monsters/${rank}.json`)
       const hoge = JSON.parse(JSON.stringify(monsters))
@@ -1837,8 +1817,7 @@ class func{
       return undefined
     }
   }
-  
-   gatya(option,time){
+  gatya(option,time){
     const rewards = []
     const rewards_name = []
     for(let i=0;i<time;i++){
@@ -1886,7 +1865,6 @@ class func{
     });
     return newrewards
   }
-  
   async ranking(message){
     const keys = []
     const values = []
@@ -1974,7 +1952,6 @@ class func{
       }
     })
   }
-  
   async exchange(player_id,message){
     let category;
     let title;
@@ -2252,6 +2229,7 @@ class func{
     })
   }
 }
+
 client.login(process.env.DISCORD_BOT_TOKEN)
 
 module.exports = {
