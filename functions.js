@@ -71,7 +71,7 @@ class func{
   return Object.keys(json).length
 }
 
-async  get_channel_mode(channel_id){
+async get_channel_mode(channel_id){
   const status = await channel_status.get(channel_id)
   if(!status) return false
   return status[3]
@@ -105,7 +105,7 @@ async  get_channel_mode(channel_id){
   return array
 }
 
-async  splice_status(option,id,start,item){
+async splice_status(option,id,start,item){
   let value;
   if(option == "player_status"){
     value = await player_status.get(id)
@@ -144,7 +144,7 @@ async  splice_status(option,id,start,item){
   }
 }
 
-async  create_data(option,id){
+async create_data(option,id){
   if(option == "player"){
     await player_status.set(id,[100,550,10000,0,false,[0,0,0,0,0],false,0,[0,0]])
     await player_items.set(id,[[],[],[["0",1]],[],[]])
@@ -159,7 +159,7 @@ async  create_data(option,id){
   }
 }
 
-async  generate_detection(player_id,message){
+async generate_detection(player_id,message){
   let status = await player_status.get(player_id)
   const deru = await func.get_proof_quantity(player_id,999)
   const denai = await func.get_proof_quantity(player_id,-999)
@@ -239,7 +239,7 @@ async  generate_detection(player_id,message){
   }
 }
 
-async  delete_data(option,id){
+async delete_data(option,id){
   if(option == "player"){
     await player_status.delete(id)
     await player_items.delete(id)
@@ -252,7 +252,7 @@ async  delete_data(option,id){
   }
 }
 
-async  ban(player_id){
+async ban(player_id){
   const list = await lists.get(client.user.id)
   const ban_list = list[1]
   if(ban_list.includes(player_id) || client.users.cache.get(player_id) == undefined){
@@ -263,7 +263,7 @@ async  ban(player_id){
   await lists.set(client.user.id,list)
 }
 
-async  unban(player_id){
+async unban(player_id){
   const list = await lists.get(client.user.id)
   const ban_list = list[1]
   const index = ban_list.findIndex(n => n == player_id)
@@ -275,7 +275,7 @@ async  unban(player_id){
   await lists.set(client.user.id,list)
 }
 
-async  _attack(player_id,channel_id,message){
+async _attack(player_id,channel_id,message){
   const intobattle = await func.into_battle(player_id,channel_id)
   const status = await player_status.get(player_id)
   const m_status = await monster_status.get(channel_id)
@@ -345,7 +345,7 @@ async  _attack(player_id,channel_id,message){
   }
 }
 
-async  _item(channel_id,item_name,mentions,message){
+async _item(channel_id,item_name,mentions,message){
   let id = message.author.id
   if(!item_name || await player_items.get(item_name) || message.mentions.members.size != 0){
     if(message.mentions.members.size != 0){
@@ -516,7 +516,7 @@ async  _item(channel_id,item_name,mentions,message){
   }
 }
 
-async  elixir(player_id,channel_id,message){
+async elixir(player_id,channel_id,message){
   if(await func.consume_item("1",1,player_id) == false){
     return `<@${player_id}>はエリクサーを持っていない！`
   }
@@ -531,7 +531,7 @@ async  elixir(player_id,channel_id,message){
   return `<@${player_id}>はエリクサーを使用した！このチャンネルの仲間全員が全回復した！`
 }
 
-async  fireball(player_id,channel_id,message){
+async fireball(player_id,channel_id,message){
   if(await func.consume_item("2",1,player_id) == false){
     const embed = new MessageEmbed()
     .setDescription(`>>> <@${player_id}>はファイボールの書を持っていない！`)
@@ -592,7 +592,7 @@ async  fireball(player_id,channel_id,message){
   }
 }
 
-async  pray(player_id,channel_id,mentions,message){
+async pray(player_id,channel_id,mentions,message){
   if(!mentions){
     return `祈りの書は仲間を復活させます。祈る相手を指定して使います。\n例)${prefix}item 祈りの書 @ユーザーメンション`
   }
@@ -621,7 +621,7 @@ async  pray(player_id,channel_id,mentions,message){
   return `祈りを捧げ、<@${prayed_id}>は復活した！\n<@${prayed_id}> 残りHP: 1`
 }
 
-async  ki(player_id,channel_id,message){
+async ki(player_id,channel_id,message){
   if(await func.get_monster_rank(channel_id) == "【極】"){
     const embed = new MessageEmbed()
     .setDescription(">>> この敵に気は通用しない...!")
@@ -679,7 +679,7 @@ async  ki(player_id,channel_id,message){
   message.reply({ content:`\`\`\`diff\n${atk_msg}\`\`\``, embeds:[embed,embed2], allowedMentions: { parse: [] } })
 }
 
-async  bigbang(player_id,channel_id,message){
+async bigbang(player_id,channel_id,message){
   if(await func.consume_item("5",1,player_id) == false){
     const embed = new MessageEmbed()
     .setDescription(`>>> <@${player_id}>は超新星爆発を持っていない！`)
@@ -741,7 +741,7 @@ async  bigbang(player_id,channel_id,message){
   }
 }
 
-async  kill(count,player_id,channel_id,message){
+async kill(count,player_id,channel_id,message){
   const intobattle = await func.into_battle(player_id,channel_id)
   let player_hp = intobattle[0]
   const error_message = intobattle[1]
@@ -826,7 +826,7 @@ async  kill(count,player_id,channel_id,message){
     return `+ ${monster_name}の攻撃！${player_name}は${monster_attack.toLocaleString()}のダメージを受けた。\n- ${player_name}のHP:${player_hp.toLocaleString()}/${(player_level * 5 + 50).toLocaleString()}`
 }
 
-async  get_item_quantity(player_id,item_id){
+async get_item_quantity(player_id,item_id){
   let quantity;
   const itemList = await player_items.get(player_id)
   itemList[0].forEach(x => {
@@ -838,7 +838,7 @@ async  get_item_quantity(player_id,item_id){
   else return 0
 }
 
-async  get_material_quantity(player_id,item_id){
+async get_material_quantity(player_id,item_id){
   let quantity;
   const itemList = await player_items.get(player_id)
   itemList[1].forEach(x => {
@@ -850,7 +850,7 @@ async  get_material_quantity(player_id,item_id){
   else return 0
 }
 
-async  get_weapon_quantity(player_id,item_id){
+async get_weapon_quantity(player_id,item_id){
   let quantity;
   const itemList = await player_items.get(player_id)
   itemList[2].forEach(x => {
@@ -862,7 +862,7 @@ async  get_weapon_quantity(player_id,item_id){
   else return 0
 }
 
-async  get_tool_quantity(player_id,item_id){
+async get_tool_quantity(player_id,item_id){
   let quantity;
   const itemList = await player_items.get(player_id)
   itemList[3].forEach(x => {
@@ -874,7 +874,7 @@ async  get_tool_quantity(player_id,item_id){
   else return 0
 }
 
-async  get_proof_quantity(player_id,item_id){
+async get_proof_quantity(player_id,item_id){
   let quantity;
   const itemList = await player_items.get(player_id)
   itemList[4].forEach(x => {
@@ -941,7 +941,7 @@ async  get_proof_quantity(player_id,item_id){
   return undefined
 }
 
-async  obtain_item(item_id,quantity,player_id){
+async obtain_item(item_id,quantity,player_id){
   if(get_item_name(item_id) == undefined) return console.log("error")
   const itemList = await player_items.get(player_id)
   const itemIds = [];
@@ -960,7 +960,7 @@ async  obtain_item(item_id,quantity,player_id){
   await player_items.set(player_id,itemList)
 }
 
-async  consume_item(item_id,quantity,player_id){
+async consume_item(item_id,quantity,player_id){
   if(func.get_item_name(item_id) == undefined) return console.log("error")
   const itemList = await player_items.get(player_id)
   const itemIds = [];
@@ -985,7 +985,7 @@ async  consume_item(item_id,quantity,player_id){
   await player_items.set(player_id,itemList)
 }
 
-async  obtain_material(item_id,quantity,player_id){
+async obtain_material(item_id,quantity,player_id){
   if(func.get_material_name(item_id) == undefined) return console.log("error")
   const itemList = await player_items.get(player_id)
   const itemIds = [];
@@ -1004,7 +1004,7 @@ async  obtain_material(item_id,quantity,player_id){
   await player_items.set(player_id,itemList)
 }
 
-async  consume_material(item_id,quantity,player_id){
+async consume_material(item_id,quantity,player_id){
   if(func.get_material_name(item_id) == undefined) return console.log("error")
   const itemList = await player_items.get(player_id)
   const itemIds = [];
@@ -1029,7 +1029,7 @@ async  consume_material(item_id,quantity,player_id){
   await player_items.set(player_id,itemList)
 }
 
-async  obtain_weapon(item_id,quantity,player_id){
+async obtain_weapon(item_id,quantity,player_id){
   if(func.get_weapon_name(item_id) == undefined) return console.log("error")
   const itemList = await player_items.get(player_id)
   const itemIds = [];
@@ -1048,7 +1048,7 @@ async  obtain_weapon(item_id,quantity,player_id){
   await player_items.set(player_id,itemList)
 }
 
-async  consume_weapon(item_id,quantity,player_id){
+async consume_weapon(item_id,quantity,player_id){
   if(func.get_weapon_name(item_id) == undefined) return console.log("error")
   const itemList = await player_items.get(player_id)
   const itemIds = [];
@@ -1073,7 +1073,7 @@ async  consume_weapon(item_id,quantity,player_id){
   await player_items.set(player_id,itemList)
 }
 
-async  obtain_tool(item_id,quantity,player_id){
+async obtain_tool(item_id,quantity,player_id){
   if(func.get_tool_name(item_id) == undefined) return console.log("error")
   const itemList = await player_items.get(player_id)
   const itemIds = [];
@@ -1092,7 +1092,7 @@ async  obtain_tool(item_id,quantity,player_id){
   await player_items.set(player_id,itemList)
 }
 
-async  consume_tool(item_id,quantity,player_id){
+async consume_tool(item_id,quantity,player_id){
   if(func.get_tool_name(item_id) == undefined) return console.log("error")
   const itemList = await player_items.get(player_id)
   const itemIds = [];
@@ -1117,7 +1117,7 @@ async  consume_tool(item_id,quantity,player_id){
   await player_items.set(player_id,itemList)
 }
 
-async  obtain_proof(item_id,quantity,player_id){
+async obtain_proof(item_id,quantity,player_id){
   if(func.get_proof_name(item_id) == undefined) return console.log("error")
   const itemList = await player_items.get(player_id)
   const itemIds = [];
@@ -1136,7 +1136,7 @@ async  obtain_proof(item_id,quantity,player_id){
   await player_items.set(player_id,itemList)
 }
 
-async  consume_proof(item_id,quantity,player_id){
+async consume_proof(item_id,quantity,player_id){
   if(func.get_proof_name(item_id) == undefined) return console.log("error")
   const itemList = await player_items.get(player_id)
   const itemIds = [];
@@ -1161,7 +1161,7 @@ async  consume_proof(item_id,quantity,player_id){
   await player_items.set(player_id,itemList)
 }
 
-async  experiment(player_id,exp){
+async experiment(player_id,exp){
   const status = await player_status.get(player_id)
   const newexp = status[2]+exp
   const current_level = status[0]
@@ -1176,7 +1176,7 @@ async  experiment(player_id,exp){
   }
 }
 
-async  coinment(option,player_id,coin){
+async coinment(option,player_id,coin){
   let num;
   if(option == "free"){
     num = 0
@@ -1191,7 +1191,7 @@ async  coinment(option,player_id,coin){
   await player_status.set(player_id,status)
 }
 
-async  win_process(player_id,channel_id,exp){
+async win_process(player_id,channel_id,exp){
   const ch_status = await channel_status.get(channel_id)
   const exp_coin_members = []
   const levelup_members = []
@@ -1364,7 +1364,7 @@ async  win_process(player_id,channel_id,exp){
   return [exp_message,levelup_message,item_message]
 }
 
-async  into_battle(player_id,channel_id){
+async into_battle(player_id,channel_id){
   const status = await player_status.get(player_id)
   const m_status = await monster_status.get(channel_id)
   let ch_status = await channel_status.get(channel_id)
@@ -1396,7 +1396,7 @@ async  into_battle(player_id,channel_id){
   return [player_hp,error_message]
 }
 
-async  reset_battle(channel_id,level){
+async reset_battle(channel_id,level){
   let ch_status = await channel_status.get(channel_id)
   if(ch_status[1] == false){
     return "このchで戦闘は行われていませんよ...？"
@@ -1446,7 +1446,7 @@ async  reset_battle(channel_id,level){
   }
 }
 
-async  inquiry(channel_id,message){
+async inquiry(channel_id,message){
   let ch_status = await channel_status.get(channel_id)
   if(ch_status[1] == false){
     return message.reply({ content: "このchで戦闘は行われていませんよ...？", allowedMentions: { parse: [] } })
@@ -1469,7 +1469,7 @@ async  inquiry(channel_id,message){
   message.reply({ embeds:[embed], allowedMentions: { parse: [] } })
 }
 
-async  change_mode(channel_id,option){
+async change_mode(channel_id,option){
   const status = await channel_status.get(channel_id)
   if(option == "normal"){
     await func.splice_status("channel_status",channel_id,3,"normal")
@@ -1482,12 +1482,12 @@ async  change_mode(channel_id,option){
   }
 }
 
-async  get_mode(channel_id){
+async get_mode(channel_id){
   const status = await channel_status.get(channel_id)
   return status[3]
 }
 
-async  get_equipped_weapon(player_id){
+async get_equipped_weapon(player_id){
   const status = await player_status.get(player_id)
   if(status){
     return status[7]
@@ -1525,7 +1525,7 @@ async  get_equipped_weapon(player_id){
   return undefined
 }
 
-async  weapon_list(player_id){
+async weapon_list(player_id){
   const items = await player_items.get(player_id)
   const weapons = items[2]
   const ids = []
@@ -1538,7 +1538,7 @@ async  weapon_list(player_id){
   return [ids,msgs]
 }
 
-async  weapon(player_id,message){
+async weapon(player_id,message){
   const list = await func.weapon_list(player_id)
   const id = await func.get_equipped_weapon(player_id)
   const embed = new MessageEmbed()
@@ -1571,7 +1571,7 @@ async  weapon(player_id,message){
   })
 }
 
-async  talent(player_id,message){
+async talent(player_id,message){
   const player_name = client.users.cache.get(player_id).username
   const status = await player_status.get(player_id)
   const talents = status[5]
@@ -1660,7 +1660,7 @@ async  talent(player_id,message){
   })
 }
 
-async  get_talent_level(option,player_id){
+async get_talent_level(option,player_id){
   let num;
   const status = await player_status.get(player_id)
   if(option == "体力"){
@@ -1682,7 +1682,7 @@ async  get_talent_level(option,player_id){
   return status[5][num]
 }
 
-async  add_talent_level(option,player_id,value){
+async add_talent_level(option,player_id,value){
   let num;
   if(option == "体力"){
     num = 0
@@ -1703,7 +1703,7 @@ async  add_talent_level(option,player_id,value){
   await player_status.set(player_id,status)
 }
 
-async  training(player_id,message){
+async training(player_id,message){
   const random = Math.floor(Math.random()*training_json.length);
   const q = training_json[random][0]
   const a = training_json[random][1]
@@ -1758,12 +1758,12 @@ async  training(player_id,message){
   });
 }
 
-async  wallet(player_id){
+async wallet(player_id){
   const status = await player_status.get(player_id)
   return status[8]
 }
 
-async  mine(player_id,channel_id){
+async mine(player_id,channel_id){
   let comment = []
   if(!mine_cooldown.includes(player_id)){
     mine_cooldown.push(player_id)
@@ -1798,7 +1798,7 @@ async  mine(player_id,channel_id){
   return comment
 }
 
-async  get_monster_rank(channel_id){
+async get_monster_rank(channel_id){
   const m_info = await monster_status.get(channel_id)
   return m_info[3]
 }
@@ -1935,7 +1935,7 @@ async  get_monster_rank(channel_id){
   return newrewards
 }
 
-async  ranking(message){
+async ranking(message){
   const keys = []
   const values = []
   const n_values = []
@@ -2023,7 +2023,7 @@ async  ranking(message){
   })
 }
 
-async  exchange(player_id,message){
+async exchange(player_id,message){
   let category;
   let title;
   const menu = new MessageEmbed()

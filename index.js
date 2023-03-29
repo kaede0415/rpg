@@ -2351,7 +2351,7 @@ client.on("messageCreate", async message => {
     const login_list = list[0]
     const ban_list = list[1]
     if(!p_status){
-      await create_data("player",message.author.id)
+      await func.create_data("player",message.author.id)
       return message.reply({ content:"お初さんいらっしゃい^^\n※これは初めてコマンドを打った人用のメッセージです" })
     }
     if(ban_list.includes(message.author.id) && !admin_list.includes(message.author.id) && !["help","wallet"].includes(command)){
@@ -2360,7 +2360,7 @@ client.on("messageCreate", async message => {
       return message.reply({ content: "質問に答えてください。", allowedMentions: { parse: [] } })
     }
     if(!login_list.includes(message.author.id)){
-      const day = await get_proof_quantity(message.author.id,0)+1
+      const day = await func.get_proof_quantity(message.author.id,0)+1
       const elength = day+29
       const flength = day*3+52
       const plength = day*3+42
@@ -2370,20 +2370,20 @@ client.on("messageCreate", async message => {
       .setThumbnail(client.user.displayAvatarURL())
       .setColor("RANDOM")
       message.channel.send({ embeds:[embed] })
-      await obtain_proof("0",1,message.author.id)
-      await obtain_item("1",elength,message.author.id)
-      await obtain_item("2",flength,message.author.id)
-      await obtain_item("3",plength,message.author.id)
-      await obtain_item("100000",tlength,message.author.id)
+      await func.obtain_proof("0",1,message.author.id)
+      await func.obtain_item("1",elength,message.author.id)
+      await func.obtain_item("2",flength,message.author.id)
+      await func.obtain_item("3",plength,message.author.id)
+      await func.obtain_item("100000",tlength,message.author.id)
       login_list.push(message.author.id)
       await lists.set(client.user.id,list)
     }
     for await(const [key, value] of player_status.iterator()){
       if(client.users.cache.get(key) == undefined){
-        await delete_data("player",key)
+        await func.delete_data("player",key)
       }
     }
-    await generate_detection(message.author.id,message)
+    await func.generate_detection(message.author.id,message)
   }
   try{
     if(["help"].includes(command)){
@@ -2460,7 +2460,7 @@ client.on("messageCreate", async message => {
       let id = message.content.split(" ")[1]
       if(!id) id = message.author.id
       else if(message.mentions.members.size != 0) id = message.mentions.members.first().id
-      const error_msg = admin_or_player(message.author.id)
+      const error_msg = func.admin_or_player(message.author.id)
       if(!await player_status.get(id) || !client.users.cache.get(id)) return message.reply({ content: "そのプレイヤーは登録または認識されていません", allowedMentions: { parse: [] } })
       else if(id != message.author.id && error_msg != "admin") return message.reply({ content: error_msg, allowedMentions: { parse: [] } })
       const status = await player_status.get(id)
@@ -2483,14 +2483,14 @@ client.on("messageCreate", async message => {
       message.reply({ embeds:[embed], allowedMentions: { parse: [] } })
     }
     if(["attack","atk"].includes(command)){
-      await _attack(message.author.id,message.channel.id,message)
+      await func._attack(message.author.id,message.channel.id,message)
     }
     if(["item","i"].includes(command)){
       const item_name = message.content.split(" ")[1]
-      await _item(message.channel.id,item_name,message.mentions.members.first(),message)
+      await func._item(message.channel.id,item_name,message.mentions.members.first(),message)
     }
     if(["in"].includes(command)){
-      const intobattle = await into_battle(message.author.id,message.channel.id)
+      const intobattle = await func.into_battle(message.author.id,message.channel.id)
       const error_message = intobattle[1]
       if(error_message != ""){
         return message.reply({ content:error_message, allowedMentions: { parse: [] } })
@@ -2501,10 +2501,10 @@ client.on("messageCreate", async message => {
       message.reply({ embeds:[embed], allowedMentions: { parse: [] } })
     }
     if(["training","t"].includes(command)){
-      await training(message.author.id,message)
+      await func.training(message.author.id,message)
     }
     if(["reset","re","rs"].includes(command)){
-      const reset = await reset_battle(message.channel.id,0)
+      const reset = await func.reset_battle(message.channel.id,0)
       if(reset == "このchで戦闘は行われていませんよ...？"){
         return message.reply({ content: "このchで戦闘は行われていませんよ...？", allowedMentions: { parse: [] } })
       }
@@ -2516,7 +2516,7 @@ client.on("messageCreate", async message => {
       message.channel.send({ embeds:[embed], allowedMentions: { parse: [] } })
     }
     if(["inquiry","inq"].includes(command)){
-      await inquiry(message.channel.id,message)
+      await func.inquiry(message.channel.id,message)
     }
     if(["gatya","gacha"].includes(command)){
       let time = message.content.slice(prefix.length+6).trim()
@@ -2525,30 +2525,30 @@ client.on("messageCreate", async message => {
       }else if(time != "max" && !Number.isInteger(Number(time)) || Number(time) <= 0){
         return message.reply({ content: "引数が不正です" })
       }else if(time == "max"){
-        time = Number(await get_item_quantity(message.author.id,100000))
+        time = Number(await func.get_item_quantity(message.author.id,100000))
       }else if(time == 0){
         return message.reply({ content: "がちゃちけないやん" })
       }else{
         time = Number(time)
       }
-      if(await get_item_quantity(message.author.id,100000) < time){
+      if(await func.get_item_quantity(message.author.id,100000) < time){
         return message.reply({ content: "がちゃちけがたりん！" })
       }
       message.reply({ content: "```diff\n+ ガチャを引き終わるまでしばらくお待ち下さい```" })
-      await consume_item("100000",time,message.author.id)
-      const result = gatya("normal",time)
+      await func.consume_item("100000",time,message.author.id)
+      const result = func.gatya("normal",time)
       const msgs = []
       for(let i=0;i<result.length;i++){
         if(result[i][2] == "item"){
-          await obtain_item(result[i][3],result[i][4],message.author.id)
+          await func.obtain_item(result[i][3],result[i][4],message.author.id)
         }else if(result[i][2] == "material"){
-          await obtain_material(result[i][3],result[i][4],message.author.id)
+          await func.obtain_material(result[i][3],result[i][4],message.author.id)
         }else if(result[i][2] == "weapon"){
-          await obtain_weapon(result[i][3],result[i][4],message.author.id)
+          await func.obtain_weapon(result[i][3],result[i][4],message.author.id)
         }else if(result[i][2] == "tool"){
-          await obtain_tool(result[i][3],result[i][4],message.author.id)
+          await func.obtain_tool(result[i][3],result[i][4],message.author.id)
         }else if(result[i][2] == "proof"){
-          await obtain_proof(result[i][3],result[i][4],message.author.id)
+          await func.obtain_proof(result[i][3],result[i][4],message.author.id)
         }
         msgs.push(`\`\`\`${result[i][0]}${result[i][1]}\`\`\`->${result[i][4]}個`)
       }
@@ -2564,30 +2564,30 @@ client.on("messageCreate", async message => {
       }else if(time != "max" && !Number.isInteger(Number(time)) || Number(time) <= 0){
         return message.reply({ content: "引数が不正です" })
       }else if(time == "max"){
-        time = Number(await get_item_quantity(message.author.id,100001))
+        time = Number(await func.get_item_quantity(message.author.id,100001))
       }else if(time == 0){
         return message.reply({ content: "がちゃちけないやん" })
       }else{
         time = Number(time)
       }
-      if(await get_item_quantity(message.author.id,100001) < time){
+      if(await func.get_item_quantity(message.author.id,100001) < time){
         return message.reply({ content: "がちゃちけがたりん！" })
       }
       message.reply({ content: "```diff\n+ ガチャを引き終わるまでしばらくお待ち下さい```" })
-      await consume_item("100001",time,message.author.id)
-      const result = gatya("rare",time)
+      await func.consume_item("100001",time,message.author.id)
+      const result = func.gatya("rare",time)
       const msgs = []
       for(let i=0;i<result.length;i++){
         if(result[i][2] == "item"){
-          await obtain_item(result[i][3],result[i][4],message.author.id)
+          await func.obtain_item(result[i][3],result[i][4],message.author.id)
         }else if(result[i][2] == "material"){
-          await obtain_material(result[i][3],result[i][4],message.author.id)
+          await func.obtain_material(result[i][3],result[i][4],message.author.id)
         }else if(result[i][2] == "weapon"){
-          await obtain_weapon(result[i][3],result[i][4],message.author.id)
+          await func.obtain_weapon(result[i][3],result[i][4],message.author.id)
         }else if(result[i][2] == "tool"){
-          await obtain_tool(result[i][3],result[i][4],message.author.id)
+          await func.obtain_tool(result[i][3],result[i][4],message.author.id)
         }else if(result[i][2] == "proof"){
-          await obtain_proof(result[i][3],result[i][4],message.author.id)
+          await func.obtain_proof(result[i][3],result[i][4],message.author.id)
         }
         msgs.push(`\`\`\`${result[i][0]}${result[i][1]}\`\`\`->${result[i][4]}個`)
       }
@@ -2597,11 +2597,11 @@ client.on("messageCreate", async message => {
       message.channel.send({ embeds:[embed] })
     }
     if(["weapon","we"].includes(command)){
-      await weapon(message.author.id,message)
+      await func.weapon(message.author.id,message)
     }
     if(["changemode","cm"].includes(command)){
-      const role = admin_or_player(message.author.id)
-      const mode = await get_mode(message.channel.id)
+      const role = func.admin_or_player(message.author.id)
+      const mode = await func.get_mode(message.channel.id)
       if(role == "admin"){
         const embed1 = new MessageEmbed()
         .setTitle(`変えたいモードを選択してください(現在のモード:${mode})`)
@@ -2619,17 +2619,17 @@ client.on("messageCreate", async message => {
             embed2.setDescription("チャンネルのモードを通常に変更しました")
             msg.edit({ embeds:[embed2], allowedMentions: { parse: [] } })
             collector.stop();
-            await change_mode(message.channel.id,"normal")
+            await func.change_mode(message.channel.id,"normal")
           }else if(m.content == "2"){
             embed2.setDescription("チャンネルのモードを非表示に変更しました")
             msg.edit({ embeds:[embed2], allowedMentions: { parse: [] } })
             collector.stop();
-            await change_mode(message.channel.id,"hihyozi")
+            await func.change_mode(message.channel.id,"hihyozi")
           }else if(m.content == "3"){
             embed2.setDescription("チャンネルのモードをデバッグに変更しました")
             msg.edit({ embeds:[embed2], allowedMentions: { parse: [] } })
             collector.stop();
-            await change_mode(message.channel.id,"debug")
+            await func.change_mode(message.channel.id,"debug")
           }else if(m.content == "0"){
             msg.edit({ content:"```処理を終了しました...```" });
             collector.stop();
@@ -2643,13 +2643,13 @@ client.on("messageCreate", async message => {
       }else{
         let comment
         if(mode == "normal"){
-          await change_mode(message.channel.id,"hihyozi")
+          await func.change_mode(message.channel.id,"hihyozi")
           comment = `<#${message.channel.id}>の敵画像表示を非表示に変更しました`
         }else if(mode == "hihyozi"){
-          await change_mode(message.channel.id,"normal")
+          await func.change_mode(message.channel.id,"normal")
           comment = `<#${message.channel.id}>の敵画像表示を表示に変更しました`
         }else if(mode == "debug"){
-          await change_mode(message.channel.id,"normal")
+          await func.change_mode(message.channel.id,"normal")
           comment = `<#${message.channel.id}>の敵画像表示を表示に変更しました`
         }
         const embed = new MessageEmbed()
@@ -2659,7 +2659,7 @@ client.on("messageCreate", async message => {
       }
     }
     if(["mine"].includes(command)){
-      const msg = await mine(message.author.id,message.channel.id)
+      const msg = await func.mine(message.author.id,message.channel.id)
       const embed = new MessageEmbed()
       .setColor("RANDOM")
       if(!Array.isArray(msg)){
@@ -2670,18 +2670,18 @@ client.on("messageCreate", async message => {
       message.reply({ embeds:[embed], allowedMentions: { parse: [] } })
     }
     if(["craft","c"].includes(command)){
-      await exchange(message.author.id,message)
+      await func.exchange(message.author.id,message)
     }
     if(["talent"].includes(command)){
-      await talent(message.author.id,message)
+      await func.talent(message.author.id,message)
     }
     if(["ranking","rank"].includes(command)){
-      await ranking(message)
+      await func.ranking(message)
     }
     if(["wallet"].includes(command)){
       const list = await lists.get(client.user.id)
       const ban_list = list[1]
-      const coin = await wallet(message.author.id)
+      const coin = await func.wallet(message.author.id)
       let ban
       if(ban_list.includes(message.author.id)){
          ban = "BAN"
@@ -2697,7 +2697,7 @@ client.on("messageCreate", async message => {
       message.reply({ embeds:[embed], allowedMentions: { parse: [] } })
     }
     if(["itemid","ii"].includes(command)){
-      const error_msg = admin_or_player(message.author.id)
+      const error_msg = func.admin_or_player(message.author.id)
       if(error_msg != "admin") return message.reply({ content: error_msg, allowedMentions: { parse: [] } })
       const itemId = message.content.split(" ")[1]
       const quantity = message.content.split(" ")[2]
@@ -2712,11 +2712,11 @@ client.on("messageCreate", async message => {
       if(await player_status.get(player) == undefined){
         return message.reply({ content: "Undefined_Player", allowedMentions: { parse: [] } })
       }
-      await obtain_item(itemId,quantity,player)
-      message.reply({ content: `\`${client.users.cache.get(player).username}\`は\`ID:${itemId}:${get_item_name(itemId)}\`を\`${quantity.toLocaleString()}\`個手に入れた！`, allowedMentions: { parse: [] } })
+      await func.obtain_item(itemId,quantity,player)
+      message.reply({ content: `\`${client.users.cache.get(player).username}\`は\`ID:${itemId}:${func.get_item_name(itemId)}\`を\`${quantity.toLocaleString()}\`個手に入れた！`, allowedMentions: { parse: [] } })
     }
     if(["consumeitem","ci"].includes(command)){
-      const error_msg = admin_or_player(message.author.id)
+      const error_msg = func.admin_or_player(message.author.id)
       if(error_msg != "admin") return message.reply({ content: error_msg, allowedMentions: { parse: [] } })
       const itemId = message.content.split(" ")[1]
       const quantity = message.content.split(" ")[2]
@@ -2731,11 +2731,11 @@ client.on("messageCreate", async message => {
       if(await player_status.get(player) == undefined){
         return message.reply({ content: "Undefined_Player", allowedMentions: { parse: [] } })
       }
-      await consume_item(itemId,quantity,player)
+      await func.consume_item(itemId,quantity,player)
       message.reply({ content: "unco", allowedMentions: { parse: [] } })
     }
     if(["materialid","mi"].includes(command)){
-      const error_msg = admin_or_player(message.author.id)
+      const error_msg = func.admin_or_player(message.author.id)
       if(error_msg != "admin") return message.reply({ content: error_msg, allowedMentions: { parse: [] } })
       const itemId = message.content.split(" ")[1]
       const quantity = message.content.split(" ")[2]
@@ -2750,8 +2750,8 @@ client.on("messageCreate", async message => {
       if(await player_status.get(player) == undefined){
         return message.reply({ content: "Undefined_Player", allowedMentions: { parse: [] } })
       }
-      await obtain_material(itemId,quantity,player)
-      message.reply({ content: `\`${client.users.cache.get(player).username}\`は\`ID:${itemId}:${get_material_name(itemId)}\`を\`${quantity.toLocaleString()}\`個手に入れた！`, allowedMentions: { parse: [] } })
+      await func.obtain_material(itemId,quantity,player)
+      message.reply({ content: `\`${client.users.cache.get(player).username}\`は\`ID:${itemId}:${func.get_material_name(itemId)}\`を\`${quantity.toLocaleString()}\`個手に入れた！`, allowedMentions: { parse: [] } })
     }
     if(["consumematerial","cma"].includes(command)){
       const error_msg = func.admin_or_player(message.author.id)
