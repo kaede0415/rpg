@@ -1540,6 +1540,7 @@ async function weapon_list(player_id){
 
 async function weapon(player_id,message){
   const list = await weapon_list(player_id)
+  const id = await get_equipped_weapon
   const embed = new MessageEmbed()
   .setTitle(`現在は「${get_weapon_name(await get_equipped_weapon(player_id))}」`)
   .setDescription(`<@${player_id}>\`\`\`css\n${list[1].join("\n")}\`\`\`\`\`\`js\n${get_weapon_outline(await get_equipped_weapon(player_id))}\`\`\``)
