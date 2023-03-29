@@ -1,18 +1,17 @@
 # DB保存方法
-| DB名 | 要素1 | 要素2 | 要素3 | 要素4 | 要素5 | 要素6 | 要素7 | 要素8 |
-|:----:|:----:|:----:|:----:|:----:|:----:|:----:|:----:|:-----:|
-|  player_status  |  Level  | HP(leftover) | EXP | Subjugations | Now_in_battle | [talent_array] | ban_status | weapon_id |
-| player_items | item [[id,quantity],...] | material [[id,quantity],...] | weapon [[id,quantity],...] | tool [[id,quantity],...] | proof [[id,quantity],...] | - | - | - |
-| enemy_status | Level | HP(leftover) | Name | Rank | Image | - | - | - |
-| channel_status | Level | On_battle | [Battler_list] | mode | - | - | - | - |
-| lists | [Login_list] | [Ban_list] | - | - | - | - | - | - |
+| DB名 | 要素1 | 要素2 | 要素3 | 要素4 | 要素5 | 要素6 | 要素7 | 要素8 | 要素9 |
+|:----:|:----:|:----:|:----:|:----:|:----:|:----:|:----:|:-----:|:----:|
+|  player_status  |  Level  | HP(leftover) | EXP | Subjugations | Now_in_battle | [talent_array] | ban_status | weapon_id | paid_coin |
+| player_items | item [[id,quantity],...] | material [[id,quantity],...] | weapon [[id,quantity],...] | tool [[id,quantity],...] | proof [[id,quantity],...] | - | - | - | - |
+| enemy_status | Level | HP(leftover) | Name | Rank | Image | - | - | - | - |
+| channel_status | Level | On_battle | [Battler_list] | mode | - | - | - | - | - |
+| lists | [Login_list] | [Ban_list] | - | - | - | - | - | - | - |
 
 # 関数一覧
 | 関数名 | 必要引数 | 主な用途 |
 |:-----:|:------:|:-------:|
 | create_data | option,id | dbとidを指定して定型データを作成 |
 | delete_data | option,id | dbとidを指定してデータを削除 |
-| bulk_change | option,instructions | dbに指定した処理を行う(未完成) |
 | splice_status | player_id,start,deleteCount,item1 | 特定のプレイヤーのステータスをstart,deleteCount,item1を指定して置き換え |
 | generate_detection | player_id,message | マクロ検知を生成 |
 | ban | player_id | プレイヤーを指定してban |
