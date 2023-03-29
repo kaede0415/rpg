@@ -1305,7 +1305,7 @@ async function win_process(player_id,channel_id,exp){
       }
     }else if(rank == "【幻】"){
       expcalc = expcalc*(10000+exp_talent*0.02)
-      coincalc = 
+      coincalc = 1000
       item_members.push(`<@${members[i]}>はエリクサーを**1個**手に入れた！`)
       await obtain_item("1",1,members[i])
       item_members.push(`<@${members[i]}>はファイアボールの書を**1個**手に入れた！`)
@@ -1325,6 +1325,8 @@ async function win_process(player_id,channel_id,exp){
         await obtain_proof("-100002",1,members[number])
       }
     }else{
+      expcalc = expcalc*(1+exp_talent*0.02)
+      coincalc = 1
       if(Math.random() <= 0.05){
         item_members.push(`<@${members[i]}>はエリクサーを**1個**手に入れた！`)
         await obtain_item("1",1,members[i])
@@ -1341,9 +1343,8 @@ async function win_process(player_id,channel_id,exp){
         item_members.push(`<@${members[i]}>は100円硬貨を**1個**手に入れた！`)
         await obtain_item("100000",1,members[i])
       }
-      expcalc = expcalc*(1+exp_talent*0.02)
     }
-    exp_coin_members.push(`<@${members[i]}>は**${expcalc.toLocaleString()}EXP**を獲得した。`)
+    exp_coin_members.push(`<@${members[i]}>は**${expcalc.toLocaleString()}EXP**と**${coincalc.toLocaleString()}コイン**を獲得した。`)
     const msg = await experiment(members[i],expcalc)
     await coinment("free",members[i],coincalc)
     if(msg != "none"){
@@ -2671,8 +2672,9 @@ client.on("messageCreate", async message => {
       const coin = await wallet(message.author.id)
       const embed = new MessageEmbed()
       .setTitle("財布")
-      .addField("無償通貨",`${coin[0]}コイン`,true)
-      .addField("有償通貨",`${coin[1]}コイン`,true)
+      .addField("BAN状態",`>>> ${}`)
+      .addField("無償通貨",`>>> ${coin[0]}コイン`)
+      .addField("有償通貨",`>>> ${coin[1]}コイン`)
       .setColor("RANDOM")
       message.reply({ embeds:[embed], allowedMentions: { parse: [] } })
     }
