@@ -95,11 +95,11 @@ async  get_channel_mode(channel_id){
 
  item_count(){
   const array = []
-  array.push(json_key_length("items","item"))
-  array.push(json_key_length("items","material"))
-  array.push(json_key_length("items","weapon"))
-  array.push(json_key_length("items","tool"))
-  array.push(json_key_length("items","proof"))
+  array.push(func.json_key_length("items","item"))
+  array.push(func.json_key_length("items","material"))
+  array.push(func.json_key_length("items","weapon"))
+  array.push(func.json_key_length("items","tool"))
+  array.push(func.json_key_length("items","proof"))
   const reducer = (sum,currentValue) => sum + currentValue
   array.push(array.reduce(reducer))
   return array
@@ -149,7 +149,7 @@ async  create_data(option,id){
     await player_status.set(id,[100,550,10000,0,false,[0,0,0,0,0],false,0,[0,0]])
     await player_items.set(id,[[],[],[["0",1]],[],[]])
   }else if(option == "monster"){
-    const info = generate_monster("random")
+    const info = func.generate_monster("random")
     const array = [1,60].concat(info)
     await monster_status.set(id,array)
   }else if(option == "channel"){
@@ -161,8 +161,8 @@ async  create_data(option,id){
 
 async  generate_detection(player_id,message){
   let status = await player_status.get(player_id)
-  const deru = await get_proof_quantity(player_id,999)
-  const denai = await get_proof_quantity(player_id,-999)
+  const deru = await func.get_proof_quantity(player_id,999)
+  const denai = await func.get_proof_quantity(player_id,-999)
   let probability = 0.001
   if(denai >= 1){
     probability = 0
@@ -170,7 +170,7 @@ async  generate_detection(player_id,message){
     probability = probability + (deru * 0.001)
   }
   if(Math.random() < probability){
-    await splice_status("player_status",player_id,6,true)
+    await func.splice_status("player_status",player_id,6,true)
     const first = ["マクロ","まくろ","ﾏｸﾛ","ま＜ろ","マク口","Macro","macro","MACRO","マク❏","マク❒","マク□","makuro","Makuro","MAKURO"]
     const second = ["Kenti","kenti","KENTI","検知","木僉矢口"," Detection"," detection"," DETECTION","ケンチ","けんち","ｹﾝﾁ"]
     const title = `${first[Math.floor(Math.random()*first.length)]}${second[Math.floor(Math.random()*second.length)]}`
@@ -219,21 +219,21 @@ async  generate_detection(player_id,message){
       if(interaction.customId == `${random_1}`){
         interaction.message.edit({ embeds: [o_embed], components: [] })
         interaction.reply({ content: "認証しました。", ephemeral: true })
-        await splice_status("player_status",player_id,6,false)
+        await func.splice_status("player_status",player_id,6,false)
         clearTimeout(timer);
       }
       if(interaction.customId == `${random_2}`){
         interaction.message.edit({ embeds: [x_embed], components: [] })
         interaction.reply({ content: "あなたはBOTだと判断されました。", ephemeral: true })
-        await splice_status("player_status",player_id,6,false)
-        await ban(player_id)
+        await func.splice_status("player_status",player_id,6,false)
+        await func.ban(player_id)
         clearTimeout(timer);
       }
     });
     const timer = setTimeout(async () => {
       msg.edit({ embeds: [t_embed], components: [] })
-      await ban(player_id)
-      await splice_status("player_status",player_id,6,false)
+      await func.ban(player_id)
+      await func.splice_status("player_status",player_id,6,false)
     },1000*60);
     return;
   }
@@ -276,7 +276,7 @@ async  unban(player_id){
 }
 
 async  _attack(player_id,channel_id,message){
-  const intobattle = await into_battle(player_id,channel_id)
+  const intobattle = await func.into_battle(player_id,channel_id)
   const status = await player_status.get(player_id)
   const m_status = await monster_status.get(channel_id)
   let player_hp = intobattle[0]
@@ -292,12 +292,12 @@ async  _attack(player_id,channel_id,message){
   const monster_img = m_status[4]
   const player_name = client.users.cache.get(player_id).username
   const random = Math.random()
-  const atk_talent = await get_talent_level("攻撃力",player_id)
-  const player_attack = get_player_attack(player_level*(1+0.01*atk_talent),random) * get_weapon_abi(await get_equipped_weapon(player_id))
+  const atk_talent = await func.get_talent_level("攻撃力",player_id)
+  const player_attack = func.get_player_attack(player_level*(1+0.01*atk_talent),random) * func.get_weapon_abi(await func.get_equipped_weapon(player_id))
   monster_hp -= player_attack
-  const attack_message = get_attack_message(player_name,player_attack,monster_name,monster_level,monster_hp,random)
+  const attack_message = func.get_attack_message(player_name,player_attack,monster_name,monster_level,monster_hp,random)
   if(monster_hp <= 0){
-    const win_message = await win_process(player_id,channel_id,monster_level)
+    const win_message = await func.win_process(player_id,channel_id,monster_level)
     const embed = new MessageEmbed()
     .setTitle("戦闘結果:")
     .setDescription(`**${monster_name}を倒した！**\n>>> ${win_message[0]}`)
@@ -308,7 +308,7 @@ async  _attack(player_id,channel_id,message){
     if(win_message[2] != ""){
       embed.addField("**アイテムを獲得:**",`>>> ${win_message[2]}`)
     }
-    await reset_battle(channel_id,1)
+    await func.reset_battle(channel_id,1)
     const m_info = await monster_status.get(channel_id)
     const m_level = m_info[0]
     const m_hp = m_info[1]
@@ -318,11 +318,11 @@ async  _attack(player_id,channel_id,message){
     const embed2 = new MessageEmbed()
     .setTitle(`ランク:${m_rank}\n${m_name}が待ち構えている...！\nLv.${m_level.toLocaleString()} HP:${m_hp.toLocaleString()}`)
     .setColor("RANDOM")
-    const mode = await get_channel_mode(channel_id)
+    const mode = await func.get_channel_mode(channel_id)
     if(mode == "normal"){
       embed2.setImage(m_img)
     }else if(mode == "debug"){
-      const id = get_monster_id(m_rank,m_name)
+      const id = func.get_monster_id(m_rank,m_name)
       embed2.setImage(m_img)
       .setFooter(`ファイル名:${id[0]} | モンスターid:${id[1]}`)
     }
@@ -330,7 +330,7 @@ async  _attack(player_id,channel_id,message){
   }else{
     m_status.splice(1,1,monster_hp)
     await monster_status.set(channel_id,m_status)
-    const monster_attack = get_monster_attack(monster_level)
+    const monster_attack = func.get_monster_attack(monster_level)
     player_hp -= monster_attack
     if(monster_attack == 0){
     }else if(player_hp <= 0){
@@ -340,7 +340,7 @@ async  _attack(player_id,channel_id,message){
       status.splice(1,1,player_hp)
       await player_status.set(player_id,status)
     }
-    const monster_attack_message = monster_attack_process(player_name,player_level,player_hp,monster_name,monster_attack)
+    const monster_attack_message = func.monster_attack_process(player_name,player_level,player_hp,monster_name,monster_attack)
     message.channel.send(`\`\`\`diff\n${attack_message}\n\n${monster_attack_message}\`\`\``)
   }
 }
@@ -357,7 +357,7 @@ async  _item(channel_id,item_name,mentions,message){
       }
     }else if(await player_items.get(item_name)){
       id = item_name
-      const error_msg = admin_or_player(message.author.id)
+      const error_msg = func.admin_or_player(message.author.id)
       if(error_msg != "admin") return message.reply({ content: error_msg, allowedMentions: { parse: [] } })
     }
     const items = await player_items.get(id)
@@ -395,7 +395,7 @@ async  _item(channel_id,item_name,mentions,message){
     }
     const i_time = p_items.length
     for(let i=0;i<i_time;i++){
-      const item_name = get_item_name(p_items[i][0])
+      const item_name = func.get_item_name(p_items[i][0])
       const item_value = p_items[i][1]
       i_content.push(`**${item_name}：**\`${item_value.toLocaleString()}個\``)
     }
@@ -410,7 +410,7 @@ async  _item(channel_id,item_name,mentions,message){
     }
     const m_time = p_materials.length
     for(let i=0;i<m_time;i++){
-      const material_name = get_material_name(p_materials[i][0])
+      const material_name = func.get_material_name(p_materials[i][0])
       const material_value = p_materials[i][1]
       m_content.push(`**${material_name}：**\`${material_value.toLocaleString()}個\``)
     }
@@ -425,7 +425,7 @@ async  _item(channel_id,item_name,mentions,message){
     }
     const w_time = p_weapons.length
     for(let i=0;i<w_time;i++){
-      const weapon_name = get_weapon_name(p_weapons[i][0])
+      const weapon_name = func.get_weapon_name(p_weapons[i][0])
       const weapon_value = p_weapons[i][1]
       w_content.push(`**${weapon_name}：**\`${weapon_value.toLocaleString()}個\``)
     }
@@ -440,7 +440,7 @@ async  _item(channel_id,item_name,mentions,message){
     }
     const t_time = p_tools.length
     for(let i=0;i<t_time;i++){
-      const tool_name = get_tool_name(p_tools[i][0])
+      const tool_name = func.get_tool_name(p_tools[i][0])
       const tool_value = p_tools[i][1]
       t_content.push(`**${tool_name}：**\`${tool_value.toLocaleString()}個\``)
     }
@@ -455,7 +455,7 @@ async  _item(channel_id,item_name,mentions,message){
     }
     const p_time = p_proofs.length
     for(let i=0;i<p_time;i++){
-      const proof_name = get_proof_name(p_proofs[i][0])
+      const proof_name = func.get_proof_name(p_proofs[i][0])
       const proof_value = p_proofs[i][1]
       p_content.push(`**${proof_name}：**\`${proof_value.toLocaleString()}個\``)
     }
@@ -489,15 +489,15 @@ async  _item(channel_id,item_name,mentions,message){
       }
     })
   }else if(["ファイアボールの書","fire","f"].includes(item_name)){
-    await fireball(message.author.id,message.channel.id,message)
+    await func.fireball(message.author.id,message.channel.id,message)
   }else if(["エリクサー","elixir","e"].includes(item_name)){
-    const msg = await elixir(message.author.id,message.channel.id,message)
+    const msg = await func.elixir(message.author.id,message.channel.id,message)
     const embed = new MessageEmbed()
     .setDescription(`>>> ${msg}`)
     .setColor("RANDOM")
     message.reply({ embeds:[embed], allowedMentions: { parse: [] } })
   }else if(["祈りの書","i"].includes(item_name)){
-    const msg = await pray(message.author.id,message.channel.id,mentions,message)
+    const msg = await func.pray(message.author.id,message.channel.id,mentions,message)
     if(msg != undefined){
       const embed = new MessageEmbed()
       .setDescription(`>>> ${msg}`)
@@ -505,9 +505,9 @@ async  _item(channel_id,item_name,mentions,message){
       message.reply({ embeds:[embed], allowedMentions: { parse: [] } })
     }
   }else if(["気","k"].includes(item_name)){
-    await ki(message.author.id,message.channel.id,message)
+    await func.ki(message.author.id,message.channel.id,message)
   }else if(["超新星爆発","b"].includes(item_name)){
-    await bigbang(message.author.id,message.channel.id,message)
+    await func.bigbang(message.author.id,message.channel.id,message)
   }else{
     const embed = new MessageEmbed()
     .setDescription(`>>> ${item_name}のデータは見つかりませんでした`)
@@ -517,7 +517,7 @@ async  _item(channel_id,item_name,mentions,message){
 }
 
 async  elixir(player_id,channel_id,message){
-  if(await consume_item("1",1,player_id) == false){
+  if(await func.consume_item("1",1,player_id) == false){
     return `<@${player_id}>はエリクサーを持っていない！`
   }
   const ch_status = await channel_status.get(channel_id)
@@ -532,13 +532,13 @@ async  elixir(player_id,channel_id,message){
 }
 
 async  fireball(player_id,channel_id,message){
-  if(await consume_item("2",1,player_id) == false){
+  if(await func.consume_item("2",1,player_id) == false){
     const embed = new MessageEmbed()
     .setDescription(`>>> <@${player_id}>はファイボールの書を持っていない！`)
     .setColor("RANDOM")
     return message.reply({ embeds:[embed], allowedMentions: { parse: [] } })
   }
-  const intobattle = await into_battle(player_id,channel_id)
+  const intobattle = await func.into_battle(player_id,channel_id)
   const status = await player_status.get(player_id)
   const m_status = await monster_status.get(channel_id)
   let player_hp = intobattle[0]
@@ -555,7 +555,7 @@ async  fireball(player_id,channel_id,message){
   monster_hp -= damage
   const atk_msg = `+ ファイアボール！${monster_name}に${damage.toLocaleString()}のダメージを与えた！`
   if(monster_hp <= 0){
-    const win_message = await win_process(player_id,channel_id,monster_level)
+    const win_message = await func.win_process(player_id,channel_id,monster_level)
     const embed = new MessageEmbed()
     .setTitle("戦闘結果:")
     .setDescription(`**${monster_name}を倒した！**\n>>> ${win_message[0]}`)
@@ -566,7 +566,7 @@ async  fireball(player_id,channel_id,message){
     if(win_message[2] != ""){
       embed.addField("**アイテムを獲得:**",`>>> ${win_message[2]}`)
     }
-    await reset_battle(channel_id,1)
+    await func.reset_battle(channel_id,1)
     const m_info = await monster_status.get(channel_id)
     const m_level = m_info[0]
     const m_hp = m_info[1]
@@ -576,11 +576,11 @@ async  fireball(player_id,channel_id,message){
     const embed2 = new MessageEmbed()
     .setTitle(`ランク:${m_rank}\n${m_name}が待ち構えている...！\nLv.${m_level.toLocaleString()} HP:${m_hp.toLocaleString()}`)
     .setColor("RANDOM")
-    const mode = await get_channel_mode(channel_id)
+    const mode = await func.get_channel_mode(channel_id)
     if(mode == "normal"){
       embed2.setImage(m_img)
     }else if(mode == "debug"){
-      const id = get_monster_id(m_rank,m_name)
+      const id = func.get_monster_id(m_rank,m_name)
       embed2.setImage(m_img)
       .setFooter(`ファイル名:${id[0]} | モンスターid:${id[1]}`)
     }
@@ -607,10 +607,10 @@ async  pray(player_id,channel_id,mentions,message){
     return `<@${prayed_id}>は戦闘に参加していない！`
   }else if(prayed_hp != 0){
     return `<@${prayed_id}>はまだ生きている！`
-  }else if(await consume_item("3",1,player_id) == false){
+  }else if(await func.consume_item("3",1,player_id) == false){
     return `<@${player_id}>は祈りの書を持っていない！`
   }
-  const intobattle = await into_battle(player_id,channel_id)
+  const intobattle = await func.into_battle(player_id,channel_id)
   const error_message = intobattle[1]
   if(error_message != ""){
     message.reply({ content: error_message, allowedMentions: { parse: [] } })
@@ -622,19 +622,19 @@ async  pray(player_id,channel_id,mentions,message){
 }
 
 async  ki(player_id,channel_id,message){
-  if(await get_monster_rank(channel_id) == "【極】"){
+  if(await func.get_monster_rank(channel_id) == "【極】"){
     const embed = new MessageEmbed()
     .setDescription(">>> この敵に気は通用しない...!")
     .setColor("RANDOM")
     return message.reply({ embeds:[embed], allowedMentions: { parse: [] } })
   }
-  if(await consume_item("4",1,player_id) == false){
+  if(await func.consume_item("4",1,player_id) == false){
     const embed = new MessageEmbed()
     .setDescription(`>>> <@${player_id}>は気を持っていない！`)
     .setColor("RANDOM")
     return message.reply({ embeds:[embed], allowedMentions: { parse: [] } })
   }
-  const intobattle = await into_battle(player_id,channel_id)
+  const intobattle = await func.into_battle(player_id,channel_id)
   const m_status = await monster_status.get(channel_id)
   let player_hp = intobattle[0]
   const error_message = intobattle[1]
@@ -647,7 +647,7 @@ async  ki(player_id,channel_id,message){
   const damage = monster_hp
   monster_hp -= damage
   const atk_msg = `+ 破...！${monster_name}に即死を与えた！`
-  const win_message = await win_process(player_id,channel_id,monster_level)
+  const win_message = await func.win_process(player_id,channel_id,monster_level)
   const embed = new MessageEmbed()
   .setTitle("戦闘結果:")
   .setDescription(`**${monster_name}を倒した！**\n>>> ${win_message[0]}`)
@@ -658,7 +658,7 @@ async  ki(player_id,channel_id,message){
   if(win_message[2] != ""){
     embed.addField("**アイテムを獲得:**",`>>> ${win_message[2]}`)
   }
-  await reset_battle(channel_id,1)
+  await func.reset_battle(channel_id,1)
   const m_info = await monster_status.get(channel_id)
   const m_level = m_info[0]
   const m_hp = m_info[1]
@@ -668,11 +668,11 @@ async  ki(player_id,channel_id,message){
   const embed2 = new MessageEmbed()
   .setTitle(`ランク:${m_rank}\n${m_name}が待ち構えている...！\nLv.${m_level.toLocaleString()} HP:${m_hp.toLocaleString()}`)
   .setColor("RANDOM")
-  const mode = await get_channel_mode(channel_id)
+  const mode = await func.get_channel_mode(channel_id)
   if(mode == "normal"){
     embed2.setImage(m_img)
   }else if(mode == "debug"){
-    const id = get_monster_id(m_rank,m_name)
+    const id = func.get_monster_id(m_rank,m_name)
     embed2.setImage(m_img)
     .setFooter(`ファイル名:${id[0]} | モンスターid:${id[1]}`)
   }
@@ -680,13 +680,13 @@ async  ki(player_id,channel_id,message){
 }
 
 async  bigbang(player_id,channel_id,message){
-  if(await consume_item("5",1,player_id) == false){
+  if(await func.consume_item("5",1,player_id) == false){
     const embed = new MessageEmbed()
     .setDescription(`>>> <@${player_id}>は超新星爆発を持っていない！`)
     .setColor("RANDOM")
     return message.reply({ embeds:[embed], allowedMentions: { parse: [] } })
   }
-  const intobattle = await into_battle(player_id,channel_id)
+  const intobattle = await func.into_battle(player_id,channel_id)
   const status = await player_status.get(player_id)
   const m_status = await monster_status.get(channel_id)
   let player_hp = intobattle[0]
@@ -703,7 +703,7 @@ async  bigbang(player_id,channel_id,message){
   monster_hp -= damage
   let atk_msg = `+ ビッグバン！${monster_name}に${damage.toLocaleString()}ダメージを与えた！\n! 先の50体の敵が吹っ飛んだ！`
   if(monster_hp <= 0){
-    const win_message = await win_process(player_id,channel_id,monster_level)
+    const win_message = await func.win_process(player_id,channel_id,monster_level)
     const embed = new MessageEmbed()
     .setTitle("戦闘結果:")
     .setDescription(`**${monster_name}を倒した！**\n>>> ${win_message[0]}`)
@@ -714,7 +714,7 @@ async  bigbang(player_id,channel_id,message){
     if(win_message[2] != ""){
       embed.addField("**アイテムを獲得:**",`>>> ${win_message[2]}`)
     }
-    await reset_battle(channel_id,50)
+    await func.reset_battle(channel_id,50)
     const m_info = await monster_status.get(channel_id)
     const m_level = m_info[0]
     const m_hp = m_info[1]
@@ -724,11 +724,11 @@ async  bigbang(player_id,channel_id,message){
     const embed2 = new MessageEmbed()
     .setTitle(`ランク:${m_rank}\n${m_name}が待ち構えている...！\nLv.${m_level.toLocaleString()} HP:${m_hp.toLocaleString()}`)
     .setColor("RANDOM")
-    const mode = await get_channel_mode(channel_id)
+    const mode = await func.get_channel_mode(channel_id)
     if(mode == "normal"){
       embed2.setImage(m_img)
     }else if(mode == "debug"){
-      const id = get_monster_id(m_rank,m_name)
+      const id = func.get_monster_id(m_rank,m_name)
       embed2.setImage(m_img)
       .setFooter(`ファイル名:${id[0]} | モンスターid:${id[1]}`)
     }
@@ -742,7 +742,7 @@ async  bigbang(player_id,channel_id,message){
 }
 
 async  kill(count,player_id,channel_id,message){
-  const intobattle = await into_battle(player_id,channel_id)
+  const intobattle = await func.into_battle(player_id,channel_id)
   let player_hp = intobattle[0]
   const error_message = intobattle[1]
   if(error_message != ""){
@@ -763,7 +763,7 @@ async  kill(count,player_id,channel_id,message){
   .setTitle("戦闘結果:")
   .setDescription(`**${monster_name}を倒した！**\nキルコマンドは経験値が入りません。`)
   .setColor("RANDOM")
-  await reset_battle(channel_id,count)
+  await func.reset_battle(channel_id,count)
   const m_info = await monster_status.get(channel_id)
   const m_level = m_info[0]
   const m_hp = m_info[1]
@@ -773,11 +773,11 @@ async  kill(count,player_id,channel_id,message){
   const embed2 = new MessageEmbed()
   .setTitle(`ランク:${m_rank}\n${m_name}が待ち構えている...！\nLv.${m_level.toLocaleString()} HP:${m_hp.toLocaleString()}`)
   .setColor("RANDOM")
-  const mode = await get_channel_mode(channel_id)
+  const mode = await func.get_channel_mode(channel_id)
   if(mode == "normal"){
     embed2.setImage(m_img)
   }else if(mode == "debug"){
-    const id = get_monster_id(m_rank,m_name)
+    const id = func.get_monster_id(m_rank,m_name)
     embed2.setImage(m_img)
     .setFooter(`ファイル名:${id[0]} | モンスターid:${id[1]}`)
   }
@@ -961,7 +961,7 @@ async  obtain_item(item_id,quantity,player_id){
 }
 
 async  consume_item(item_id,quantity,player_id){
-  if(get_item_name(item_id) == undefined) return console.log("error")
+  if(func.get_item_name(item_id) == undefined) return console.log("error")
   const itemList = await player_items.get(player_id)
   const itemIds = [];
   itemList[0].forEach(x => {
@@ -986,7 +986,7 @@ async  consume_item(item_id,quantity,player_id){
 }
 
 async  obtain_material(item_id,quantity,player_id){
-  if(get_material_name(item_id) == undefined) return console.log("error")
+  if(func.get_material_name(item_id) == undefined) return console.log("error")
   const itemList = await player_items.get(player_id)
   const itemIds = [];
   itemList[1].forEach(x => {
@@ -1005,7 +1005,7 @@ async  obtain_material(item_id,quantity,player_id){
 }
 
 async  consume_material(item_id,quantity,player_id){
-  if(get_material_name(item_id) == undefined) return console.log("error")
+  if(func.get_material_name(item_id) == undefined) return console.log("error")
   const itemList = await player_items.get(player_id)
   const itemIds = [];
   itemList[1].forEach(x => {
@@ -1030,7 +1030,7 @@ async  consume_material(item_id,quantity,player_id){
 }
 
 async  obtain_weapon(item_id,quantity,player_id){
-  if(get_weapon_name(item_id) == undefined) return console.log("error")
+  if(func.get_weapon_name(item_id) == undefined) return console.log("error")
   const itemList = await player_items.get(player_id)
   const itemIds = [];
   itemList[2].forEach(x => {
@@ -1049,7 +1049,7 @@ async  obtain_weapon(item_id,quantity,player_id){
 }
 
 async  consume_weapon(item_id,quantity,player_id){
-  if(get_weapon_name(item_id) == undefined) return console.log("error")
+  if(func.get_weapon_name(item_id) == undefined) return console.log("error")
   const itemList = await player_items.get(player_id)
   const itemIds = [];
   itemList[2].forEach(x => {
@@ -1074,7 +1074,7 @@ async  consume_weapon(item_id,quantity,player_id){
 }
 
 async  obtain_tool(item_id,quantity,player_id){
-  if(get_tool_name(item_id) == undefined) return console.log("error")
+  if(func.get_tool_name(item_id) == undefined) return console.log("error")
   const itemList = await player_items.get(player_id)
   const itemIds = [];
   itemList[3].forEach(x => {
@@ -1093,7 +1093,7 @@ async  obtain_tool(item_id,quantity,player_id){
 }
 
 async  consume_tool(item_id,quantity,player_id){
-  if(get_tool_name(item_id) == undefined) return console.log("error")
+  if(func.get_tool_name(item_id) == undefined) return console.log("error")
   const itemList = await player_items.get(player_id)
   const itemIds = [];
   itemList[3].forEach(x => {
@@ -1118,7 +1118,7 @@ async  consume_tool(item_id,quantity,player_id){
 }
 
 async  obtain_proof(item_id,quantity,player_id){
-  if(get_proof_name(item_id) == undefined) return console.log("error")
+  if(func.get_proof_name(item_id) == undefined) return console.log("error")
   const itemList = await player_items.get(player_id)
   const itemIds = [];
   itemList[4].forEach(x => {
@@ -1137,7 +1137,7 @@ async  obtain_proof(item_id,quantity,player_id){
 }
 
 async  consume_proof(item_id,quantity,player_id){
-  if(get_proof_name(item_id) == undefined) return console.log("error")
+  if(func.get_proof_name(item_id) == undefined) return console.log("error")
   const itemList = await player_items.get(player_id)
   const itemIds = [];
   itemList[4].forEach(x => {
@@ -1204,156 +1204,156 @@ async  win_process(player_id,channel_id,exp){
     await player_status.set(members[i],status)
     let expcalc = exp
     let coincalc
-    const rank = await get_monster_rank(channel_id)
-    const exp_talent = await get_talent_level("経験値",player_id)
+    const rank = await func.get_monster_rank(channel_id)
+    const exp_talent = await func.get_talent_level("経験値",player_id)
     if(rank == "【強敵】"){
       expcalc = expcalc*(2+exp_talent*0.02)
       coincalc = 2
       if(Math.random() <= 0.06){
         item_members.push(`<@${members[i]}>はエリクサーを**1個**手に入れた！`)
-        await obtain_item("1",1,members[i])
+        await func.obtain_item("1",1,members[i])
       }
       if(Math.random() <= 0.11){
         item_members.push(`<@${members[i]}>はファイアボールの書を**1個**手に入れた！`)
-        await obtain_item("2",1,members[i])
+        await func.obtain_item("2",1,members[i])
       }
       if(Math.random() <= 0.11){
         item_members.push(`<@${members[i]}>は祈りの書を**1個**手に入れた！`)
-        await obtain_item("3",1,members[i])
+        await func.obtain_item("3",1,members[i])
       }
       if(Math.random() <= 0.02){
         item_members.push(`<@${members[i]}>は100円硬貨を**1個**手に入れた！`)
-        await obtain_item("100000",1,members[i])
+        await func.obtain_item("100000",1,members[i])
       }
     }else if(rank == "【超強敵】"){
       expcalc = expcalc*(5+exp_talent*0.02)
       coincalc = 5
       item_members.push(`<@${members[i]}>はエリクサーを**1個**手に入れた！`)
-      await obtain_item("1",1,members[i])
+      await func.obtain_item("1",1,members[i])
       item_members.push(`<@${members[i]}>はファイアボールの書を**1個**手に入れた！`)
-      await obtain_item("2",1,members[i])
+      await func.obtain_item("2",1,members[i])
       item_members.push(`<@${members[i]}>は祈りの書を**1個**手に入れた！`)
-      await obtain_item("3",1,members[i])
+      await func.obtain_item("3",1,members[i])
       if(Math.random() <= 0.01){
         item_members.push(`<@${members[i]}>は気を**1個**手に入れた！`)
-        await obtain_item("4",1,members[i])
+        await func.obtain_item("4",1,members[i])
       }
       if(Math.random() <= 0.03){
         item_members.push(`<@${members[i]}>は100円硬貨を**1個**手に入れた！`)
-        await obtain_item("100000",1,members[i])
+        await func.obtain_item("100000",1,members[i])
       }
     }else if(rank == "【極】"){
       expcalc = expcalc*(10+exp_talent*0.02)
       coincalc = 10
       item_members.push(`<@${members[i]}>はエリクサーを**1個**手に入れた！`)
-      await obtain_item("1",1,members[i])
+      await func.obtain_item("1",1,members[i])
       item_members.push(`<@${members[i]}>はファイアボールの書を**1個**手に入れた！`)
-      await obtain_item("2",1,members[i])
+      await func.obtain_item("2",1,members[i])
       item_members.push(`<@${members[i]}>は祈りの書を**1個**手に入れた！`)
-      await obtain_item("3",1,members[i])
+      await func.obtain_item("3",1,members[i])
       item_members.push(`<@${members[i]}>は気を**1個**手に入れた！`)
-      await obtain_item("4",1,members[i])
+      await func.obtain_item("4",1,members[i])
       if(Math.random() <= 0.3){
         item_members.push(`<@${members[i]}>は100円硬貨を**1個**手に入れた！`)
-        await obtain_item("100000",1,members[i])
+        await func.obtain_item("100000",1,members[i])
       }
     }else if(rank == "【レア】"){
       expcalc = expcalc*(10+exp_talent*0.02)
       coincalc = 10
       if(Math.random() <= 0.1){
         item_members.push(`<@${members[i]}>はエリクサーを**1個**手に入れた！`)
-        await obtain_item("1",1,members[i])
+        await func.obtain_item("1",1,members[i])
       }
       if(Math.random() <= 0.2){
         item_members.push(`<@${members[i]}>はファイアボールの書を**1個**手に入れた！`)
-        await obtain_item("2",1,members[i])
+        await func.obtain_item("2",1,members[i])
       }
       if(Math.random() <= 0.2){
         item_members.push(`<@${members[i]}>は祈りの書を**1個**手に入れた！`)
-        await obtain_item("3",1,members[i])
+        await func.obtain_item("3",1,members[i])
       }
       if(Math.random() <= 0.05){
         item_members.push(`<@${members[i]}>は100円硬貨を**1個**手に入れた！`)
-        await obtain_item("100000",1,members[i])
+        await func.obtain_item("100000",1,members[i])
       }
     }else if(rank == "【激レア】"){
       expcalc = expcalc*(100+exp_talent*0.02)
       coincalc = 50
       if(Math.random() <= 0.25){
         item_members.push(`<@${members[i]}>はエリクサーを**1個**手に入れた！`)
-        await obtain_item("1",1,members[i])
+        await func.obtain_item("1",1,members[i])
       }
       if(Math.random() <= 0.5){
         item_members.push(`<@${members[i]}>はファイアボールの書を**1個**手に入れた！`)
-        await obtain_item("2",1,members[i])
+        await func.obtain_item("2",1,members[i])
       }
       if(Math.random() <= 0.5){
         item_members.push(`<@${members[i]}>は祈りの書を**1個**手に入れた！`)
-        await obtain_item("3",1,members[i])
+        await func.obtain_item("3",1,members[i])
       }
       if(Math.random() <= 0.1){
         item_members.push(`<@${members[i]}>は100円硬貨を**1個**手に入れた！`)
-        await obtain_item("100000",1,members[i])
+        await func.obtain_item("100000",1,members[i])
       }
     }else if(rank == "【超激レア】"){
       expcalc = expcalc*(1000+exp_talent*0.02)
       coincalc = 100
       item_members.push(`<@${members[i]}>はエリクサーを**1個**手に入れた！`)
-      await obtain_item("1",1,members[i])
+      await func.obtain_item("1",1,members[i])
       item_members.push(`<@${members[i]}>はファイアボールの書を**1個**手に入れた！`)
-      await obtain_item("2",1,members[i])
+      await func.obtain_item("2",1,members[i])
       item_members.push(`<@${members[i]}>は祈りの書を**1個**手に入れた！`)
-      await obtain_item("3",1,members[i])
+      await func.obtain_item("3",1,members[i])
       item_members.push(`<@${members[i]}>は100円硬貨を**1個**手に入れた！`)
-      await obtain_item("100000",1,members[i])
+      await func.obtain_item("100000",1,members[i])
       if(Math.random() <= 0.5){
         item_members.push(`<@${members[i]}>は超新星爆発を**1個**手に入れた！`)
-        await obtain_item("5",1,members[i])
+        await func.obtain_item("5",1,members[i])
       }
     }else if(rank == "【幻】"){
       expcalc = expcalc*(10000+exp_talent*0.02)
       coincalc = 1000
       item_members.push(`<@${members[i]}>はエリクサーを**1個**手に入れた！`)
-      await obtain_item("1",1,members[i])
+      await func.obtain_item("1",1,members[i])
       item_members.push(`<@${members[i]}>はファイアボールの書を**1個**手に入れた！`)
-      await obtain_item("2",1,members[i])
+      await func.obtain_item("2",1,members[i])
       item_members.push(`<@${members[i]}>は祈りの書を**1個**手に入れた！`)
-      await obtain_item("3",1,members[i])
+      await func.obtain_item("3",1,members[i])
       item_members.push(`<@${members[i]}>は100円硬貨を**1個**手に入れた！`)
-      await obtain_item("100000",1,members[i])
+      await func.obtain_item("100000",1,members[i])
       item_members.push(`<@${members[i]}>は気を**1個**手に入れた！`)
       if(Math.random() <= 0.5){
         item_members.push(`<@${members[i]}>は超新星爆発を**1個**手に入れた！`)
-        await obtain_item("5",1,members[i])
+        await func.obtain_item("5",1,members[i])
       }
       if(Math.random() <= 0.5 && i==0){
         const number = Math.floor( Math.random() * members.length )
         item_members.push(`<@${members[number]}>は幻の証を**1個**手に入れた！`)
-        await obtain_proof("-100002",1,members[number])
+        await func.obtain_proof("-100002",1,members[number])
       }
     }else{
       expcalc = expcalc*(1+exp_talent*0.02)
       coincalc = 1
       if(Math.random() <= 0.05){
         item_members.push(`<@${members[i]}>はエリクサーを**1個**手に入れた！`)
-        await obtain_item("1",1,members[i])
+        await func.obtain_item("1",1,members[i])
       }
       if(Math.random() <= 0.1){
         item_members.push(`<@${members[i]}>はファイアボールの書を**1個**手に入れた！`)
-        await obtain_item("2",1,members[i])
+        await func.obtain_item("2",1,members[i])
       }
       if(Math.random() <= 0.1){
         item_members.push(`<@${members[i]}>は祈りの書を**1個**手に入れた！`)
-        await obtain_item("3",1,members[i])
+        await func.obtain_item("3",1,members[i])
       }
       if(Math.random() <= 0.01){
         item_members.push(`<@${members[i]}>は100円硬貨を**1個**手に入れた！`)
-        await obtain_item("100000",1,members[i])
+        await func.obtain_item("100000",1,members[i])
       }
     }
     exp_coin_members.push(`<@${members[i]}>は**${expcalc.toLocaleString()}EXP**と**${coincalc.toLocaleString()}コイン**を獲得した。`)
     const msg = await experiment(members[i],expcalc)
-    await coinment("free",members[i],coincalc)
+    await func.coinment("free",members[i],coincalc)
     if(msg != "none"){
       levelup_members.push(msg)
     }
@@ -1370,11 +1370,11 @@ async  into_battle(player_id,channel_id){
   let ch_status = await channel_status.get(channel_id)
   let error_message = ""
   if(!m_status){
-    const info = generate_monster("random")
+    const info = func.generate_monster("random")
     await monster_status.set(channel_id,[1,60].concat(info))
   }
   if(!ch_status){
-    await create_data("channel",channel_id)
+    await func.create_data("channel",channel_id)
   }
   ch_status = await channel_status.get(channel_id)
   if(status[4] == false){
@@ -1413,16 +1413,16 @@ async  reset_battle(channel_id,level){
     ch_status = await channel_status.get(channel_id)
     const monster_info = [ch_status[0],ch_status[0]*10+50]
     let info;
-    const nowrank = await get_monster_rank(channel_id)
+    const nowrank = await func.get_monster_rank(channel_id)
     if(nowrank != "【強敵】" && nowrank != "【超強敵】" && nowrank != "【極】"){
-      info = generate_monster("normal")
+      info = func.generate_monster("normal")
     }else{
       if(nowrank == "【強敵】"){
-        info = generate_monster("kyouteki")
+        info = func.generate_monster("kyouteki")
       }else if(nowrank == "【超強敵】"){
-        info = generate_monster("super_kyouteki")
+        info = func.generate_monster("super_kyouteki")
       }else if(nowrank == "【極】"){
-        info = generate_monster("kiwami")
+        info = func.generate_monster("kiwami")
       }
     }
     await monster_status.set(channel_id,monster_info.concat(info))
@@ -1434,13 +1434,13 @@ async  reset_battle(channel_id,level){
     const monster_info = [boss_level,boss_level*10+50]
     let info;
     if(boss_level % 500 == 0){
-      info = generate_monster("kiwami")
+      info = func.generate_monster("kiwami")
     }else if(boss_level % 50 == 0){
-      info = generate_monster("super_kyouteki")
+      info = func.generate_monster("super_kyouteki")
     }else if(boss_level % 5 == 0){
-      info = generate_monster("kyouteki")
+      info = func.generate_monster("kyouteki")
     }else{
-      info = generate_monster("random")
+      info = func.generate_monster("random")
     }
     await monster_status.set(channel_id,monster_info.concat(info))
   }
@@ -1472,11 +1472,11 @@ async  inquiry(channel_id,message){
 async  change_mode(channel_id,option){
   const status = await channel_status.get(channel_id)
   if(option == "normal"){
-    await splice_status("channel_status",channel_id,3,"normal")
+    await func.splice_status("channel_status",channel_id,3,"normal")
   }else if(option == "hihyozi"){
-    await splice_status("channel_status",channel_id,3,"hihyozi")
+    await func.splice_status("channel_status",channel_id,3,"hihyozi")
   }else if(option == "debug"){
-    await splice_status("channel_status",channel_id,3,"debug")
+    await func.splice_status("channel_status",channel_id,3,"debug")
   }else{
     return false
   }
@@ -1533,17 +1533,17 @@ async  weapon_list(player_id){
   for(let i=0;i<weapons.length;i++){
     const id = weapons[i][0]
     ids.push(id)
-    msgs.push(`[${id}:${get_weapon_name(id)}]`)
+    msgs.push(`[${id}:${func.get_weapon_name(id)}]`)
   }
   return [ids,msgs]
 }
 
 async  weapon(player_id,message){
-  const list = await weapon_list(player_id)
-  const id = await get_equipped_weapon(player_id)
+  const list = await func.weapon_list(player_id)
+  const id = await func.get_equipped_weapon(player_id)
   const embed = new MessageEmbed()
-  .setTitle(`現在は「${get_weapon_name(id)}」`)
-  .setDescription(`<@${player_id}>\`\`\`css\n${list[1].join("\n")}\`\`\`\`\`\`js\n${get_weapon_outline(id)}\`\`\``)
+  .setTitle(`現在は「${func.get_weapon_name(id)}」`)
+  .setDescription(`<@${player_id}>\`\`\`css\n${list[1].join("\n")}\`\`\`\`\`\`js\n${func.get_weapon_outline(id)}\`\`\``)
   .setFooter("数字を送信してください(xで処理終了)")
   .setColor("RANDOM")
   const msg = await message.reply({ embeds:[embed], allowedMentions: { parse: [] } })
@@ -1558,10 +1558,10 @@ async  weapon(player_id,message){
     }else{
       collector.stop()
       const emb = new MessageEmbed()
-      .setDescription(`\`\`\`diff\n+ 武器を「${get_weapon_name(m.content)}」に変更しました\`\`\`\`\`\`js\n${get_weapon_outline(m.content)}\`\`\``)
+      .setDescription(`\`\`\`diff\n+ 武器を「${func.get_weapon_name(m.content)}」に変更しました\`\`\`\`\`\`js\n${func.get_weapon_outline(m.content)}\`\`\``)
       .setColor("RANDOM")
       msg.edit({ embeds:[emb] })
-      await splice_status("player_status",player_id,7,Number(m.content))
+      await func.splice_status("player_status",player_id,7,Number(m.content))
     }
   })
   collector.on('end', async (collected, reason) => {
@@ -1576,10 +1576,10 @@ async  talent(player_id,message){
   const status = await player_status.get(player_id)
   const talents = status[5]
   const embed = new MessageEmbed()
-  .setDescription(`\`\`\`md\n[${player_name}](合計Lv.${await get_talent_level("all",player_id)}/Lv.50)\`\`\`\`\`\`css\n[1.体力] ${talents[0]}\n[2.攻撃力] ${talents[1]}\n[3.防御力] ${talents[2]}\n[4.盗み力] ${talents[3]}\n[5.経験値] ${talents[4]}\`\`\``)
+  .setDescription(`\`\`\`md\n[${player_name}](合計Lv.${await func.get_talent_level("all",player_id)}/Lv.50)\`\`\`\`\`\`css\n[1.体力] ${talents[0]}\n[2.攻撃力] ${talents[1]}\n[3.防御力] ${talents[2]}\n[4.盗み力] ${talents[3]}\n[5.経験値] ${talents[4]}\`\`\``)
   .setFooter("上げたいタレントの数字を送信してください")
   .setColor("RANDOM")
-  if(await get_talent_level("all",player_id) >= 50){
+  if(await func.get_talent_level("all",player_id) >= 50){
     embed.setFooter("上限に達しました")
     return message.reply({ embeds:[embed], allowedMentions: { parse: [] } })
   }
@@ -1616,10 +1616,10 @@ async  talent(player_id,message){
       if(Number(m.content) <= 0){
         return msg.edit({ content: "```値は1以上の整数にしてください```" })
       }
-      if(await get_talent_level("all",player_id)+Number(m.content) > 50){
+      if(await func.get_talent_level("all",player_id)+Number(m.content) > 50){
         return msg.edit({ content: "```上限を超えているため処理を停止しました...```" })
       }
-      const nowlevel = await get_talent_level(talent_name,player_id)
+      const nowlevel = await func.get_talent_level(talent_name,player_id)
       const value = Number(m.content)
       const newlevel = nowlevel+value
       const q_embed = new MessageEmbed()
@@ -1634,7 +1634,7 @@ async  talent(player_id,message){
           .setDescription(`\`\`\`diff\n+ レベルを${value}上げました！\`\`\``)
           .setColor("RANDOM")
           msg.edit({ embeds:[lastembed] })
-          await add_talent_level(talent_name,player_id,value)
+          await func.add_talent_level(talent_name,player_id,value)
         }else if(m.content == "0"){
           return msg.edit({ content:"```処理を終了しました...```" });
         }else{
@@ -1719,21 +1719,21 @@ async  training(player_id,message){
   const collector = message.channel.createMessageCollector({ filter: filter, time: 15000 });
   collector.on('collect', async m => {
     if(m.content == a){
-      const expe = await experiment(player_id,exp)
+      const expe = await func.experiment(player_id,exp)
       if(expe != "none"){
         comment += `\n${expe}`
       }
       if(Math.random() < 0.005){
         comment += `\n\`エリクサー\`を手に入れた！`
-        await obtain_item(1,1,player_id)
+        await func.obtain_item(1,1,player_id)
       }
       if(Math.random() < 0.1){
         comment += `\n\`ファイアボールの書\`を手に入れた！`
-        await obtain_item(2,1,player_id)
+        await func.obtain_item(2,1,player_id)
       }
       if(Math.random() < 0.1){
         comment += `\n\`祈りの書\`を手に入れた！`
-        await obtain_item(3,1,player_id)
+        await func.obtain_item(3,1,player_id)
       }
       const t_embed = new MessageEmbed()
       .setDescription(comment)
@@ -1778,22 +1778,22 @@ async  mine(player_id,channel_id){
   const w_quantity = Math.floor( Math.random() * 30 ) + 15
   const s_quantity = Math.floor( Math.random() * 10 ) + 1
   comment.push(`+ 木材: ${w_quantity}個`)
-  await obtain_material("1",w_quantity,player_id)
+  await func.obtain_material("1",w_quantity,player_id)
   if(Math.random() < 0.5){
     comment.push(`+ 丸石: ${s_quantity}個`)
-    await obtain_material("2",s_quantity,player_id)
+    await func.obtain_material("2",s_quantity,player_id)
   }
   if(Math.random() < 0.25){
     comment.push(`+ 鉄: ${s_quantity}個`)
-    await obtain_material("3",s_quantity,player_id)
+    await func.obtain_material("3",s_quantity,player_id)
   }
   if(Math.random() < 0.5){
     comment.push(`+ 石炭: ${s_quantity}個`)
-    await obtain_material("5",s_quantity,player_id)
+    await func.obtain_material("5",s_quantity,player_id)
   }
   if(Math.random() < 0.1){
     comment.push(`+ ダイヤモンド: ${s_quantity}個`)
-    await obtain_material("4",s_quantity,player_id)
+    await func.obtain_material("4",s_quantity,player_id)
   }
   return comment
 }
@@ -1987,10 +1987,10 @@ async  ranking(message){
       }
     }else if(m.content == "3"){
       for await(const [key, value] of player_items.iterator()){
-        if(await get_proof_quantity(key,0) != 0){
+        if(await func.get_proof_quantity(key,0) != 0){
           keys.push(key)
-          values.push(await get_proof_quantity(key,0))
-          n_values.push(await get_proof_quantity(key,0))
+          values.push(await func.get_proof_quantity(key,0))
+          n_values.push(await func.get_proof_quantity(key,0))
         }
       };
       const newvalues = n_values.sort(function(a,b){
@@ -2075,7 +2075,7 @@ async  exchange(player_id,message){
       if(category == "normal"){
         recipe_menu.setDescription(`\`\`\`css\n${recipes_txt.join("\n\n\n")}\`\`\``)
       }else if(category == "sagyoudai"){
-        if(await get_tool_quantity(message.author.id,"100") != 0){
+        if(await func.get_tool_quantity(message.author.id,"100") != 0){
           recipe_menu.setDescription(`\`\`\`css\n${recipes_txt.join("\n\n\n")}\`\`\``)
         }else{
           recipe_menu.setDescription("```diff\n- 必要なものが揃っていないので開けません```")
@@ -2083,7 +2083,7 @@ async  exchange(player_id,message){
           return msg.edit({ embeds:[recipe_menu] })
         }
       }else if(category == "kanadoko"){
-        if(await get_tool_quantity(message.author.id,"101") != 0){
+        if(await func.get_tool_quantity(message.author.id,"101") != 0){
           recipe_menu.setDescription(`\`\`\`css\n${recipes_txt.join("\n\n\n")}\`\`\``)
         }else{
           recipe_menu.setDescription("```diff\n- 必要なものが揃っていないので開けません```")
@@ -2108,53 +2108,53 @@ async  exchange(player_id,message){
           for(let i=0;i<i_length;i++){
             const info = data[`item_${i+1}`]
             if(info.type == "item"){
-              if(info.quantity <= await get_item_quantity(message.author.id,info.id)){
-                msgs.push(`+ ${info.name}: ${info.quantity}個 | 所有:${await get_item_quantity(message.author.id,info.id)} 必要:${info.quantity}個`)
-                if(!num || await get_item_quantity(message.author.id,info.id)/info.quantity < num){
-                  num = Math.floor(await get_item_quantity(message.author.id,info.id)/info.quantity)
+              if(info.quantity <= await func.get_item_quantity(message.author.id,info.id)){
+                msgs.push(`+ ${info.name}: ${info.quantity}個 | 所有:${await func.get_item_quantity(message.author.id,info.id)} 必要:${info.quantity}個`)
+                if(!num || await func.get_item_quantity(message.author.id,info.id)/info.quantity < num){
+                  num = Math.floor(await func.get_item_quantity(message.author.id,info.id)/info.quantity)
                 }
               }else{
-                msgs.push(`- ${info.name}: ${info.quantity}個 | 所有:${await get_item_quantity(message.author.id,info.id)} 必要:${info.quantity}個`)
+                msgs.push(`- ${info.name}: ${info.quantity}個 | 所有:${await func.get_item_quantity(message.author.id,info.id)} 必要:${info.quantity}個`)
                 num = 0
               }
             }else if(info.type == "material"){
-              if(info.quantity <= await get_material_quantity(message.author.id,info.id)){
-                msgs.push(`+ ${info.name}: ${info.quantity}個 | 所有:${await get_material_quantity(message.author.id,info.id)} 必要:${info.quantity}個`)
-                if(!num || await get_material_quantity(message.author.id,info.id)/info.quantity < num){
-                  num = Math.floor(await get_material_quantity(message.author.id,info.id)/info.quantity)
+              if(info.quantity <= await func.get_material_quantity(message.author.id,info.id)){
+                msgs.push(`+ ${info.name}: ${info.quantity}個 | 所有:${await func.get_material_quantity(message.author.id,info.id)} 必要:${info.quantity}個`)
+                if(!num || await func.get_material_quantity(message.author.id,info.id)/info.quantity < num){
+                  num = Math.floor(await func.get_material_quantity(message.author.id,info.id)/info.quantity)
                 }
               }else{
-                msgs.push(`- ${info.name}: ${info.quantity}個 | 所有:${await get_material_quantity(message.author.id,info.id)} 必要:${info.quantity}個`)
+                msgs.push(`- ${info.name}: ${info.quantity}個 | 所有:${await func.get_material_quantity(message.author.id,info.id)} 必要:${info.quantity}個`)
                 num = 0
               }
             }else if(info.type == "weapon"){
-              if(info.quantity <= await get_weapon_quantity(message.author.id,info.id)){
-                msgs.push(`+ ${info.name}: ${info.quantity}個 | 所有:${await get_weapon_quantity(message.author.id,info.id)} 必要:${info.quantity}個`)
-                if(!num || await get_weapon_quantity(message.author.id,info.id)/info.quantity < num){
-                  num = Math.floor(await get_weapon_quantity(message.author.id,info.id)/info.quantity)
+              if(info.quantity <= await func.get_weapon_quantity(message.author.id,info.id)){
+                msgs.push(`+ ${info.name}: ${info.quantity}個 | 所有:${await func.get_weapon_quantity(message.author.id,info.id)} 必要:${info.quantity}個`)
+                if(!num || await func.get_weapon_quantity(message.author.id,info.id)/info.quantity < num){
+                  num = Math.floor(await func.get_weapon_quantity(message.author.id,info.id)/info.quantity)
                 }
               }else{
-                msgs.push(`- ${info.name}: ${info.quantity}個 | 所有:${await get_weapon_quantity(message.author.id,info.id)} 必要:${info.quantity}個`)
+                msgs.push(`- ${info.name}: ${info.quantity}個 | 所有:${await func.get_weapon_quantity(message.author.id,info.id)} 必要:${info.quantity}個`)
                 num = 0
               }
             }else if(info.type == "tool"){
-              if(info.quantity <= await get_tool_quantity(message.author.id,info.id)){
-                msgs.push(`+ ${info.name}: ${info.quantity}個 | 所有:${await get_tool_quantity(message.author.id,info.id)} 必要:${info.quantity}個`)
-                if(!num || await get_tool_quantity(message.author.id,info.id)/info.quantity < num){
-                  num = Math.floor(await get_tool_quantity(message.author.id,info.id)/info.quantity)
+              if(info.quantity <= await func.get_tool_quantity(message.author.id,info.id)){
+                msgs.push(`+ ${info.name}: ${info.quantity}個 | 所有:${await func.get_tool_quantity(message.author.id,info.id)} 必要:${info.quantity}個`)
+                if(!num || await func.get_tool_quantity(message.author.id,info.id)/info.quantity < num){
+                  num = Math.floor(await func.get_tool_quantity(message.author.id,info.id)/info.quantity)
                 }
               }else{
-                msgs.push(`- ${info.name}: ${info.quantity}個 | 所有:${await get_tool_quantity(message.author.id,info.id)} 必要:${info.quantity}個`)
+                msgs.push(`- ${info.name}: ${info.quantity}個 | 所有:${await func.get_tool_quantity(message.author.id,info.id)} 必要:${info.quantity}個`)
                 num = 0
               }
             }else if(info.type == "proof"){
-              if(info.quantity <= await get_proof_quantity(message.author.id,info.id)){
-                msgs.push(`+ ${info.name}: ${info.quantity}個 | 所有:${await get_proof_quantity(message.author.id,info.id)} 必要:${info.quantity}個`)
-                if(!num || await get_proof_quantity(message.author.id,info.id)/info.quantity < num){
-                  num = Math.floor(await get_proof_quantity(message.author.id,info.id)/info.quantity)
+              if(info.quantity <= await func.get_proof_quantity(message.author.id,info.id)){
+                msgs.push(`+ ${info.name}: ${info.quantity}個 | 所有:${await func.get_proof_quantity(message.author.id,info.id)} 必要:${info.quantity}個`)
+                if(!num || await func.get_proof_quantity(message.author.id,info.id)/info.quantity < num){
+                  num = Math.floor(await func.get_proof_quantity(message.author.id,info.id)/info.quantity)
                 }
               }else{
-                msgs.push(`- ${info.name}: ${info.quantity}個 | 所有:${await get_proof_quantity(message.author.id,info.id)} 必要:${info.quantity}個`)
+                msgs.push(`- ${info.name}: ${info.quantity}個 | 所有:${await func.get_proof_quantity(message.author.id,info.id)} 必要:${info.quantity}個`)
                 num = 0
               }
             }
@@ -2190,34 +2190,34 @@ async  exchange(player_id,message){
               for(let i=0;i<i_length;i++){
                 const info = data[`item_${i+1}`]
                 if(info.type == "item"){
-                  if(await get_item_quantity(message.author.id,info.id)-info.quantity*quant >= 0){
-                    msgs.push(`+ ${info.name}: ${info.quantity*quant}個 | 所有:${await get_item_quantity(message.author.id,info.id)} -> ${await get_item_quantity(message.author.id,info.id)-info.quantity*quant}個`)
+                  if(await func.get_item_quantity(message.author.id,info.id)-info.quantity*quant >= 0){
+                    msgs.push(`+ ${info.name}: ${info.quantity*quant}個 | 所有:${await func.get_item_quantity(message.author.id,info.id)} -> ${await func.get_item_quantity(message.author.id,info.id)-info.quantity*quant}個`)
                   }else{
-                    msgs.push(`- ${info.name}: ${info.quantity*quant}個 | 所有:${await get_item_quantity(message.author.id,info.id)} -> ${info.quantity*quant-await get_item_quantity(message.author.id,info.id)}個不足`)
+                    msgs.push(`- ${info.name}: ${info.quantity*quant}個 | 所有:${await func.get_item_quantity(message.author.id,info.id)} -> ${info.quantity*quant-await func.get_item_quantity(message.author.id,info.id)}個不足`)
                   }
                 }else if(info.type == "material"){
-                  if(await get_material_quantity(message.author.id,info.id)-info.quantity*quant >= 0){
-                    msgs.push(`+ ${info.name}: ${info.quantity*quant}個 | 所有:${await get_material_quantity(message.author.id,info.id)} -> ${await get_material_quantity(message.author.id,info.id)-info.quantity*quant}個`)
+                  if(await func.get_material_quantity(message.author.id,info.id)-info.quantity*quant >= 0){
+                    msgs.push(`+ ${info.name}: ${info.quantity*quant}個 | 所有:${await func.get_material_quantity(message.author.id,info.id)} -> ${await func.get_material_quantity(message.author.id,info.id)-info.quantity*quant}個`)
                   }else{
-                    msgs.push(`- ${info.name}: ${info.quantity*quant}個 | 所有:${await get_material_quantity(message.author.id,info.id)} -> ${info.quantity*quant-await get_material_quantity(message.author.id,info.id)}個不足`)
+                    msgs.push(`- ${info.name}: ${info.quantity*quant}個 | 所有:${await func.get_material_quantity(message.author.id,info.id)} -> ${info.quantity*quant-await func.get_material_quantity(message.author.id,info.id)}個不足`)
                   }
                 }else if(info.type == "weapon"){
-                  if(await get_weapon_quantity(message.author.id,info.id)-info.quantity*quant >= 0){
-                    msgs.push(`+ ${info.name}: ${info.quantity*quant}個 | 所有:${await get_weapon_quantity(message.author.id,info.id)} -> ${await get_weapon_quantity(message.author.id,info.id)-info.quantity*quant}個`)
+                  if(await func.get_weapon_quantity(message.author.id,info.id)-info.quantity*quant >= 0){
+                    msgs.push(`+ ${info.name}: ${info.quantity*quant}個 | 所有:${await func.get_weapon_quantity(message.author.id,info.id)} -> ${await func.get_weapon_quantity(message.author.id,info.id)-info.quantity*quant}個`)
                   }else{
-                    msgs.push(`- ${info.name}: ${info.quantity*quant}個 | 所有:${await get_weapon_quantity(message.author.id,info.id)} -> ${info.quantity*quant-await get_weapon_quantity(message.author.id,info.id)}個不足`)
+                    msgs.push(`- ${info.name}: ${info.quantity*quant}個 | 所有:${await func.get_weapon_quantity(message.author.id,info.id)} -> ${info.quantity*quant-await func.get_weapon_quantity(message.author.id,info.id)}個不足`)
                   }
                 }else if(info.type == "tool"){
-                  if(await get_tool_quantity(message.author.id,info.id)-info.quantity*quant >= 0){
-                    msgs.push(`+ ${info.name}: ${info.quantity*quant}個 | 所有:${await get_tool_quantity(message.author.id,info.id)} -> ${await get_tool_quantity(message.author.id,info.id)-info.quantity*quant}個`)
+                  if(await func.get_tool_quantity(message.author.id,info.id)-info.quantity*quant >= 0){
+                    msgs.push(`+ ${info.name}: ${info.quantity*quant}個 | 所有:${await func.get_tool_quantity(message.author.id,info.id)} -> ${await func.get_tool_quantity(message.author.id,info.id)-info.quantity*quant}個`)
                   }else{
-                    msgs.push(`- ${info.name}: ${info.quantity*quant}個 | 所有:${await get_tool_quantity(message.author.id,info.id)} -> ${info.quantity*quant-await get_tool_quantity(message.author.id,info.id)}個不足`)
+                    msgs.push(`- ${info.name}: ${info.quantity*quant}個 | 所有:${await func.get_tool_quantity(message.author.id,info.id)} -> ${info.quantity*quant-await func.get_tool_quantity(message.author.id,info.id)}個不足`)
                   }
                 }else if(info.type == "proof"){
-                  if(await get_proof_quantity(message.author.id,info.id)-info.quantity*quant >= 0){
-                    msgs.push(`+ ${info.name}: ${info.quantity*quant}個 | 所有:${await get_proof_quantity(message.author.id,info.id)} -> ${await get_proof_quantity(message.author.id,info.id)-info.quantity*quant}個`)
+                  if(await func.get_proof_quantity(message.author.id,info.id)-info.quantity*quant >= 0){
+                    msgs.push(`+ ${info.name}: ${info.quantity*quant}個 | 所有:${await func.get_proof_quantity(message.author.id,info.id)} -> ${await func.get_proof_quantity(message.author.id,info.id)-info.quantity*quant}個`)
                   }else{
-                    msgs.push(`- ${info.name}: ${info.quantity*quant}個 | 所有:${await get_proof_quantity(message.author.id,info.id)} -> ${info.quantity*quant-await get_proof_quantity(message.author.id,info.id)}個不足`)
+                    msgs.push(`- ${info.name}: ${info.quantity*quant}個 | 所有:${await func.get_proof_quantity(message.author.id,info.id)} -> ${info.quantity*quant-await func.get_proof_quantity(message.author.id,info.id)}個不足`)
                   }
                 }
               }
@@ -2242,27 +2242,27 @@ async  exchange(player_id,message){
                     for(let i=0;i<i_length;i++){
                       const info = data[`item_${i+1}`]
                       if(info.type == "item"){
-                        await consume_item(info.id,info.quantity*quant,message.author.id)
+                        await func.consume_item(info.id,info.quantity*quant,message.author.id)
                       }else if(info.type == "material"){
-                        await consume_material(info.id,info.quantity*quant,message.author.id)
+                        await func.consume_material(info.id,info.quantity*quant,message.author.id)
                       }else if(info.type == "weapon"){
-                        await consume_weapon(info.id,info.quantity*quant,message.author.id)
+                        await func.consume_weapon(info.id,info.quantity*quant,message.author.id)
                       }else if(info.type == "tool"){
-                        await consume_tool(info.id,info.quantity*quant,message.author.id)
+                        await func.consume_tool(info.id,info.quantity*quant,message.author.id)
                       }else if(info.type == "proof"){
-                        await consume_proof(info.id,info.quantity*quant,message.author.id)
+                        await func.consume_proof(info.id,info.quantity*quant,message.author.id)
                       }
                     }
                     if(data["item_type"] == "item"){
-                      await obtain_item(data["item_id"],quant,message.author.id)
+                      await func.obtain_item(data["item_id"],quant,message.author.id)
                     }else if(data["item_type"] == "material"){
-                      await obtain_material(data["item_id"],quant,message.author.id)
+                      await func.obtain_material(data["item_id"],quant,message.author.id)
                     }else if(data["item_type"] == "weapon"){
-                      await obtain_weapon(data["item_id"],quant,message.author.id)
+                      await func.obtain_weapon(data["item_id"],quant,message.author.id)
                     }else if(data["item_type"] == "tool"){
-                      await obtain_tool(data["item_id"],quant,message.author.id)
+                      await func.obtain_tool(data["item_id"],quant,message.author.id)
                     }else if(data["item_type"] == "proof"){
-                      await obtain_proof(data["item_id"],quant,message.author.id)
+                      await func.obtain_proof(data["item_id"],quant,message.author.id)
                     }
                     msg.edit({ embeds:[o_embed] })
                   }else if(m.content == "0"){
