@@ -53,15 +53,14 @@ const mine_cooldown = []
 let timeout;
 let time;
 process.env.TZ = 'Asia/Tokyo'
-const {func} = require("./functions")
-//const dbFiles = fs.readdirSync('./').filter(file => file.endsWith('.sqlite'));
 
-/*function admin_or_player(id){
+class func{
+   admin_or_player(id){
   if(admin_list.includes(id)) return "admin"
   else return "```diff\n- お前は誰だ？```"
 }
 
-function json_key_length(folder,file){
+ json_key_length(folder,file){
   let json_name
   if(folder == "none"){
     json_name = `./${file}.json`
@@ -72,29 +71,29 @@ function json_key_length(folder,file){
   return Object.keys(json).length
 }
 
-async function get_channel_mode(channel_id){
+async  get_channel_mode(channel_id){
   const status = await channel_status.get(channel_id)
   if(!status) return false
   return status[3]
 }
 
-function monster_count(){
+ monster_count(){
   const array = []
-  array.push(json_key_length("monsters","zyakuteki"))
-  array.push(json_key_length("monsters","normal"))
-  array.push(json_key_length("monsters","kyouteki"))
-  array.push(json_key_length("monsters","super_kyouteki"))
-  array.push(json_key_length("monsters","kiwami"))
-  array.push(json_key_length("monsters","rare"))
-  array.push(json_key_length("monsters","super_rare"))
-  array.push(json_key_length("monsters","super_ultra_rare"))
-  array.push(json_key_length("monsters","maboroshi"))
+  array.push(func.json_key_length("monsters","zyakuteki"))
+  array.push(func.json_key_length("monsters","normal"))
+  array.push(func.json_key_length("monsters","kyouteki"))
+  array.push(func.json_key_length("monsters","super_kyouteki"))
+  array.push(func.json_key_length("monsters","kiwami"))
+  array.push(func.json_key_length("monsters","rare"))
+  array.push(func.json_key_length("monsters","super_rare"))
+  array.push(func.json_key_length("monsters","super_ultra_rare"))
+  array.push(func.json_key_length("monsters","maboroshi"))
   const reducer = (sum,currentValue) => sum + currentValue
   array.push(array.reduce(reducer))
   return array
 }
 
-function item_count(){
+ item_count(){
   const array = []
   array.push(json_key_length("items","item"))
   array.push(json_key_length("items","material"))
@@ -106,7 +105,7 @@ function item_count(){
   return array
 }
 
-async function splice_status(option,id,start,item){
+async  splice_status(option,id,start,item){
   let value;
   if(option == "player_status"){
     value = await player_status.get(id)
@@ -145,7 +144,7 @@ async function splice_status(option,id,start,item){
   }
 }
 
-async function create_data(option,id){
+async  create_data(option,id){
   if(option == "player"){
     await player_status.set(id,[100,550,10000,0,false,[0,0,0,0,0],false,0,[0,0]])
     await player_items.set(id,[[],[],[["0",1]],[],[]])
@@ -160,7 +159,7 @@ async function create_data(option,id){
   }
 }
 
-async function generate_detection(player_id,message){
+async  generate_detection(player_id,message){
   let status = await player_status.get(player_id)
   const deru = await get_proof_quantity(player_id,999)
   const denai = await get_proof_quantity(player_id,-999)
@@ -240,7 +239,7 @@ async function generate_detection(player_id,message){
   }
 }
 
-async function delete_data(option,id){
+async  delete_data(option,id){
   if(option == "player"){
     await player_status.delete(id)
     await player_items.delete(id)
@@ -253,7 +252,7 @@ async function delete_data(option,id){
   }
 }
 
-async function ban(player_id){
+async  ban(player_id){
   const list = await lists.get(client.user.id)
   const ban_list = list[1]
   if(ban_list.includes(player_id) || client.users.cache.get(player_id) == undefined){
@@ -264,7 +263,7 @@ async function ban(player_id){
   await lists.set(client.user.id,list)
 }
 
-async function unban(player_id){
+async  unban(player_id){
   const list = await lists.get(client.user.id)
   const ban_list = list[1]
   const index = ban_list.findIndex(n => n == player_id)
@@ -276,7 +275,7 @@ async function unban(player_id){
   await lists.set(client.user.id,list)
 }
 
-async function _attack(player_id,channel_id,message){
+async  _attack(player_id,channel_id,message){
   const intobattle = await into_battle(player_id,channel_id)
   const status = await player_status.get(player_id)
   const m_status = await monster_status.get(channel_id)
@@ -346,7 +345,7 @@ async function _attack(player_id,channel_id,message){
   }
 }
 
-async function _item(channel_id,item_name,mentions,message){
+async  _item(channel_id,item_name,mentions,message){
   let id = message.author.id
   if(!item_name || await player_items.get(item_name) || message.mentions.members.size != 0){
     if(message.mentions.members.size != 0){
@@ -368,23 +367,23 @@ async function _item(channel_id,item_name,mentions,message){
     const p_tools = items[3]
     const p_proofs = items[4]
     const player = client.users.cache.get(id)
-    const comparefunction = function(a,b){
+    const compare = function(a,b){
       return a[0] - b[0]
     }
     if(p_items){
-      p_items.sort(comparefunction)
+      p_items.sort(compare)
     }
     if(p_materials){
-      p_materials.sort(comparefunction)
+      p_materials.sort(compare)
     }
     if(p_weapons){
-      p_weapons.sort(comparefunction)
+      p_weapons.sort(compare)
     }
     if(p_tools){
-      p_tools.sort(comparefunction)
+      p_tools.sort(compare)
     }
     if(p_proofs){
-      p_proofs.sort(comparefunction)
+      p_proofs.sort(compare)
     }
     let i_content = [];
     const i_embed = new MessageEmbed()
@@ -517,7 +516,7 @@ async function _item(channel_id,item_name,mentions,message){
   }
 }
 
-async function elixir(player_id,channel_id,message){
+async  elixir(player_id,channel_id,message){
   if(await consume_item("1",1,player_id) == false){
     return `<@${player_id}>はエリクサーを持っていない！`
   }
@@ -532,7 +531,7 @@ async function elixir(player_id,channel_id,message){
   return `<@${player_id}>はエリクサーを使用した！このチャンネルの仲間全員が全回復した！`
 }
 
-async function fireball(player_id,channel_id,message){
+async  fireball(player_id,channel_id,message){
   if(await consume_item("2",1,player_id) == false){
     const embed = new MessageEmbed()
     .setDescription(`>>> <@${player_id}>はファイボールの書を持っていない！`)
@@ -593,7 +592,7 @@ async function fireball(player_id,channel_id,message){
   }
 }
 
-async function pray(player_id,channel_id,mentions,message){
+async  pray(player_id,channel_id,mentions,message){
   if(!mentions){
     return `祈りの書は仲間を復活させます。祈る相手を指定して使います。\n例)${prefix}item 祈りの書 @ユーザーメンション`
   }
@@ -622,7 +621,7 @@ async function pray(player_id,channel_id,mentions,message){
   return `祈りを捧げ、<@${prayed_id}>は復活した！\n<@${prayed_id}> 残りHP: 1`
 }
 
-async function ki(player_id,channel_id,message){
+async  ki(player_id,channel_id,message){
   if(await get_monster_rank(channel_id) == "【極】"){
     const embed = new MessageEmbed()
     .setDescription(">>> この敵に気は通用しない...!")
@@ -680,7 +679,7 @@ async function ki(player_id,channel_id,message){
   message.reply({ content:`\`\`\`diff\n${atk_msg}\`\`\``, embeds:[embed,embed2], allowedMentions: { parse: [] } })
 }
 
-async function bigbang(player_id,channel_id,message){
+async  bigbang(player_id,channel_id,message){
   if(await consume_item("5",1,player_id) == false){
     const embed = new MessageEmbed()
     .setDescription(`>>> <@${player_id}>は超新星爆発を持っていない！`)
@@ -742,7 +741,7 @@ async function bigbang(player_id,channel_id,message){
   }
 }
 
-async function kill(count,player_id,channel_id,message){
+async  kill(count,player_id,channel_id,message){
   const intobattle = await into_battle(player_id,channel_id)
   let player_hp = intobattle[0]
   const error_message = intobattle[1]
@@ -785,13 +784,13 @@ async function kill(count,player_id,channel_id,message){
   message.reply({ content:`\`\`\`diff\n${atk_msg}\`\`\``, embeds:[embed,embed2], allowedMentions: { parse: [] } })
 }
 
-function get_player_attack(player_attack,rand){
+ get_player_attack(player_attack,rand){
   if(rand < 0.01) return 0
   else if(rand > 0.96) return player_attack*(2) + 10
   else return Math.floor(player_attack*(rand/2+1) + 10)
 }
 
-function get_attack_message(player_name,player_attack,monster_name,monster_level,monster_hp,rand){
+ get_attack_message(player_name,player_attack,monster_name,monster_level,monster_hp,rand){
   if(player_attack == 0)
     return `+ ${player_name}の攻撃！${monster_name}にかわされてしまった！\n- ${monster_name}のHP:${monster_hp.toLocaleString()}/${(monster_level * 10 + 50).toLocaleString()}`
   else if(rand > 0.96)
@@ -806,7 +805,7 @@ function get_attack_message(player_name,player_attack,monster_name,monster_level
       return `+ ${player_name}の攻撃！${monster_name}に${player_attack.toLocaleString()}のダメージを与えた！\n- ${monster_name}のHP:${monster_hp.toLocaleString()}/${(monster_level * 10 + 50).toLocaleString()}`
 }
 
-function get_monster_attack(monster_level){
+ get_monster_attack(monster_level){
   if(Math.random() < 0.01){
     return 0
   }else if(monster_level % 50 == 0){
@@ -818,7 +817,7 @@ function get_monster_attack(monster_level){
   }
 }
 
-function monster_attack_process(player_name,player_level,player_hp,monster_name,monster_attack){
+ monster_attack_process(player_name,player_level,player_hp,monster_name,monster_attack){
   if(monster_attack == 0)
     return `+ ${monster_name}の攻撃！${player_name}は華麗にかわした！\n- ${player_name}のHP:${player_hp.toLocaleString()}/${(player_level * 5 + 50).toLocaleString()}`
   else if(player_hp <= 0)
@@ -827,7 +826,7 @@ function monster_attack_process(player_name,player_level,player_hp,monster_name,
     return `+ ${monster_name}の攻撃！${player_name}は${monster_attack.toLocaleString()}のダメージを受けた。\n- ${player_name}のHP:${player_hp.toLocaleString()}/${(player_level * 5 + 50).toLocaleString()}`
 }
 
-async function get_item_quantity(player_id,item_id){
+async  get_item_quantity(player_id,item_id){
   let quantity;
   const itemList = await player_items.get(player_id)
   itemList[0].forEach(x => {
@@ -839,7 +838,7 @@ async function get_item_quantity(player_id,item_id){
   else return 0
 }
 
-async function get_material_quantity(player_id,item_id){
+async  get_material_quantity(player_id,item_id){
   let quantity;
   const itemList = await player_items.get(player_id)
   itemList[1].forEach(x => {
@@ -851,7 +850,7 @@ async function get_material_quantity(player_id,item_id){
   else return 0
 }
 
-async function get_weapon_quantity(player_id,item_id){
+async  get_weapon_quantity(player_id,item_id){
   let quantity;
   const itemList = await player_items.get(player_id)
   itemList[2].forEach(x => {
@@ -863,7 +862,7 @@ async function get_weapon_quantity(player_id,item_id){
   else return 0
 }
 
-async function get_tool_quantity(player_id,item_id){
+async  get_tool_quantity(player_id,item_id){
   let quantity;
   const itemList = await player_items.get(player_id)
   itemList[3].forEach(x => {
@@ -875,7 +874,7 @@ async function get_tool_quantity(player_id,item_id){
   else return 0
 }
 
-async function get_proof_quantity(player_id,item_id){
+async  get_proof_quantity(player_id,item_id){
   let quantity;
   const itemList = await player_items.get(player_id)
   itemList[4].forEach(x => {
@@ -887,7 +886,7 @@ async function get_proof_quantity(player_id,item_id){
   else return 0
 }
 
-function get_item_name(id){
+ get_item_name(id){
   const hoge = JSON.parse(JSON.stringify(item_json))
   const keyList = Object.keys(hoge)
   for(let key in keyList){
@@ -898,7 +897,7 @@ function get_item_name(id){
   return undefined
 }
 
-function get_material_name(id){
+ get_material_name(id){
   const hoge = JSON.parse(JSON.stringify(material_json))
   const keyList = Object.keys(hoge)
   for(let key in keyList){
@@ -909,7 +908,7 @@ function get_material_name(id){
   return undefined
 }
 
-function get_weapon_name(id){
+ get_weapon_name(id){
   const hoge = JSON.parse(JSON.stringify(weapon_json))
   const valueList = Object.values(hoge)
   for(let i=0;i<valueList.length;i++){
@@ -920,7 +919,7 @@ function get_weapon_name(id){
   return undefined
 }
 
-function get_tool_name(id){
+ get_tool_name(id){
   const hoge = JSON.parse(JSON.stringify(tool_json))
   const keyList = Object.keys(hoge)
   for(let key in keyList){
@@ -931,7 +930,7 @@ function get_tool_name(id){
   return undefined
 }
 
-function get_proof_name(id){
+ get_proof_name(id){
   const hoge = JSON.parse(JSON.stringify(proof_json))
   const keyList = Object.keys(hoge)
   for(let key in keyList){
@@ -942,7 +941,7 @@ function get_proof_name(id){
   return undefined
 }
 
-async function obtain_item(item_id,quantity,player_id){
+async  obtain_item(item_id,quantity,player_id){
   if(get_item_name(item_id) == undefined) return console.log("error")
   const itemList = await player_items.get(player_id)
   const itemIds = [];
@@ -961,7 +960,7 @@ async function obtain_item(item_id,quantity,player_id){
   await player_items.set(player_id,itemList)
 }
 
-async function consume_item(item_id,quantity,player_id){
+async  consume_item(item_id,quantity,player_id){
   if(get_item_name(item_id) == undefined) return console.log("error")
   const itemList = await player_items.get(player_id)
   const itemIds = [];
@@ -986,7 +985,7 @@ async function consume_item(item_id,quantity,player_id){
   await player_items.set(player_id,itemList)
 }
 
-async function obtain_material(item_id,quantity,player_id){
+async  obtain_material(item_id,quantity,player_id){
   if(get_material_name(item_id) == undefined) return console.log("error")
   const itemList = await player_items.get(player_id)
   const itemIds = [];
@@ -1005,7 +1004,7 @@ async function obtain_material(item_id,quantity,player_id){
   await player_items.set(player_id,itemList)
 }
 
-async function consume_material(item_id,quantity,player_id){
+async  consume_material(item_id,quantity,player_id){
   if(get_material_name(item_id) == undefined) return console.log("error")
   const itemList = await player_items.get(player_id)
   const itemIds = [];
@@ -1030,7 +1029,7 @@ async function consume_material(item_id,quantity,player_id){
   await player_items.set(player_id,itemList)
 }
 
-async function obtain_weapon(item_id,quantity,player_id){
+async  obtain_weapon(item_id,quantity,player_id){
   if(get_weapon_name(item_id) == undefined) return console.log("error")
   const itemList = await player_items.get(player_id)
   const itemIds = [];
@@ -1049,7 +1048,7 @@ async function obtain_weapon(item_id,quantity,player_id){
   await player_items.set(player_id,itemList)
 }
 
-async function consume_weapon(item_id,quantity,player_id){
+async  consume_weapon(item_id,quantity,player_id){
   if(get_weapon_name(item_id) == undefined) return console.log("error")
   const itemList = await player_items.get(player_id)
   const itemIds = [];
@@ -1074,7 +1073,7 @@ async function consume_weapon(item_id,quantity,player_id){
   await player_items.set(player_id,itemList)
 }
 
-async function obtain_tool(item_id,quantity,player_id){
+async  obtain_tool(item_id,quantity,player_id){
   if(get_tool_name(item_id) == undefined) return console.log("error")
   const itemList = await player_items.get(player_id)
   const itemIds = [];
@@ -1093,7 +1092,7 @@ async function obtain_tool(item_id,quantity,player_id){
   await player_items.set(player_id,itemList)
 }
 
-async function consume_tool(item_id,quantity,player_id){
+async  consume_tool(item_id,quantity,player_id){
   if(get_tool_name(item_id) == undefined) return console.log("error")
   const itemList = await player_items.get(player_id)
   const itemIds = [];
@@ -1118,7 +1117,7 @@ async function consume_tool(item_id,quantity,player_id){
   await player_items.set(player_id,itemList)
 }
 
-async function obtain_proof(item_id,quantity,player_id){
+async  obtain_proof(item_id,quantity,player_id){
   if(get_proof_name(item_id) == undefined) return console.log("error")
   const itemList = await player_items.get(player_id)
   const itemIds = [];
@@ -1137,7 +1136,7 @@ async function obtain_proof(item_id,quantity,player_id){
   await player_items.set(player_id,itemList)
 }
 
-async function consume_proof(item_id,quantity,player_id){
+async  consume_proof(item_id,quantity,player_id){
   if(get_proof_name(item_id) == undefined) return console.log("error")
   const itemList = await player_items.get(player_id)
   const itemIds = [];
@@ -1162,7 +1161,7 @@ async function consume_proof(item_id,quantity,player_id){
   await player_items.set(player_id,itemList)
 }
 
-async function experiment(player_id,exp){
+async  experiment(player_id,exp){
   const status = await player_status.get(player_id)
   const newexp = status[2]+exp
   const current_level = status[0]
@@ -1177,7 +1176,7 @@ async function experiment(player_id,exp){
   }
 }
 
-async function coinment(option,player_id,coin){
+async  coinment(option,player_id,coin){
   let num;
   if(option == "free"){
     num = 0
@@ -1192,7 +1191,7 @@ async function coinment(option,player_id,coin){
   await player_status.set(player_id,status)
 }
 
-async function win_process(player_id,channel_id,exp){
+async  win_process(player_id,channel_id,exp){
   const ch_status = await channel_status.get(channel_id)
   const exp_coin_members = []
   const levelup_members = []
@@ -1365,7 +1364,7 @@ async function win_process(player_id,channel_id,exp){
   return [exp_message,levelup_message,item_message]
 }
 
-async function into_battle(player_id,channel_id){
+async  into_battle(player_id,channel_id){
   const status = await player_status.get(player_id)
   const m_status = await monster_status.get(channel_id)
   let ch_status = await channel_status.get(channel_id)
@@ -1397,7 +1396,7 @@ async function into_battle(player_id,channel_id){
   return [player_hp,error_message]
 }
 
-async function reset_battle(channel_id,level){
+async  reset_battle(channel_id,level){
   let ch_status = await channel_status.get(channel_id)
   if(ch_status[1] == false){
     return "このchで戦闘は行われていませんよ...？"
@@ -1447,7 +1446,7 @@ async function reset_battle(channel_id,level){
   }
 }
 
-async function inquiry(channel_id,message){
+async  inquiry(channel_id,message){
   let ch_status = await channel_status.get(channel_id)
   if(ch_status[1] == false){
     return message.reply({ content: "このchで戦闘は行われていませんよ...？", allowedMentions: { parse: [] } })
@@ -1470,7 +1469,7 @@ async function inquiry(channel_id,message){
   message.reply({ embeds:[embed], allowedMentions: { parse: [] } })
 }
 
-async function change_mode(channel_id,option){
+async  change_mode(channel_id,option){
   const status = await channel_status.get(channel_id)
   if(option == "normal"){
     await splice_status("channel_status",channel_id,3,"normal")
@@ -1483,12 +1482,12 @@ async function change_mode(channel_id,option){
   }
 }
 
-async function get_mode(channel_id){
+async  get_mode(channel_id){
   const status = await channel_status.get(channel_id)
   return status[3]
 }
 
-async function get_equipped_weapon(player_id){
+async  get_equipped_weapon(player_id){
   const status = await player_status.get(player_id)
   if(status){
     return status[7]
@@ -1497,7 +1496,7 @@ async function get_equipped_weapon(player_id){
   }
 }
 
-function get_weapon_abi(id){
+ get_weapon_abi(id){
   if(id == -1){
     return 10000
   }else if(id == 0){
@@ -1515,7 +1514,7 @@ function get_weapon_abi(id){
   }
 }
 
-function get_weapon_outline(id){
+ get_weapon_outline(id){
   const hoge = JSON.parse(JSON.stringify(weapon_json))
   const valueList = Object.values(hoge)
   for(let i=0;i<valueList.length;i++){
@@ -1526,7 +1525,7 @@ function get_weapon_outline(id){
   return undefined
 }
 
-async function weapon_list(player_id){
+async  weapon_list(player_id){
   const items = await player_items.get(player_id)
   const weapons = items[2]
   const ids = []
@@ -1539,7 +1538,7 @@ async function weapon_list(player_id){
   return [ids,msgs]
 }
 
-async function weapon(player_id,message){
+async  weapon(player_id,message){
   const list = await weapon_list(player_id)
   const id = await get_equipped_weapon(player_id)
   const embed = new MessageEmbed()
@@ -1572,7 +1571,7 @@ async function weapon(player_id,message){
   })
 }
 
-async function talent(player_id,message){
+async  talent(player_id,message){
   const player_name = client.users.cache.get(player_id).username
   const status = await player_status.get(player_id)
   const talents = status[5]
@@ -1661,7 +1660,7 @@ async function talent(player_id,message){
   })
 }
 
-async function get_talent_level(option,player_id){
+async  get_talent_level(option,player_id){
   let num;
   const status = await player_status.get(player_id)
   if(option == "体力"){
@@ -1683,7 +1682,7 @@ async function get_talent_level(option,player_id){
   return status[5][num]
 }
 
-async function add_talent_level(option,player_id,value){
+async  add_talent_level(option,player_id,value){
   let num;
   if(option == "体力"){
     num = 0
@@ -1704,7 +1703,7 @@ async function add_talent_level(option,player_id,value){
   await player_status.set(player_id,status)
 }
 
-async function training(player_id,message){
+async  training(player_id,message){
   const random = Math.floor(Math.random()*training_json.length);
   const q = training_json[random][0]
   const a = training_json[random][1]
@@ -1759,12 +1758,12 @@ async function training(player_id,message){
   });
 }
 
-async function wallet(player_id){
+async  wallet(player_id){
   const status = await player_status.get(player_id)
   return status[8]
 }
 
-async function mine(player_id,channel_id){
+async  mine(player_id,channel_id){
   let comment = []
   if(!mine_cooldown.includes(player_id)){
     mine_cooldown.push(player_id)
@@ -1799,12 +1798,12 @@ async function mine(player_id,channel_id){
   return comment
 }
 
-async function get_monster_rank(channel_id){
+async  get_monster_rank(channel_id){
   const m_info = await monster_status.get(channel_id)
   return m_info[3]
 }
 
-function get_monster_id(monster_rank,monster_name){
+ get_monster_id(monster_rank,monster_name){
   const array = []
   let rank
   if(["【通常】"].includes(monster_rank)){
@@ -1839,7 +1838,7 @@ function get_monster_id(monster_rank,monster_name){
   return undefined
 }
 
-function generate_monster(rank){
+ generate_monster(rank){
   try{
     if(rank == "random"){
       const random = Math.random()
@@ -1871,7 +1870,7 @@ function generate_monster(rank){
   }
 }
 
-function summon_monster(rank,id){
+ summon_monster(rank,id){
   try{
     const monsters = require(`./monsters/${rank}.json`)
     const hoge = JSON.parse(JSON.stringify(monsters))
@@ -1887,7 +1886,7 @@ function summon_monster(rank,id){
   }
 }
 
-function gatya(option,time){
+ gatya(option,time){
   const rewards = []
   const rewards_name = []
   for(let i=0;i<time;i++){
@@ -1936,7 +1935,7 @@ function gatya(option,time){
   return newrewards
 }
 
-async function ranking(message){
+async  ranking(message){
   const keys = []
   const values = []
   const n_values = []
@@ -2024,7 +2023,7 @@ async function ranking(message){
   })
 }
 
-async function exchange(player_id,message){
+async  exchange(player_id,message){
   let category;
   let title;
   const menu = new MessageEmbed()
@@ -2299,750 +2298,7 @@ async function exchange(player_id,message){
       msg.edit({ content:"```時間切れです...```" });
     }
   })
-}*/
-
-http
-  .createServer(function(request, response) {
-    response.writeHead(200, { 'Content-Type': 'text/plain;charset=utf-8' })
-    response.end(`${client.user.tag} is ready!\n導入サーバー:${client.guilds.cache.size}\nユーザー:${client.users.cache.size}`)
-  })
-  .listen(3000)
-
-if (process.env.DISCORD_BOT_TOKEN == undefined) {
-  console.error('tokenが設定されていません！')
-  process.exit(0)
+}
 }
 
-client.on('ready', async () => {
-  client.user.setActivity(`${prefix}help`, {
-    type: 'PLAYING'
-  });
-  client.user.setStatus("idle");
-  console.log(`${client.user.tag} is ready!`);
-  const embed = new MessageEmbed()
-  .setTitle("起動しました！")
-  .setDescription(">>> ```diff\n+ Hello World!　　　　　``````diff\n+ 導入サーバー数:" + client.guilds.cache.size + "\n+ ユーザー数:" + client.users.cache.size + "```" + moment().format("YYYY-MM-DD HH:mm:ss"))
-  .setThumbnail(client.user.displayAvatarURL())
-  .setColor("RANDOM")
-  client.channels.cache.forEach(ch => {
-    if(ch.name == "きふぉう"){
-      ch.send({ embeds:[embed] })
-    }
-  })
-});
-
-cron.schedule('0 0 0 * * *', async () => {
-  const list = await lists.get(client.user.id)
-  const login_list = list[0]
-  list.splice(0,1,[])
-  await lists.set(client.user.id,list)
-  console.log("ログイン情報をリセットしました。")
-});
-
-client.on("messageCreate", async message => {
-  const arg = message.content.slice(prefix.length).split(/ +/);
-  const command = arg.shift().toLowerCase();
-  if(message.author.bot || message.channel.type == "DM" || !message.content.startsWith(prefix)){
-    return;
-  }
-  if(message.content.startsWith(prefix) && cmd_list.includes(command)){
-    const p_status = await player_status.get(message.author.id)
-    const list = await lists.get(client.user.id)
-    const login_list = list[0]
-    const ban_list = list[1]
-    if(!p_status){
-      await create_data("player",message.author.id)
-      return message.reply({ content:"お初さんいらっしゃい^^\n※これは初めてコマンドを打った人用のメッセージです" })
-    }
-    if(ban_list.includes(message.author.id) && !admin_list.includes(message.author.id) && !["help","wallet"].includes(command)){
-      return message.reply({ content: "BANされてますよ...?", allowedMentions: { parse: [] } })
-    }else if(p_status[6] == true){
-      return message.reply({ content: "質問に答えてください。", allowedMentions: { parse: [] } })
-    }
-    if(!login_list.includes(message.author.id)){
-      const day = await get_proof_quantity(message.author.id,0)+1
-      const elength = day+29
-      const flength = day*3+52
-      const plength = day*3+42
-      const tlength = day+10
-      const embed = new MessageEmbed()
-      .setDescription(`>>> **ログイン${day}日目です。\nログボをゲットしました！！！**\`\`\`ゲットした物:\n   冒険の証:1個\n   エリクサー:${elength}個\n   ファイアボールの書:${flength}個\n   祈りの書:${plength}個\n   100円硬貨:${tlength}個\`\`\``)
-      .setThumbnail(client.user.displayAvatarURL())
-      .setColor("RANDOM")
-      message.channel.send({ embeds:[embed] })
-      await obtain_proof("0",1,message.author.id)
-      await obtain_item("1",elength,message.author.id)
-      await obtain_item("2",flength,message.author.id)
-      await obtain_item("3",plength,message.author.id)
-      await obtain_item("100000",tlength,message.author.id)
-      login_list.push(message.author.id)
-      await lists.set(client.user.id,list)
-    }
-    for await(const [key, value] of player_status.iterator()){
-      if(client.users.cache.get(key) == undefined){
-        await delete_data("player",key)
-      }
-    }
-    await generate_detection(message.author.id,message)
-  }
-  try{
-    if(["help"].includes(command)){
-      const args = message.content.split(" ")[1]
-      if(args){
-        if(cmd_list.includes(args.toLowerCase())){
-          const num = cmd_list.indexOf(args.toLowerCase())
-          const embed = new MessageEmbed()
-          .setTitle(`HELP of \`${command_json[num][0]}\``)
-          .addField("= コマンドの説明 =",`${command_json[num][1]}`)
-          .addField("= エイリアス =",`${command_json[num][2]}`)
-          .addField("= 使用例 =",`${command_json[num][3]}`)
-          .addField("= 使用可能 =",`${command_json[num][4]}`)
-          .setColor("RANDOM")
-          return message.reply({ embeds: [embed], allowedMentions: { parse: [] } })
-        }else{
-          return message.reply(`Command[\`${args.toLowerCase()}\`] not found.`)
-        } 
-      }
-      const embeds = [
-        new MessageEmbed()
-        .setTitle("HELP:")
-        .setDescription(`このbotは${client.users.cache.get(admin_list[0]).tag}が自己満で作ったげーむぼっとです。`)
-        .addField("= 注意 =", "浅はかすぎる知識でテンプレもなしに作っているのでバグが多発します。\nもし発見した際は開発者までdmください。")
-        .addField("= 管理者ズ =", `${admin_list.map(x => eval('client.users.cache.get("' + x + '").tag'))}`)
-        .setAuthor(`コマンド実行者:${message.author.tag}`, message.author.displayAvatarURL())
-        .setColor("RANDOM"),
-        new MessageEmbed()
-        .setTitle("HELP:")
-        .setDescription("全員使用可能なコマンド")
-        .addField(`= ${prefix}help ([cmd]) =`,">>> この画面",true)
-        .addField(`= ${prefix}status ([id]) | ${prefix}st ([id]) =`,">>> ステータス表示",true)
-        .addField(`= ${prefix}attack | ${prefix}atk =`,">>> 敵に攻撃",true)
-        .addField(`= ${prefix}item ([item名]) | ${prefix}i ([item名]) =`,">>> アイテムリスト/アイテムを使用",true)
-        .addField(`= ${prefix}training | ${prefix}t =`,">>> 四字熟語トレーニング",true)
-        .addField(`= ${prefix}ranking | ${prefix}rank =`,">>> 各種ランキング",true)
-        .addField(`= ${prefix}in =`,">>> 戦闘に参加",true)
-        .addField(`= ${prefix}reset | ${prefix}re =`,">>> 戦闘をリセット",true)
-        .addField(`= ${prefix}inquiry | ${prefix}inq =`,">>> 戦闘状況の確認",true)
-        //.addField(`= ${prefix}dungeon | ${prefix}dung =`,">>> ダンジョン",true)
-        //.addField(`= ${prefix}retire =`,">>> ダンジョンからリタイア",true)
-        .addField(`= ${prefix}talent =`,">>> タレント",true)
-        .addField(`= ${prefix}monstergen [rarelity] =`,">>> モンスターを生成",true)
-        //.addField(`= ${prefix}inbox ([gift名]) =`,">>> 受信箱/ギフト受け取り",true)
-        //.addField(`= ${prefix}word =`,">>> 特別コードの入力",true)
-        .addField(`= ${prefix}mine =`,">>> 採掘(特に意味はない)",true)
-        .addField(`= ${prefix}gatya [回数] =`,">>> ガチャる",true)
-        .setAuthor(`コマンド実行者:${message.author.tag}`, message.author.displayAvatarURL())
-        .setColor("RANDOM"),
-        new MessageEmbed()
-        .setTitle("HELP:")
-        .setDescription("管理者のみ使用可能なコマンド")
-        .addField(`= ${prefix}itemid [itemid] [個数] [@メンション/id] =`,">>> アイテム付与",true)
-        .addField(`= ${prefix}consumeitem [itemid] [個数] [@メンション/id] =`,">>> アイテム剥奪",true)
-        .addField(`= ${prefix}materialid [materialid] [個数] [@メンション/id] =`,">>> 素材付与",true)
-        .addField(`= ${prefix}consumematerial [materialid] [個数] [@メンション/id] =`,">>> 素材剥奪",true)
-        .addField(`= ${prefix}summon [rank] [id] [level] =`,">>> モンスターを召喚",true)
-        .addField(`= ${prefix}kill [count] =`,">>> 指定した数字の敵を殺害",true)
-        .addField(`= ${prefix}ban [id/@mention] =`,">>> id指定または全員をBAN",true)
-        .addField(`= ${prefix}unban [id/@mention] =`,">>> id指定または全員をUNBAN",true)
-        .addField(`= ${prefix}banlist =`,">>> BAN者のリストを表示",true)
-        .addField(`= ${prefix}eval [code] =`,">>> 記述したコードを実行",true)
-        .addField(`= ${prefix}db [code] =`,">>> 記述したコードを実行(非同期処理)",true)
-        //.addField(`= ${prefix}delete [code] =`,">>> Dataを削除",true)
-        //.addField(`= ${prefix}test =`,">>> 登録されている敵の情報",true)
-        //.addField(`= ${prefix}file [ファイル名] =`,">>> 指定したファイルを表示",true)
-        //.addField(`= ${prefix}backup =`,">>> db出力",true)
-        .setAuthor(`コマンド実行者:${message.author.tag}`, message.author.displayAvatarURL())
-        .setColor("RANDOM")
-      ]
-      await new Pagination(message.channel, embeds, "page").paginate();
-    }
-    if(["status","st"].includes(command)){
-      let id = message.content.split(" ")[1]
-      if(!id) id = message.author.id
-      else if(message.mentions.members.size != 0) id = message.mentions.members.first().id
-      const error_msg = admin_or_player(message.author.id)
-      if(!await player_status.get(id) || !client.users.cache.get(id)) return message.reply({ content: "そのプレイヤーは登録または認識されていません", allowedMentions: { parse: [] } })
-      else if(id != message.author.id && error_msg != "admin") return message.reply({ content: error_msg, allowedMentions: { parse: [] } })
-      const status = await player_status.get(id)
-      const player = client.users.cache.get(id)
-      const embed = new MessageEmbed()
-      .setTitle(`${player.username}のステータス:`)
-      .setColor("RANDOM")
-      .setThumbnail(player.displayAvatarURL())
-      .addField("レベル",`${status[0].toLocaleString()}`,true)
-      .addField("体力",`${(status[0]*5+50).toLocaleString()}`,true)
-      .addField("攻撃力",`${(status[0]*2+10).toLocaleString()}`,true)
-      .addField("経験値",`${status[2].toLocaleString()}`,true)
-      .addField("次のレベルまで",`${((status[0]+1)**2-status[2]).toLocaleString()}`,true)
-      .addField("討伐数",`${status[3].toLocaleString()}`,true)
-      if(status[4] == false){
-        embed.addField("戦闘状況",`戦闘していません`,true)
-      }else{
-        embed.addField("戦闘状況",`<#${status[4]}>で戦闘中`,true)
-      }
-      message.reply({ embeds:[embed], allowedMentions: { parse: [] } })
-    }
-    if(["attack","atk"].includes(command)){
-      await _attack(message.author.id,message.channel.id,message)
-    }
-    if(["item","i"].includes(command)){
-      const item_name = message.content.split(" ")[1]
-      await _item(message.channel.id,item_name,message.mentions.members.first(),message)
-    }
-    if(["in"].includes(command)){
-      const intobattle = await into_battle(message.author.id,message.channel.id)
-      const error_message = intobattle[1]
-      if(error_message != ""){
-        return message.reply({ content:error_message, allowedMentions: { parse: [] } })
-      }
-      const embed = new MessageEmbed()
-      .setDescription(`<@${message.author.id}>は<#${message.channel.id}>の戦闘に参加した！`)
-      .setColor("RANDOM")
-      message.reply({ embeds:[embed], allowedMentions: { parse: [] } })
-    }
-    if(["training","t"].includes(command)){
-      await training(message.author.id,message)
-    }
-    if(["reset","re","rs"].includes(command)){
-      const reset = await reset_battle(message.channel.id,0)
-      if(reset == "このchで戦闘は行われていませんよ...？"){
-        return message.reply({ content: "このchで戦闘は行われていませんよ...？", allowedMentions: { parse: [] } })
-      }
-      const m_info = await monster_status.get(message.channel.id)
-      const embed = new MessageEmbed()
-      .setTitle(`ランク:${m_info[3]}\n${m_info[2]}が待ち構えている...！\nLv.${m_info[0].toLocaleString()} HP:${m_info[1].toLocaleString()}`)
-      .setImage(m_info[4])
-      .setColor("RANDOM")
-      message.channel.send({ embeds:[embed], allowedMentions: { parse: [] } })
-    }
-    if(["inquiry","inq"].includes(command)){
-      await inquiry(message.channel.id,message)
-    }
-    if(["gatya","gacha"].includes(command)){
-      let time = message.content.slice(prefix.length+6).trim()
-      if(!time){
-        return message.reply({ content: "回数を入力してください" })
-      }else if(time != "max" && !Number.isInteger(Number(time)) || Number(time) <= 0){
-        return message.reply({ content: "引数が不正です" })
-      }else if(time == "max"){
-        time = Number(await get_item_quantity(message.author.id,100000))
-      }else if(time == 0){
-        return message.reply({ content: "がちゃちけないやん" })
-      }else{
-        time = Number(time)
-      }
-      if(await get_item_quantity(message.author.id,100000) < time){
-        return message.reply({ content: "がちゃちけがたりん！" })
-      }
-      message.reply({ content: "```diff\n+ ガチャを引き終わるまでしばらくお待ち下さい```" })
-      await consume_item("100000",time,message.author.id)
-      const result = gatya("normal",time)
-      const msgs = []
-      for(let i=0;i<result.length;i++){
-        if(result[i][2] == "item"){
-          await obtain_item(result[i][3],result[i][4],message.author.id)
-        }else if(result[i][2] == "material"){
-          await obtain_material(result[i][3],result[i][4],message.author.id)
-        }else if(result[i][2] == "weapon"){
-          await obtain_weapon(result[i][3],result[i][4],message.author.id)
-        }else if(result[i][2] == "tool"){
-          await obtain_tool(result[i][3],result[i][4],message.author.id)
-        }else if(result[i][2] == "proof"){
-          await obtain_proof(result[i][3],result[i][4],message.author.id)
-        }
-        msgs.push(`\`\`\`${result[i][0]}${result[i][1]}\`\`\`->${result[i][4]}個`)
-      }
-      const embed = new MessageEmbed()
-      .setTitle(`ガチャ結果${time}枚`)
-      .setDescription(msgs.join("\n"))
-      message.channel.send({ embeds:[embed] })
-    }
-    if(["xgatya","xgacha"].includes(command)){
-      let time = message.content.slice(prefix.length+7).trim()
-      if(!time){
-        return message.reply({ content: "回数を入力してください" })
-      }else if(time != "max" && !Number.isInteger(Number(time)) || Number(time) <= 0){
-        return message.reply({ content: "引数が不正です" })
-      }else if(time == "max"){
-        time = Number(await get_item_quantity(message.author.id,100001))
-      }else if(time == 0){
-        return message.reply({ content: "がちゃちけないやん" })
-      }else{
-        time = Number(time)
-      }
-      if(await get_item_quantity(message.author.id,100001) < time){
-        return message.reply({ content: "がちゃちけがたりん！" })
-      }
-      message.reply({ content: "```diff\n+ ガチャを引き終わるまでしばらくお待ち下さい```" })
-      await consume_item("100001",time,message.author.id)
-      const result = gatya("rare",time)
-      const msgs = []
-      for(let i=0;i<result.length;i++){
-        if(result[i][2] == "item"){
-          await obtain_item(result[i][3],result[i][4],message.author.id)
-        }else if(result[i][2] == "material"){
-          await obtain_material(result[i][3],result[i][4],message.author.id)
-        }else if(result[i][2] == "weapon"){
-          await obtain_weapon(result[i][3],result[i][4],message.author.id)
-        }else if(result[i][2] == "tool"){
-          await obtain_tool(result[i][3],result[i][4],message.author.id)
-        }else if(result[i][2] == "proof"){
-          await obtain_proof(result[i][3],result[i][4],message.author.id)
-        }
-        msgs.push(`\`\`\`${result[i][0]}${result[i][1]}\`\`\`->${result[i][4]}個`)
-      }
-      const embed = new MessageEmbed()
-      .setTitle(`ガチャ結果${time}枚`)
-      .setDescription(msgs.join("\n"))
-      message.channel.send({ embeds:[embed] })
-    }
-    if(["weapon","we"].includes(command)){
-      await weapon(message.author.id,message)
-    }
-    if(["changemode","cm"].includes(command)){
-      const role = admin_or_player(message.author.id)
-      const mode = await get_mode(message.channel.id)
-      if(role == "admin"){
-        const embed1 = new MessageEmbed()
-        .setTitle(`変えたいモードを選択してください(現在のモード:${mode})`)
-        .setDescription("1⃣:通常\n2⃣:非表示\n3⃣:デバッグ")
-        .setColor("RANDOM")
-        const embed2 = new MessageEmbed()
-        .setColor("RANDOM")
-        const msg = await message.reply({ embeds:[embed1], allowedMentions: { parse: [] } })
-        const filter = m => m.author.id == message.author.id;
-        const collector = message.channel.createMessageCollector({ filter: filter, idle: 60000 });
-        collector.on('collect', async m => {
-          m.delete();
-          if(!Number.isInteger(Number(m.content)) || 0 > Number(m.content) || Number(m.content) > 3){
-          }else if(m.content == "1"){
-            embed2.setDescription("チャンネルのモードを通常に変更しました")
-            msg.edit({ embeds:[embed2], allowedMentions: { parse: [] } })
-            collector.stop();
-            await change_mode(message.channel.id,"normal")
-          }else if(m.content == "2"){
-            embed2.setDescription("チャンネルのモードを非表示に変更しました")
-            msg.edit({ embeds:[embed2], allowedMentions: { parse: [] } })
-            collector.stop();
-            await change_mode(message.channel.id,"hihyozi")
-          }else if(m.content == "3"){
-            embed2.setDescription("チャンネルのモードをデバッグに変更しました")
-            msg.edit({ embeds:[embed2], allowedMentions: { parse: [] } })
-            collector.stop();
-            await change_mode(message.channel.id,"debug")
-          }else if(m.content == "0"){
-            msg.edit({ content:"```処理を終了しました...```" });
-            collector.stop();
-          }
-        });
-        collector.on('end', async (collected, reason) => {
-          if(reason == "idle"){
-            msg.edit({ content:"```時間切れです...```" });
-          }
-        })
-      }else{
-        let comment
-        if(mode == "normal"){
-          await change_mode(message.channel.id,"hihyozi")
-          comment = `<#${message.channel.id}>の敵画像表示を非表示に変更しました`
-        }else if(mode == "hihyozi"){
-          await change_mode(message.channel.id,"normal")
-          comment = `<#${message.channel.id}>の敵画像表示を表示に変更しました`
-        }else if(mode == "debug"){
-          await change_mode(message.channel.id,"normal")
-          comment = `<#${message.channel.id}>の敵画像表示を表示に変更しました`
-        }
-        const embed = new MessageEmbed()
-        .setDescription(comment)
-        .setColor("RANDOM")
-        message.reply({ embeds:[embed], allowedMentions: { parse: [] } })
-      }
-    }
-    if(["mine"].includes(command)){
-      const msg = await mine(message.author.id,message.channel.id)
-      const embed = new MessageEmbed()
-      .setColor("RANDOM")
-      if(!Array.isArray(msg)){
-        embed.setDescription(`そのコマンドは${msg}秒後に使えます`)
-      }else{
-        embed.setDescription(`\`\`\`css\n[採掘者:${message.author.username}]\`\`\`\`\`\`diff\n${msg.join("\n")}\`\`\``)
-      }
-      message.reply({ embeds:[embed], allowedMentions: { parse: [] } })
-    }
-    if(["craft","c"].includes(command)){
-      await exchange(message.author.id,message)
-    }
-    if(["talent"].includes(command)){
-      await talent(message.author.id,message)
-    }
-    if(["ranking","rank"].includes(command)){
-      await ranking(message)
-    }
-    if(["wallet"].includes(command)){
-      const list = await lists.get(client.user.id)
-      const ban_list = list[1]
-      const coin = await wallet(message.author.id)
-      let ban
-      if(ban_list.includes(message.author.id)){
-         ban = "BAN"
-      }else{
-        ban = "OK"
-      }
-      const embed = new MessageEmbed()
-      .setTitle("財布")
-      .addField("BAN状態",`>>> {0}`.format(ban))
-      .addField("無償通貨",`>>> ${coin[0]}コイン`)
-      .addField("有償通貨",`>>> ${coin[1]}コイン`)
-      .setColor("RANDOM")
-      message.reply({ embeds:[embed], allowedMentions: { parse: [] } })
-    }
-    if(["itemid","ii"].includes(command)){
-      const error_msg = admin_or_player(message.author.id)
-      if(error_msg != "admin") return message.reply({ content: error_msg, allowedMentions: { parse: [] } })
-      const itemId = message.content.split(" ")[1]
-      const quantity = message.content.split(" ")[2]
-      let player;
-      if(message.mentions.members.size == 1){
-        player = message.mentions.members.first().id
-      }else if(message.mentions.members.size >= 2){
-        player = undefined
-      }else{
-        player = message.content.split(" ")[3]
-      }
-      if(await player_status.get(player) == undefined){
-        return message.reply({ content: "Undefined_Player", allowedMentions: { parse: [] } })
-      }
-      await obtain_item(itemId,quantity,player)
-      message.reply({ content: `\`${client.users.cache.get(player).username}\`は\`ID:${itemId}:${get_item_name(itemId)}\`を\`${quantity.toLocaleString()}\`個手に入れた！`, allowedMentions: { parse: [] } })
-    }
-    if(["consumeitem","ci"].includes(command)){
-      const error_msg = admin_or_player(message.author.id)
-      if(error_msg != "admin") return message.reply({ content: error_msg, allowedMentions: { parse: [] } })
-      const itemId = message.content.split(" ")[1]
-      const quantity = message.content.split(" ")[2]
-      let player;
-      if(message.mentions.members.size == 1){
-        player = message.mentions.members.first().id
-      }else if(message.mentions.members.size >= 2){
-        player = undefined
-      }else{
-        player = message.content.split(" ")[3]
-      }
-      if(await player_status.get(player) == undefined){
-        return message.reply({ content: "Undefined_Player", allowedMentions: { parse: [] } })
-      }
-      await consume_item(itemId,quantity,player)
-      message.reply({ content: "unco", allowedMentions: { parse: [] } })
-    }
-    if(["materialid","mi"].includes(command)){
-      const error_msg = admin_or_player(message.author.id)
-      if(error_msg != "admin") return message.reply({ content: error_msg, allowedMentions: { parse: [] } })
-      const itemId = message.content.split(" ")[1]
-      const quantity = message.content.split(" ")[2]
-      let player;
-      if(message.mentions.members.size == 1){
-        player = message.mentions.members.first().id
-      }else if(message.mentions.members.size >= 2){
-        player = undefined
-      }else{
-        player = message.content.split(" ")[3]
-      }
-      if(await player_status.get(player) == undefined){
-        return message.reply({ content: "Undefined_Player", allowedMentions: { parse: [] } })
-      }
-      await obtain_material(itemId,quantity,player)
-      message.reply({ content: `\`${client.users.cache.get(player).username}\`は\`ID:${itemId}:${get_material_name(itemId)}\`を\`${quantity.toLocaleString()}\`個手に入れた！`, allowedMentions: { parse: [] } })
-    }
-    if(["consumematerial","cma"].includes(command)){
-      const error_msg = admin_or_player(message.author.id)
-      if(error_msg != "admin") return message.reply({ content: error_msg, allowedMentions: { parse: [] } })
-      const itemId = message.content.split(" ")[1]
-      const quantity = message.content.split(" ")[2]
-      let player;
-      if(message.mentions.members.size == 1){
-        player = message.mentions.members.first().id
-      }else if(message.mentions.members.size >= 2){
-        player = undefined
-      }else{
-        player = message.content.split(" ")[3]
-      }
-      if(await player_status.get(player) == undefined){
-        return message.reply({ content: "Undefined_Player", allowedMentions: { parse: [] } })
-      }
-      await consume_material(itemId,quantity,player)
-      message.reply({ content: "unco", allowedMentions: { parse: [] } })
-    }
-    if(["weaponid","wi"].includes(command)){
-      const error_msg = admin_or_player(message.author.id)
-      if(error_msg != "admin") return message.reply({ content: error_msg, allowedMentions: { parse: [] } })
-      const itemId = message.content.split(" ")[1]
-      const quantity = message.content.split(" ")[2]
-      let player;
-      if(message.mentions.members.size == 1){
-        player = message.mentions.members.first().id
-      }else if(message.mentions.members.size >= 2){
-        player = undefined
-      }else{
-        player = message.content.split(" ")[3]
-      }
-      if(await player_status.get(player) == undefined){
-        return message.reply({ content: "Undefined_Player", allowedMentions: { parse: [] } })
-      }
-      await obtain_weapon(itemId,quantity,player)
-      message.reply({ content: `\`${client.users.cache.get(player).username}\`は\`ID:${itemId}:${get_weapon_name(itemId)}\`を\`${quantity.toLocaleString()}\`個手に入れた！`, allowedMentions: { parse: [] } })
-    }
-    if(["consumeweapon","cw"].includes(command)){
-      const error_msg = admin_or_player(message.author.id)
-      if(error_msg != "admin") return message.reply({ content: error_msg, allowedMentions: { parse: [] } })
-      const itemId = message.content.split(" ")[1]
-      const quantity = message.content.split(" ")[2]
-      let player;
-      if(message.mentions.members.size == 1){
-        player = message.mentions.members.first().id
-      }else if(message.mentions.members.size >= 2){
-        player = undefined
-      }else{
-        player = message.content.split(" ")[3]
-      }
-      if(await player_status.get(player) == undefined){
-        return message.reply({ content: "Undefined_Player", allowedMentions: { parse: [] } })
-      }
-      await consume_weapon(itemId,quantity,player)
-      message.reply({ content: "unco", allowedMentions: { parse: [] } })
-    }
-    if(["toolid","ti"].includes(command)){
-      const error_msg = admin_or_player(message.author.id)
-      if(error_msg != "admin") return message.reply({ content: error_msg, allowedMentions: { parse: [] } })
-      const itemId = message.content.split(" ")[1]
-      const quantity = message.content.split(" ")[2]
-      let player;
-      if(message.mentions.members.size == 1){
-        player = message.mentions.members.first().id
-      }else if(message.mentions.members.size >= 2){
-        player = undefined
-      }else{
-        player = message.content.split(" ")[3]
-      }
-      if(await player_status.get(player) == undefined){
-        return message.reply({ content: "Undefined_Player", allowedMentions: { parse: [] } })
-      }
-      await obtain_tool(itemId,quantity,player)
-      message.reply({ content: `\`${client.users.cache.get(player).username}\`は\`ID:${itemId}:${get_tool_name(itemId)}\`を\`${quantity.toLocaleString()}\`個手に入れた！`, allowedMentions: { parse: [] } })
-    }
-    if(["consumetool","ct"].includes(command)){
-      const error_msg = admin_or_player(message.author.id)
-      if(error_msg != "admin") return message.reply({ content: error_msg, allowedMentions: { parse: [] } })
-      const itemId = message.content.split(" ")[1]
-      const quantity = message.content.split(" ")[2]
-      let player;
-      if(message.mentions.members.size == 1){
-        player = message.mentions.members.first().id
-      }else if(message.mentions.members.size >= 2){
-        player = undefined
-      }else{
-        player = message.content.split(" ")[3]
-      }
-      if(await player_status.get(player) == undefined){
-        return message.reply({ content: "Undefined_Player", allowedMentions: { parse: [] } })
-      }
-      await consume_tool(itemId,quantity,player)
-      message.reply({ content: "unco", allowedMentions: { parse: [] } })
-    }
-    if(["proofid","pi"].includes(command)){
-      const error_msg = admin_or_player(message.author.id)
-      if(error_msg != "admin") return message.reply({ content: error_msg, allowedMentions: { parse: [] } })
-      const itemId = message.content.split(" ")[1]
-      const quantity = message.content.split(" ")[2]
-      let player;
-      if(message.mentions.members.size == 1){
-        player = message.mentions.members.first().id
-      }else if(message.mentions.members.size >= 2){
-        player = undefined
-      }else{
-        player = message.content.split(" ")[3]
-      }
-      if(await player_status.get(player) == undefined){
-        return message.reply({ content: "Undefined_Player", allowedMentions: { parse: [] } })
-      }
-      await obtain_proof(itemId,quantity,player)
-      message.reply({ content: `\`${client.users.cache.get(player).username}\`は\`ID:${itemId}:${get_proof_name(itemId)}\`を\`${quantity.toLocaleString()}\`個手に入れた！`, allowedMentions: { parse: [] } })
-    }
-    if(["consumeproof","cp"].includes(command)){
-      const error_msg = admin_or_player(message.author.id)
-      if(error_msg != "admin") return message.reply({ content: error_msg, allowedMentions: { parse: [] } })
-      const itemId = message.content.split(" ")[1]
-      const quantity = message.content.split(" ")[2]
-      let player;
-      if(message.mentions.members.size == 1){
-        player = message.mentions.members.first().id
-      }else if(message.mentions.members.size >= 2){
-        player = undefined
-      }else{
-        player = message.content.split(" ")[3]
-      }
-      if(await player_status.get(player) == undefined){
-        return message.reply({ content: "Undefined_Player", allowedMentions: { parse: [] } })
-      }
-      await consume_proof(itemId,quantity,player)
-      message.reply({ content: "unco", allowedMentions: { parse: [] } })
-    }
-    if(["exp"].includes(command)){
-      const error_msg = admin_or_player(message.author.id)
-      if(error_msg != "admin") return message.reply({ content: error_msg, allowedMentions: { parse: [] } })
-      const player_id = message.content.split(" ")[1]
-      const exp = Number(message.content.split(" ")[2])
-      const levelup_msg = await experiment(player_id,exp)
-      const embed = new MessageEmbed()
-      .setDescription(`<@${player_id}>に${exp.toLocaleString()}EXPを付与しました\n${levelup_msg}`)
-      message.reply({ embeds:[embed], allowedMentions: { parse: [] } })
-    }
-    if(["monstergen"].includes(command)){
-      let rank = message.content.slice(prefix.length+11)
-      const info = generate_monster(rank)
-      const embed = new MessageEmbed()
-      .setTitle(`ランク:${info[1]}\n${info[0]}が待ち構えている...！\nLv.0 HP:0`)
-      .setImage(info[2])
-      .setColor("RANDOM")
-      message.channel.send({ embeds:[embed] })
-    }
-    if(["summon"].includes(command)){
-      const error_msg = admin_or_player(message.author.id)
-      if(error_msg != "admin") return message.reply({ content: error_msg, allowedMentions: { parse: [] } })
-      const rank = message.content.split(" ")[1]
-      const id = Number(message.content.split(" ")[2])
-      const level = Number(message.content.split(" ")[3])
-      const hp = level*10+50
-      const info = summon_monster(rank,id,level)
-      if(info == undefined){
-        return message.reply({ content: "undefined", allowedMentions: { parse: [] } })
-      }
-      const embed = new MessageEmbed()
-      .setTitle(`ランク:${info[1]}\n${info[0]}が待ち構えている...！\nLv.${level.toLocaleString()} HP:${hp.toLocaleString()}`)
-      .setColor("RANDOM")
-      const mode = await get_channel_mode(message.channel.id)
-      if(mode == "normal"){
-        embed.setImage(info[2])
-      }else if(mode == "debug"){
-        const id = get_monster_id(info[1],info[0])
-        embed.setImage(info[2])
-        .setFooter(`ファイル名:${id[0]} | モンスターid:${id[1]}`)
-      }
-      message.channel.send({ embeds:[embed] })
-      await monster_status.set(message.channel.id,[level,hp].concat(info))
-    }
-    if(["ban"].includes(command)){
-      const error_msg = admin_or_player(message.author.id)
-      if(error_msg != "admin") return message.reply({ content: error_msg, allowedMentions: { parse: [] } })
-      let player;
-      if(message.mentions.members.size == 1){
-        player = message.mentions.members.first().id
-      }else if(message.mentions.members.size >= 2){
-        player = undefined
-      }else{
-        player = message.content.split(" ")[1]
-      }
-      if(player == undefined){
-        return message.reply({ content: "メンションは1人にしてください", allowedMentions: { parse: [] } })
-      }
-      if(await ban(player) == false){
-        return message.reply({ content: "不正", allowedMentions: { parse: [] } })
-      }
-      const embed = new MessageEmbed()
-      .setDescription(`${client.users.cache.get(player).tag}をBANしました`)
-      .setColor("RANDOM")
-      message.reply({ embeds:[embed], allowedMentions: { parse: [] } })
-    }
-    if(["unban"].includes(command)){
-      const error_msg = admin_or_player(message.author.id)
-      if(error_msg != "admin") return message.reply({ content: error_msg, allowedMentions: { parse: [] } })
-      let player;
-      if(message.mentions.members.size == 1){
-        player = message.mentions.members.first().id
-      }else if(message.mentions.members.size >= 2){
-        player = undefined
-      }else{
-        player = message.content.split(" ")[1]
-      }
-      if(player == undefined){
-        return message.reply({ content: "メンションは1人にしてください", allowedMentions: { parse: [] } })
-      }
-      if(await unban(player) == false){
-        return message.reply({ content: "不正", allowedMentions: { parse: [] } })
-      }
-      const embed = new MessageEmbed()
-      .setDescription(`${client.users.cache.get(player).tag}をUNBANしました`)
-      .setColor("RANDOM")
-      message.reply({ embeds:[embed], allowedMentions: { parse: [] } })
-    }
-    if(["banlist"].includes(command)){
-      const error_msg = admin_or_player(message.author.id)
-      if(error_msg != "admin") return message.reply({ content: error_msg, allowedMentions: { parse: [] } })
-      const list = await lists.get(client.user.id)
-      const banlist = list[1]
-      const desc = banlist.map(x => client.users.cache.get(x).tag+`/${x}`).join("\n")
-      const embed = new MessageEmbed()
-      .setTitle("BAN者一覧")
-      .setColor("RANDOM")
-      if(!banlist.length){
-        embed
-          .setDescription("なし")
-      }else{
-        embed
-          .setDescription(desc)
-      }
-      message.reply({ embeds:[embed], allowedMentions: { parse: [] } })
-    }
-    if(["kill"].includes(command)){
-      const error_msg = admin_or_player(message.author.id)
-      if(error_msg != "admin") return message.reply({ content: error_msg, allowedMentions: { parse: [] } })
-      let count = message.content.slice(prefix.length+5).trim()
-      if(count == "" || !Number.isInteger(Number(count))){
-        count = 1
-      }else{
-        count = Number(count)
-      }
-      await kill(count,message.author.id,message.channel.id,message)
-    }
-    if(["register_info","ri"].includes(command)){
-      const error_msg = admin_or_player(message.author.id)
-      if(error_msg != "admin") return message.reply({ content: error_msg, allowedMentions: { parse: [] } })
-      const monster = monster_count()
-      const item = item_count()
-      const embed = new MessageEmbed()
-      .setTitle("各種登録情報")
-      .addField("モンスター",`弱敵:${monster[0]}体\n通常:${monster[1]}体\n強敵:${monster[2]}体\n超強敵:${monster[3]}体\n極:${monster[4]}体\nレア:${monster[5]}体\n激レア:${monster[6]}体\n超激レア:${monster[7]}体\n幻:${monster[8]}体\n合計:${monster[9]}体`,true)
-      .addField("所持品関連",`アイテム:${item[0]}種類\n素材:${item[1]}種類\n武器:${item[2]}種類\nツール:${item[3]}種類\n証:${item[4]}種類\n合計:${item[5]}種類`,true)
-      .addField("コマンド数",`${cmd_list.length}`)
-      .setColor("RANDOM")
-      message.reply({ embeds:[embed], allowedMentions: { parse: [] } })
-    }
-    if(["eval"].includes(command)){
-      const error_msg = admin_or_player(message.author.id)
-      if(error_msg != "admin") return message.reply({ content: error_msg, allowedMentions: { parse: [] } })
-      var result = message.content.slice(prefix.length+5).trim();
-      let evaled = eval(result);
-      message.channel.send(evaled)
-      message.react("✅")
-    }
-    if(["db"].includes(command)){
-      const error_msg = admin_or_player(message.author.id)
-      if(error_msg != "admin") return message.reply({ content: error_msg, allowedMentions: { parse: [] } })
-      var result = message.content.slice(prefix.length+3).trim();
-      let evaled = eval("(async () => {" + result + "})()");
-      if(typeof evaled != "string"){
-        evaled = util.inspect(evaled);
-      }
-      message.channel.send("Done.")
-      message.react("✅")
-    }
-  }catch(err){
-    message.react("❓")
-    const embed = new MessageEmbed()
-    .setTitle("Error[ " + err.toString() + " ]")
-    .setDescription(`M:${message.content}/${message.id}\nG:${message.guild.name}/${message.guild.id}\nC:${message.channel.name}/${message.channel.id}/<#${message.channel.id}>\nU:${message.author.username}/${message.author.id}/<@${message.author.id}>\n` + "```js\n" + err.stack + "```")
-    .setColor("RANDOM")
-    message.reply({ embeds:[embed], allowedMentions: { parse: [] } })
-  }
-});
-
-client.login(process.env.DISCORD_BOT_TOKEN)
+module.exports = func
