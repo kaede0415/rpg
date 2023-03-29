@@ -139,7 +139,7 @@ async function splice_status(option,id,start,item){
 
 async function create_data(option,id){
   if(option == "player"){
-    await player_status.set(id,[100,550,10000,0,false,[0,0,0,0,0],0,0])
+    await player_status.set(id,[100,550,10000,0,false,[0,0,0,0,0],0,[0,0]])
     await player_items.set(id,[[],[],[["0",1]],[],[]])
   }else if(option == "monster"){
     const info = generate_monster("random")
