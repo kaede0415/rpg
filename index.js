@@ -2676,10 +2676,18 @@ client.on("messageCreate", async message => {
       await ranking(message)
     }
     if(["wallet"].includes(command)){
+      const list = await lists.get(client.user.id)
+      const ban_list = list[1]
       const coin = await wallet(message.author.id)
+      let ban
+      if(ban_list.includes(message.author.id)){
+         ban = "BAN"
+      }else{
+        ban = "OK"
+      }
       const embed = new MessageEmbed()
       .setTitle("財布")
-      .addField("BAN状態",`>>> ${}`)
+      .addField("BAN状態",`>>> {0}`.format(ban))
       .addField("無償通貨",`>>> ${coin[0]}コイン`)
       .addField("有償通貨",`>>> ${coin[1]}コイン`)
       .setColor("RANDOM")
