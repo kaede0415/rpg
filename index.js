@@ -1169,6 +1169,21 @@ async function experiment(player_id,exp){
   }
 }
 
+async function coinment(option,player_id,coin){
+  let num;
+  if(option == "free"){
+    num = 0
+  }else if(option == "paid"){
+    num = 1
+  }else{
+    return false
+  }
+  const status = await player_status.get(player_id)
+  const newcoin = status[8][num]+coin
+  status[8].splice(0,1,newcoin)
+  await player_status.set(player_id,status)
+}
+
 async function win_process(player_id,channel_id,exp){
   const ch_status = await channel_status.get(channel_id)
   const exp_members = []
@@ -1723,6 +1738,11 @@ async function training(player_id,message){
       msg.edit({ embeds:[l_embed] })
     }
   });
+}
+
+async function wallet(player_id){
+  const status = await player_status.get(player_id)
+  return status[8]
 }
 
 async function mine(player_id,channel_id){
@@ -2637,6 +2657,15 @@ client.on("messageCreate", async message => {
     }
     if(["ranking","rank"].includes(command)){
       await ranking(message)
+    }
+    if(["wallet"].includes(command)){
+      const coin = await wallet(message.author.id)
+      const embed = new MessageEmbed()
+      .setTitle("財布")
+      .addField("無償通貨",`${coin[0]}コイン`,true)
+      .addField("有償通貨",`${coin[1]}コイン`,true)
+      .setColor("RANDOM")
+      message.reply({ embeds:[embed], allowedMentions: { parse: [] } })
     }
     if(["itemid","ii"].includes(command)){
       const error_msg = admin_or_player(message.author.id)
