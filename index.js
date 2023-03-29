@@ -658,7 +658,7 @@ client.on("messageCreate", async message => {
     if(["coin"].includes(command)){
       const error_msg = func.admin_or_player(message.author.id)
       if(error_msg != "admin") return message.reply({ content: error_msg, allowedMentions: { parse: [] } })
-      const option = message.content.splice(" ")[1]
+      const option = message.content.split(" ")[1]
       const player_id = message.content.split(" ")[2]
       const coin = Number(message.content.split(" ")[3])
       let mes
@@ -666,10 +666,11 @@ client.on("messageCreate", async message => {
         await func.coinment(option,player_id,coin)
         mes = `<@${player_id}>に${coin.toLocaleString()}コインを付与しました`
       }else{
+        await func.consume_coin(option,player_id,Math.abs(coin))
         mes = `<@${player_id}>から${coin.toLocaleString()}コインを剥奪しました`
       }
       const embed = new MessageEmbed()
-      .setDescription(`<@${player_id}>に${exp.toLocaleString()}EXPを付与しました\n${levelup_msg}`)
+      .setDescription(mes)
       message.reply({ embeds:[embed], allowedMentions: { parse: [] } })
     }
     if(["monstergen"].includes(command)){
