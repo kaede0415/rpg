@@ -1698,6 +1698,259 @@ class func{
     const status = await player_status.get(player_id)
     return status[8]
   }
+  async shop(player_id,message){
+    let category;
+    let title;
+    const menu = new MessageEmbed()
+    .setTitle("ショップ一覧")
+    .setDescription("```diff\n+ 1\n無償ショップ\n+ 2\n有償ショップ\n\n0:処理終了```")
+    .setFooter("ページ数を送信してください")
+    .setColor("RANDOM")
+    const msg = await message.reply({ embeds:[menu], allowedMentions: { parse: [] } })
+    const filter = m => m.author.id == message.author.id;
+    const collector = message.channel.createMessageCollector({ filter: filter, idle: 60000 });
+    collector.on('collect', async m => {
+      m.delete();
+      if(m.content == "1"){
+        category = "free"
+        title = "無償ショップ"
+        collector.stop();
+      }else if(m.content == "2"){
+        category = "paid"
+        title = "有償"
+        collector.stop();
+      }else if(m.content == "0"){
+        msg.edit({ content:"```処理を終了しました...```" });
+        return collector.stop();
+      }
+      if(category == undefined){
+      }else{
+        const recipe = require(`./shop/${category}.json`)[0]
+        const r_length = Object.keys(recipe).length
+        const recipes_txt = []
+        const recipe_menu = new MessageEmbed()
+        .setTitle(title)
+        .setColor("RANDOM")
+        .setFooter("購入したいアイテムの番号を送信してください(0で処理を終了)")
+        for(let x=0;x<r_length;x++){
+          const target = recipe[`${x+1}`]
+          const length = Object.keys(target).length-3
+          const msgs = []
+          for(let y=0;y<length;y++){
+            const info = target[`item_${y+1}`]
+            msgs.push(`・${info.name} ${info.quantity}個`)
+          }
+          recipes_txt.push(`[${x+1}:${target["item_name"]}]\n${msgs.join("\n")}`)
+        }
+        recipe_menu.setDescription(`\`\`\`css\n${recipes_txt.join("\n\n\n")}\`\`\``)
+        msg.edit({ embeds:[recipe_menu] })
+        const collector2 = message.channel.createMessageCollector({ filter: filter, idle: 60000 });
+        collector2.on('collect', async m => {
+          m.delete();
+          if((!Number.isInteger(Number(m.content)) || 1 > Number(m.content) || Number(m.content) > r_length) && (m.content != "0")){
+          }else if(m.content == "0"){
+            msg.edit({ content:"```処理を終了しました...```" });
+            return collector2.stop();
+          }else{
+            collector2.stop()
+            const data = recipe[`${m.content}`]
+            const i_length = Object.keys(data).length-3
+            const msgs = []
+            let num
+            for(let i=0;i<i_length;i++){
+              const info = data[`item_${i+1}`]
+              if(info.type == "item"){
+                if(info.quantity <= await this.get_item_quantity(message.author.id,info.id)){
+                  msgs.push(`+ ${info.name}: ${info.quantity}個 | 所有:${await this.get_item_quantity(message.author.id,info.id)} 必要:${info.quantity}個`)
+                  if(!num || await this.get_item_quantity(message.author.id,info.id)/info.quantity < num){
+                    num = Math.floor(await this.get_item_quantity(message.author.id,info.id)/info.quantity)
+                  }
+                }else{
+                  msgs.push(`- ${info.name}: ${info.quantity}個 | 所有:${await this.get_item_quantity(message.author.id,info.id)} 必要:${info.quantity}個`)
+                  num = 0
+                }
+              }else if(info.type == "material"){
+                if(info.quantity <= await this.get_material_quantity(message.author.id,info.id)){
+                  msgs.push(`+ ${info.name}: ${info.quantity}個 | 所有:${await this.get_material_quantity(message.author.id,info.id)} 必要:${info.quantity}個`)
+                  if(!num || await this.get_material_quantity(message.author.id,info.id)/info.quantity < num){
+                    num = Math.floor(await this.get_material_quantity(message.author.id,info.id)/info.quantity)
+                  }
+                }else{
+                  msgs.push(`- ${info.name}: ${info.quantity}個 | 所有:${await this.get_material_quantity(message.author.id,info.id)} 必要:${info.quantity}個`)
+                  num = 0
+                }
+              }else if(info.type == "weapon"){
+                if(info.quantity <= await this.get_weapon_quantity(message.author.id,info.id)){
+                  msgs.push(`+ ${info.name}: ${info.quantity}個 | 所有:${await this.get_weapon_quantity(message.author.id,info.id)} 必要:${info.quantity}個`)
+                  if(!num || await this.get_weapon_quantity(message.author.id,info.id)/info.quantity < num){
+                    num = Math.floor(await this.get_weapon_quantity(message.author.id,info.id)/info.quantity)
+                  }
+                }else{
+                  msgs.push(`- ${info.name}: ${info.quantity}個 | 所有:${await this.get_weapon_quantity(message.author.id,info.id)} 必要:${info.quantity}個`)
+                  num = 0
+                }
+              }else if(info.type == "tool"){
+                if(info.quantity <= await this.get_tool_quantity(message.author.id,info.id)){
+                  msgs.push(`+ ${info.name}: ${info.quantity}個 | 所有:${await this.get_tool_quantity(message.author.id,info.id)} 必要:${info.quantity}個`)
+                  if(!num || await this.get_tool_quantity(message.author.id,info.id)/info.quantity < num){
+                    num = Math.floor(await this.get_tool_quantity(message.author.id,info.id)/info.quantity)
+                  }
+                }else{
+                  msgs.push(`- ${info.name}: ${info.quantity}個 | 所有:${await this.get_tool_quantity(message.author.id,info.id)} 必要:${info.quantity}個`)
+                  num = 0
+                }
+              }else if(info.type == "proof"){
+                if(info.quantity <= await this.get_proof_quantity(message.author.id,info.id)){
+                  msgs.push(`+ ${info.name}: ${info.quantity}個 | 所有:${await this.get_proof_quantity(message.author.id,info.id)} 必要:${info.quantity}個`)
+                  if(!num || await this.get_proof_quantity(message.author.id,info.id)/info.quantity < num){
+                    num = Math.floor(await this.get_proof_quantity(message.author.id,info.id)/info.quantity)
+                  }
+                }else{
+                  msgs.push(`- ${info.name}: ${info.quantity}個 | 所有:${await this.get_proof_quantity(message.author.id,info.id)} 必要:${info.quantity}個`)
+                  num = 0
+                }
+              }
+            }
+            const mes = msgs.join("\n")
+            const check_embed = new MessageEmbed()
+            .setColor("RANDOM")
+            if(mes.includes("-")){
+              check_embed.setDescription(`\`\`\`fix\n${data["item_name"]}\`\`\`\`\`\`diff\n${mes}\`\`\`\`\`\`diff\n- 素材が不足しています\`\`\``)
+              return msg.edit({ embeds:[check_embed] })
+            }else{
+              check_embed.setDescription(`\`\`\`fix\n${data["item_name"]}\`\`\`\`\`\`diff\n${mes}\n\n\n最大${num}個作成可能(allで一括作成)\`\`\`\`\`\`diff\n+ 作成したい数を数字で送信してください\`\`\``)
+              msg.edit({ embeds:[check_embed] })
+            }
+            const collector3 = message.channel.createMessageCollector({ filter: filter, idle: 60000 });
+            collector3.on('collect', async m => {
+              m.delete()
+              let quant
+              if((Number.isInteger(Number(m.content)) || Number(m.content) < 1) && m.content.toLowerCase().includes(["0","all"])){
+              }else if(m.content == "0"){
+                msg.edit({ content:"```処理を終了しました...```" });
+                return collector3.stop();
+              }else if(m.content.toLowerCase() == "all"){
+                collector3.stop()
+                quant = num
+              }else{
+                collector3.stop()
+                quant = Number(m.content)
+              }
+              if(!quant){
+              }else{
+                const msgs = []
+                for(let i=0;i<i_length;i++){
+                  const info = data[`item_${i+1}`]
+                  if(info.type == "item"){
+                    if(await this.get_item_quantity(message.author.id,info.id)-info.quantity*quant >= 0){
+                      msgs.push(`+ ${info.name}: ${info.quantity*quant}個 | 所有:${await this.get_item_quantity(message.author.id,info.id)} -> ${await this.get_item_quantity(message.author.id,info.id)-info.quantity*quant}個`)
+                    }else{
+                      msgs.push(`- ${info.name}: ${info.quantity*quant}個 | 所有:${await this.get_item_quantity(message.author.id,info.id)} -> ${info.quantity*quant-await this.get_item_quantity(message.author.id,info.id)}個不足`)
+                    }
+                  }else if(info.type == "material"){
+                    if(await this.get_material_quantity(message.author.id,info.id)-info.quantity*quant >= 0){
+                      msgs.push(`+ ${info.name}: ${info.quantity*quant}個 | 所有:${await this.get_material_quantity(message.author.id,info.id)} -> ${await this.get_material_quantity(message.author.id,info.id)-info.quantity*quant}個`)
+                    }else{
+                      msgs.push(`- ${info.name}: ${info.quantity*quant}個 | 所有:${await this.get_material_quantity(message.author.id,info.id)} -> ${info.quantity*quant-await this.get_material_quantity(message.author.id,info.id)}個不足`)
+                    }
+                  }else if(info.type == "weapon"){
+                    if(await this.get_weapon_quantity(message.author.id,info.id)-info.quantity*quant >= 0){
+                      msgs.push(`+ ${info.name}: ${info.quantity*quant}個 | 所有:${await this.get_weapon_quantity(message.author.id,info.id)} -> ${await this.get_weapon_quantity(message.author.id,info.id)-info.quantity*quant}個`)
+                    }else{
+                      msgs.push(`- ${info.name}: ${info.quantity*quant}個 | 所有:${await this.get_weapon_quantity(message.author.id,info.id)} -> ${info.quantity*quant-await this.get_weapon_quantity(message.author.id,info.id)}個不足`)
+                    }
+                  }else if(info.type == "tool"){
+                    if(await this.get_tool_quantity(message.author.id,info.id)-info.quantity*quant >= 0){
+                      msgs.push(`+ ${info.name}: ${info.quantity*quant}個 | 所有:${await this.get_tool_quantity(message.author.id,info.id)} -> ${await this.get_tool_quantity(message.author.id,info.id)-info.quantity*quant}個`)
+                    }else{
+                      msgs.push(`- ${info.name}: ${info.quantity*quant}個 | 所有:${await this.get_tool_quantity(message.author.id,info.id)} -> ${info.quantity*quant-await this.get_tool_quantity(message.author.id,info.id)}個不足`)
+                    }
+                  }else if(info.type == "proof"){
+                    if(await this.get_proof_quantity(message.author.id,info.id)-info.quantity*quant >= 0){
+                      msgs.push(`+ ${info.name}: ${info.quantity*quant}個 | 所有:${await this.get_proof_quantity(message.author.id,info.id)} -> ${await this.get_proof_quantity(message.author.id,info.id)-info.quantity*quant}個`)
+                    }else{
+                      msgs.push(`- ${info.name}: ${info.quantity*quant}個 | 所有:${await this.get_proof_quantity(message.author.id,info.id)} -> ${info.quantity*quant-await this.get_proof_quantity(message.author.id,info.id)}個不足`)
+                    }
+                  }
+                }
+                const n_mes = msgs.join("\n")
+                const q_embed = new MessageEmbed()
+                .setColor("RANDOM")
+                if(n_mes.includes("- ")){
+                  q_embed.setDescription(`\`\`\`fix\n${data["item_name"]}\`\`\`\`\`\`diff\n${n_mes}\n\n\n${quant}個作成\`\`\`\`\`\`diff\n- 素材が不足しています\`\`\``)
+                  return msg.edit({ embeds:[q_embed] })
+                }else{
+                  q_embed.setDescription(`\`\`\`fix\n${data["item_name"]}\`\`\`\`\`\`diff\n${n_mes}\n\n\n${quant}個作成\`\`\``)
+                  .setFooter("ok or 0")
+                  msg.edit({ embeds:[q_embed] })
+                  const collector4 = message.channel.createMessageCollector({ filter: filter, idle: 60000 });
+                  collector4.on('collect', async m => {
+                    m.delete()
+                    const o_embed = new MessageEmbed()
+                    .setDescription(`\`\`\`fix\n「${data["item_name"]}」を${quant}個作りました\`\`\``)
+                    .setColor("RANDOM")
+                    if(m.content.toLowerCase() == "ok"){
+                      collector4.stop()
+                      for(let i=0;i<i_length;i++){
+                        const info = data[`item_${i+1}`]
+                        if(info.type == "item"){
+                          await this.consume_item(info.id,info.quantity*quant,message.author.id)
+                        }else if(info.type == "material"){
+                          await this.consume_material(info.id,info.quantity*quant,message.author.id)
+                        }else if(info.type == "weapon"){
+                          await this.consume_weapon(info.id,info.quantity*quant,message.author.id)
+                        }else if(info.type == "tool"){
+                          await this.consume_tool(info.id,info.quantity*quant,message.author.id)
+                        }else if(info.type == "proof"){
+                          await this.consume_proof(info.id,info.quantity*quant,message.author.id)
+                        }
+                      }
+                      if(data["item_type"] == "item"){
+                        await this.obtain_item(data["item_id"],quant,message.author.id)
+                      }else if(data["item_type"] == "material"){
+                        await this.obtain_material(data["item_id"],quant,message.author.id)
+                      }else if(data["item_type"] == "weapon"){
+                        await this.obtain_weapon(data["item_id"],quant,message.author.id)
+                      }else if(data["item_type"] == "tool"){
+                        await this.obtain_tool(data["item_id"],quant,message.author.id)
+                      }else if(data["item_type"] == "proof"){
+                        await this.obtain_proof(data["item_id"],quant,message.author.id)
+                      }
+                      msg.edit({ embeds:[o_embed] })
+                    }else if(m.content == "0"){
+                      msg.edit({ content:"```処理を終了しました...```" });
+                      return collector3.stop();
+                    }else{
+                    }
+                  })
+                  collector4.on('end', async (collected, reason) => {
+                    if(reason == "idle"){
+                      msg.edit({ content:"```時間切れです...```" });
+                    }
+                  })
+                }
+              }
+            })
+            collector3.on('end', async (collected, reason) => {
+              if(reason == "idle"){
+                msg.edit({ content:"```時間切れです...```" });
+              }
+            })
+          }
+        })
+        collector2.on('end', async (collected, reason) => {
+          if(reason == "idle"){
+            msg.edit({ content:"```時間切れです...```" });
+          }
+        })
+      }
+    });
+    collector.on('end', async (collected, reason) => {
+      if(reason == "idle"){
+        msg.edit({ content:"```時間切れです...```" });
+      }
+    })
+  }
   async mine(player_id,channel_id){
     let comment = []
     if(!mine_cooldown.includes(player_id)){

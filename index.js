@@ -452,6 +452,9 @@ client.on("messageCreate", async message => {
       .setColor("RANDOM")
       message.reply({ embeds:[embed], allowedMentions: { parse: [] } })
     }
+    if(["shop","s"].includes(command)){
+      await func.shop(message.author.id,message)
+    }
     if(["itemid","ii"].includes(command)){
       const error_msg = func.admin_or_player(message.author.id)
       if(error_msg != "admin") return message.reply({ content: error_msg, allowedMentions: { parse: [] } })
