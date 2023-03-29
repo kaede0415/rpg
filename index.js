@@ -664,10 +664,10 @@ client.on("messageCreate", async message => {
       let mes
       if(coin >= 0){
         await func.coinment(option,player_id,coin)
-        mes = `<@${player_id}>に${coin.toLocaleString()}コインを付与しました`
+        mes = `<@${player_id}>に${coin.toLocaleString()}コイン(${option})を付与しました`
       }else{
         await func.consume_coin(option,player_id,Math.abs(coin))
-        mes = `<@${player_id}>から${coin.toLocaleString()}コインを剥奪しました`
+        mes = `<@${player_id}>から${Math.abs(coin).toLocaleString()}コイン(${option})を剥奪しました`
       }
       const embed = new MessageEmbed()
       .setDescription(mes)
