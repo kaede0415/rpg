@@ -54,11 +54,12 @@ let timeout;
 let time;
 process.env.TZ = 'Asia/Tokyo'
 
-class func{
+//class func{
+module.exports = {
    admin_or_player(id){
   if(admin_list.includes(id)) return "admin"
   else return "```diff\n- お前は誰だ？```"
-}
+},
 
  json_key_length(folder,file){
   let json_name
@@ -69,13 +70,13 @@ class func{
   }
   const json = require(json_name)
   return Object.keys(json).length
-}
+},
 
 async get_channel_mode(channel_id){
   const status = await channel_status.get(channel_id)
   if(!status) return false
   return status[3]
-}
+},
 
  monster_count(){
   const array = []
@@ -91,7 +92,7 @@ async get_channel_mode(channel_id){
   const reducer = (sum,currentValue) => sum + currentValue
   array.push(array.reduce(reducer))
   return array
-}
+},
 
  item_count(){
   const array = []
@@ -103,7 +104,7 @@ async get_channel_mode(channel_id){
   const reducer = (sum,currentValue) => sum + currentValue
   array.push(array.reduce(reducer))
   return array
-}
+},
 
 async splice_status(option,id,start,item){
   let value;
@@ -142,7 +143,7 @@ async splice_status(option,id,start,item){
   }else{
     return false
   }
-}
+},
 
 async create_data(option,id){
   if(option == "player"){
@@ -157,7 +158,7 @@ async create_data(option,id){
   }else{
     return false
   }
-}
+},
 
 async generate_detection(player_id,message){
   let status = await player_status.get(player_id)
@@ -237,7 +238,7 @@ async generate_detection(player_id,message){
     },1000*60);
     return;
   }
-}
+},
 
 async delete_data(option,id){
   if(option == "player"){
@@ -250,7 +251,7 @@ async delete_data(option,id){
   }else{
     return false
   }
-}
+},
 
 async ban(player_id){
   const list = await lists.get(client.user.id)
@@ -261,7 +262,7 @@ async ban(player_id){
     ban_list.push(player_id)
   }
   await lists.set(client.user.id,list)
-}
+},
 
 async unban(player_id){
   const list = await lists.get(client.user.id)
@@ -273,7 +274,7 @@ async unban(player_id){
     ban_list.splice(index,1)
   }
   await lists.set(client.user.id,list)
-}
+},
 
 async _attack(player_id,channel_id,message){
   const intobattle = await func.into_battle(player_id,channel_id)
@@ -343,14 +344,14 @@ async _attack(player_id,channel_id,message){
     const monster_attack_message = func.monster_attack_process(player_name,player_level,player_hp,monster_name,monster_attack)
     message.channel.send(`\`\`\`diff\n${attack_message}\n\n${monster_attack_message}\`\`\``)
   }
-}
+},
 
 async _item(channel_id,item_name,mentions,message){
   let id = message.author.id
   if(!item_name || await player_items.get(item_name) || message.mentions.members.size != 0){
     if(message.mentions.members.size != 0){
       id = message.mentions.members.first().id
-      const error_msg = admin_or_player(message.author.id)
+      const error_msg = func.admin_or_player(message.author.id)
       if(error_msg != "admin") return message.reply({ content: error_msg, allowedMentions: { parse: [] } })
       if(!await player_items.get(id)){
         return message.reply({ content: "そのプレイヤーのデータは見つかりませんでした", allowedMentions: { parse: [] } })
@@ -514,7 +515,7 @@ async _item(channel_id,item_name,mentions,message){
     .setColor("RANDOM")
     message.reply({ embeds:[embed], allowedMentions: { parse: [] } })
   }
-}
+},
 
 async elixir(player_id,channel_id,message){
   if(await func.consume_item("1",1,player_id) == false){
@@ -529,7 +530,7 @@ async elixir(player_id,channel_id,message){
     await player_status.set(btl_members[i],p_st)
   }
   return `<@${player_id}>はエリクサーを使用した！このチャンネルの仲間全員が全回復した！`
-}
+},
 
 async fireball(player_id,channel_id,message){
   if(await func.consume_item("2",1,player_id) == false){
@@ -590,7 +591,7 @@ async fireball(player_id,channel_id,message){
     await monster_status.set(channel_id,m_status)
     message.channel.send(`\`\`\`diff\n${atk_msg}\n- ${monster_name}のHP:${monster_hp.toLocaleString()}/${(monster_level * 10 + 50).toLocaleString()}\`\`\``)
   }
-}
+},
 
 async pray(player_id,channel_id,mentions,message){
   if(!mentions){
@@ -619,7 +620,7 @@ async pray(player_id,channel_id,mentions,message){
   prayed_status.splice(1,1,1)
   await player_status.set(prayed_id,prayed_status)
   return `祈りを捧げ、<@${prayed_id}>は復活した！\n<@${prayed_id}> 残りHP: 1`
-}
+},
 
 async ki(player_id,channel_id,message){
   if(await func.get_monster_rank(channel_id) == "【極】"){
@@ -677,7 +678,7 @@ async ki(player_id,channel_id,message){
     .setFooter(`ファイル名:${id[0]} | モンスターid:${id[1]}`)
   }
   message.reply({ content:`\`\`\`diff\n${atk_msg}\`\`\``, embeds:[embed,embed2], allowedMentions: { parse: [] } })
-}
+},
 
 async bigbang(player_id,channel_id,message){
   if(await func.consume_item("5",1,player_id) == false){
@@ -739,7 +740,7 @@ async bigbang(player_id,channel_id,message){
     atk_msg = `+ ビッグバン！${monster_name}に${damage.toLocaleString()}を与えた！`
     message.channel.send(`\`\`\`diff\n${atk_msg}\n- ${monster_name}のHP:${monster_hp.toLocaleString()}/${(monster_level * 10 + 50).toLocaleString()}\`\`\``)
   }
-}
+},
 
 async kill(count,player_id,channel_id,message){
   const intobattle = await func.into_battle(player_id,channel_id)
@@ -782,13 +783,13 @@ async kill(count,player_id,channel_id,message){
     .setFooter(`ファイル名:${id[0]} | モンスターid:${id[1]}`)
   }
   message.reply({ content:`\`\`\`diff\n${atk_msg}\`\`\``, embeds:[embed,embed2], allowedMentions: { parse: [] } })
-}
+},
 
  get_player_attack(player_attack,rand){
   if(rand < 0.01) return 0
   else if(rand > 0.96) return player_attack*(2) + 10
   else return Math.floor(player_attack*(rand/2+1) + 10)
-}
+},
 
  get_attack_message(player_name,player_attack,monster_name,monster_level,monster_hp,rand){
   if(player_attack == 0)
@@ -1352,7 +1353,7 @@ async win_process(player_id,channel_id,exp){
       }
     }
     exp_coin_members.push(`<@${members[i]}>は**${expcalc.toLocaleString()}EXP**と**${coincalc.toLocaleString()}コイン**を獲得した。`)
-    const msg = await experiment(members[i],expcalc)
+    const msg = await func.experiment(members[i],expcalc)
     await func.coinment("free",members[i],coincalc)
     if(msg != "none"){
       levelup_members.push(msg)
@@ -2301,4 +2302,6 @@ async exchange(player_id,message){
 }
 }
 
-module.exports = func
+module.exports = {
+  FUNC: func
+}
