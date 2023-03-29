@@ -1180,7 +1180,7 @@ async function coinment(option,player_id,coin){
   }
   const status = await player_status.get(player_id)
   const newcoin = status[8][num]+coin
-  status[8].splice(0,1,newcoin)
+  status[8].splice(num,1,newcoin)
   await player_status.set(player_id,status)
 }
 
