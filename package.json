@@ -7,15 +7,15 @@
     "start": "node index.js"
   },
   "dependencies": {
-    "discord.js": "^13.0",
-    "moment": "^2.29.4",
+    "discord.js": "^13.15.0",
     "@keyv/sqlite": "^3.6.4",
-    "keyv": "^4.5.2",
-    "pify": "^6.1.0",
     "discordjs-button-embed-pagination": "^4.x",
-    "util": "^0.12.5",
     "fs": "^0.0.2",
-    "node-cron": "^3.0.2"
+    "keyv": "^4.5.2",
+    "moment": "^2.29.4",
+    "node-cron": "^3.0.2",
+    "pify": "^6.1.0",
+    "util": "^0.12.5"
   },
   "engines": {
     "node": "16.x"
