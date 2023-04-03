@@ -700,7 +700,7 @@ client.on("messageCreate", async message => {
       if(mode == "normal"){
         embed.setImage(info[2])
       }else if(mode == "debug"){
-        const id = func.func.get_monster_id(info[1],info[0])
+        const id = func.get_monster_id(info[1],info[0])
         embed.setImage(info[2])
         .setFooter(`ファイル名:${id[0]} | モンスターid:${id[1]}`)
       }
