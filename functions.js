@@ -1875,7 +1875,7 @@ class func{
       }
     })
   }
-  async mine(player_id,channel_id){
+  async mine(player_id){
     let comment = []
     if(!mine_cooldown.includes(player_id)){
       mine_cooldown.push(player_id)
@@ -1909,7 +1909,6 @@ class func{
     }
     return comment
   }
-  
   async get_monster_rank(channel_id){
     const m_info = await monster_status.get(channel_id)
     return m_info[3]

@@ -415,7 +415,7 @@ client.on("messageCreate", async message => {
       }
     }
     if(["mine"].includes(command)){
-      const msg = await func.mine(message.author.id,message.channel.id)
+      const msg = await func.mine(message.author.id)
       const embed = new MessageEmbed()
       .setColor("RANDOM")
       if(!Array.isArray(msg)){
