@@ -1791,7 +1791,7 @@ class func{
             collector3.on('collect', async m => {
               m.delete()
               let quant
-              if((Number.isInteger(Number(m.content)) || Number(m.content) < 1) && m.content.toLowerCase().includes(["0","all"])){
+              if((Number.isInteger(Number(m.content)) || Number(m.content) < 1) && ["0","all"].includes(m.content.toLowerCase())){
               }else if(m.content == "0"){
                 msg.edit({ content:"```処理を終了しました...```" });
                 return collector3.stop();
@@ -2278,7 +2278,7 @@ class func{
             collector3.on('collect', async m => {
               m.delete()
               let quant
-              if((Number.isInteger(Number(m.content)) || Number(m.content) < 1) && m.content.toLowerCase().includes(["0","all"])){
+              if((Number.isInteger(Number(m.content)) || Number(m.content) < 1) && ["0","all"].includes(m.content.toLowerCase())){
               }else if(m.content == "0"){
                 msg.edit({ content:"```処理を終了しました...```" });
                 return collector3.stop();
