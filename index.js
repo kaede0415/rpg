@@ -101,7 +101,7 @@ client.on("messageCreate", async message => {
   if(message.author.bot || message.channel.type == "DM" || !message.content.startsWith(prefix)){
     return;
   }
-  if(message.content.startsWith(prefix) && cmd_list.includes(command)){
+  if(cmd_list.includes(command)){
     const p_status = await player_status.get(message.author.id)
     const list = await lists.get(client.user.id)
     const login_list = list[0]
