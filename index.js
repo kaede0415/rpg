@@ -107,7 +107,7 @@ client.on("messageCreate", async message => {
     const login_list = list[0]
     const ban_list = list[1]
     if(!p_status){
-      await func.create_data("player",message.author.id)
+      await func.data("player",message.author.id)
       return message.reply({ content:"お初さんいらっしゃい^^\n※これは初めてコマンドを打った人用のメッセージです" })
     }
     if(ban_list.includes(message.author.id) && !admin_list.includes(message.author.id) && !["help","wallet"].includes(command)){
